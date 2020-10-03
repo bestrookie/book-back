@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.UserMapper">
+    <select id="queryUserByName" parameterType="String" resultMap="userInfo">
+        select * from book_db.user where user_name = #{name}
+    </select>
+    <resultMap id="userInfo" type="UserPojo">
+        <id column="user_id" property="userId"></id>
+        <result column="user_name" property="userName"/>
+        <result column="user_password" property="password"/>
+        <result column="user_photo" property="image"/>
+        <result column="user_coin" property="userCoin"/>
+        <result column="user_role" property="role"/>
+    </resultMap>
+</mapper>

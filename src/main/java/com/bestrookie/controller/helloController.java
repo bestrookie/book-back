@@ -2,11 +2,10 @@ package com.bestrookie.controller;
 
 
 import com.bestrookie.utils.TokenUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
-import java.net.http.HttpRequest;
 
 /**
  * @author : bestrookie
@@ -15,7 +14,7 @@ import java.net.http.HttpRequest;
 @RestController
 @RequestMapping("/")
 public class helloController {
-    @RequestMapping("/hello")
+    @GetMapping("/hello")
     public String hello(HttpServletRequest httpRequest){
         return TokenUtils.token("111","aaa");
     }

@@ -68,7 +68,7 @@ public class TokenUtils {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
-            return jwt.getClaim("uid").asInt();
+            return jwt.getClaim("userName").asInt();
         }catch (Exception e){
             e.printStackTrace();
             return 0;
