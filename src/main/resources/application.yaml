@@ -34,7 +34,29 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+#redis配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 500
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 0
+  #配置头像路径
+  mvc:
+    static-path-pattern: /**
 #mybatis
 mybatis:
   type-aliases-package: com.bestrookie.pojo
   mapper-locations: classpath:mapper/*.xml
+#Sms
+sms:
+  accessKeyId: LTAI4G4mzNHrS38Gioo6LnNU
+  secret: aEQfTi1nztc7nlaiHGpypDvkuxPCUH
+  signName: 书源网
+  templateCode: SMS_204106333

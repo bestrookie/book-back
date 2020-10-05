@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyResult {
-    private long code;
+    private int code;
     private String msg;
     private Object obj;
 
@@ -43,6 +43,19 @@ public class MyResult {
      */
     public static MyResult failed(String msg){
         return new MyResult(ResultCode.FAILED.getCode(), msg,null);
+    }
+
+    /**
+     * 失败返回对象和消息
+     * @param msg
+     * @param obj
+     * @return
+     */
+    public static MyResult failed(String msg,Object obj){
+        return  new MyResult(ResultCode.FAILED.getCode(),msg,obj);
+    }
+    public static MyResult failed(String msg,Object obj,int code){
+        return  new MyResult(code,msg,obj);
     }
 
 }

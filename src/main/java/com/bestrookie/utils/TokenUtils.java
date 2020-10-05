@@ -22,7 +22,7 @@ public class TokenUtils {
     //token秘钥
     private static final String TOKEN_SECRET = "xiaofeng";
 
-    public static String token (String username,String password){
+    public static String token (String phone){
 
         String token = "";
         try {
@@ -37,8 +37,7 @@ public class TokenUtils {
             //携带username，password信息，生成签名
             token = JWT.create()
                     .withHeader(header)
-                    .withClaim("username",username)
-                    .withClaim("password",password).withExpiresAt(date)
+                    .withClaim("userName",phone).withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
             e.printStackTrace();
@@ -63,24 +62,16 @@ public class TokenUtils {
         }
     }
 
-    public static int getInfo(String token){
+    public static String getInfo(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
-            return jwt.getClaim("userName").asInt();
+            return jwt.getClaim("userName").asString();
         }catch (Exception e){
             e.printStackTrace();
-            return 0;
+            return null;
         }
 
-    }
-    public static void main(String[] args) {
-        String username ="zhangsan";
-        String password = "123";
-        String token = token(username,password);
-        System.out.println(token);
-        boolean b = verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsImlhdCI6MTYwMDkzMjQ3OH0.JSKNxhNDSQE_Q81STQcnI30OMD_6IpJFN0VuHkPz2mo");
-        System.out.println(b);
     }
 }

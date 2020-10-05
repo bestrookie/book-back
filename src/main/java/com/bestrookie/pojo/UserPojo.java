@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.awt.*;
+import java.io.File;
+
 /**
  * @author : bestrookie
  * @date : 10:00 2020/10/3
@@ -16,6 +19,20 @@ public class UserPojo {
     private String userName;
     private String password;
     private String image;
-    private int userCoin;
-    private int role;
+    private int userCoin= 0;
+    private int role = 0;
+    private String userPhone;
+
+    public UserPojo(String userName, String password, String image,String userPhone) {
+        this.userName = userName;
+        this.password = password;
+        this.image = image;
+        this.userPhone = userPhone;
+    }
+
+    public UserPojo(String userName, String password, String image) {
+        this.userName = userName;
+        this.password = password;
+        this.image = image;
+    }
 }

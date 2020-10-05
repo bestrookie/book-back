@@ -5,6 +5,6 @@ package com.bestrookie.model;
  * @date : 16:14 2020/10/3
  */
 public interface IErrorCode {
-    long getCode();
+    int getCode();
     String getMessage();
 }
