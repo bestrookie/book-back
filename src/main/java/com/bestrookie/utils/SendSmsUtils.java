@@ -19,7 +19,7 @@ import java.util.Random;
  * @date : 14:45 2020/10/4
  */
 @Slf4j
-public class SendSms {
+public class SendSmsUtils {
     private static final String ACCESS_KEY_ID = "LTAI4G4mzNHrS38Gioo6LnNU";
     private static final String SECRET = "aEQfTi1nztc7nlaiHGpypDvkuxPCUH";
     private static final String SIGN_NAME = "书源网";

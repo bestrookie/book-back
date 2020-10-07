@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface UserMapper {
-    public UserPojo queryUserByName(String phone);
-    public boolean addUserInfo(UserPojo userPojo);
+     UserPojo queryUserByName(String phone);
+     boolean addUserInfo(UserPojo userPojo);
+     boolean updateImage(String imageAddress,String phone);
 }

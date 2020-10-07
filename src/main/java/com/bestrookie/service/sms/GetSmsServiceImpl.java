@@ -1,7 +1,6 @@
 package com.bestrookie.service.sms;
 
-import com.bestrookie.service.sms.GetSmsService;
-import com.bestrookie.utils.SendSms;
+import com.bestrookie.utils.SendSmsUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,6 +13,6 @@ import java.util.HashMap;
 public class GetSmsServiceImpl implements GetSmsService {
     @Override
     public HashMap<String, String> GetSms(String phone) {
-        return SendSms.send(phone);
+        return SendSmsUtils.send(phone);
     }
 }

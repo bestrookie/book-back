@@ -9,6 +9,7 @@ import com.bestrookie.pojo.UserPojo;
  * @date : 14:27 2020/10/3
  */
 public interface UserService {
-    public MyResult queryUserByName(String phone,String password);
-    public MyResult addUserInfo(UserPojo userPojo);
+     MyResult queryUserByName(String phone,String password);
+     MyResult addUserInfo(UserPojo userPojo);
+     MyResult updateImage(String imageAddress,String phone);
 }

@@ -3,6 +3,7 @@ package com.bestrookie.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 
 /**
@@ -57,5 +58,7 @@ public class MyResult {
     public static MyResult failed(String msg,Object obj,int code){
         return  new MyResult(code,msg,obj);
     }
-
+    public static MyResult failed(String msg, Object obj, HttpStatus code){
+        return  new MyResult(code.value(),msg,obj);
+    }
 }

@@ -2,7 +2,7 @@
 spring:
   devtools:
     restart:
-      enabled: true  #设置开启热部署
+      enabled: false  #设置开启热部署
       additional-paths: src/main/java #重启目录
       exclude: WEB-INF/**
   freemarker:
@@ -48,8 +48,16 @@ spring:
     lettuce:
       shutdown-timeout: 0
   #配置头像路径
-  mvc:
-    static-path-pattern: /**
+#  mvc:
+#    static-path-pattern: /**
+  #限制上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+#  resources:
+#    static-locations:
+#      - classpath:/static/
 #mybatis
 mybatis:
   type-aliases-package: com.bestrookie.pojo
@@ -60,3 +68,7 @@ sms:
   secret: aEQfTi1nztc7nlaiHGpypDvkuxPCUH
   signName: 书源网
   templateCode: SMS_204106333
+
+# 文件地址
+file:
+  image-path: D:\\resources\\image

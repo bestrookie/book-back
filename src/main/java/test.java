@@ -2,6 +2,7 @@ import com.fasterxml.jackson.databind.util.ClassUtil;
 import org.springframework.util.ClassUtils;
 
 import java.net.URL;
+import java.util.Date;
 
 /**
  * @author : bestrookie
@@ -9,8 +10,9 @@ import java.net.URL;
  */
 public class test {
     public static void main(String[] args) {
+        System.out.println(System.getProperty("user.dir"));
+        System.out.println(new Date().getTime());
 
-        URL url = ClassUtils.getDefaultClassLoader().getResource("classpath:static/avatar/"+"01.png");
-        System.out.println(url);
+        System.out.println(System.currentTimeMillis());
     }
 }

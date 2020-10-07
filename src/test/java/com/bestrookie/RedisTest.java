@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : bestrookie
@@ -17,15 +18,8 @@ public class RedisTest {
     private RedisTemplate<String, String> redisTemplate;
     @Test
     public void set(){
-        String userPhone = "15684135930";
+        String userPhone = "15684135931";
         String code = "146680";
-        HashMap<String, String> phone=new HashMap<>();
-        phone.put("phone","15684135930");
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("15684135930","146680");
-        System.out.println(phone.get("phone"));
-        System.out.println(hashMap.get("15684135930"));
-        redisTemplate.opsForValue().set(userPhone,code);
-        System.out.println(redisTemplate.opsForValue().get(phone.get("phone")));
+        redisTemplate.opsForValue().set(userPhone,code,2*5, TimeUnit.SECONDS);
     }
 }

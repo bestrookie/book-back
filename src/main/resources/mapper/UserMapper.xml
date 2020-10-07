@@ -9,6 +9,9 @@
     <insert id="addUserInfo" parameterType="com.bestrookie.pojo.UserPojo" >
         INSERT INTO book_db.user (user_name,user_photo,user_password,user_phone) values (#{userName},#{image},#{password},#{userPhone})
     </insert>
+    <update id="updateImage" parameterType="String">
+        UPDATE book_db.user set user_photo = #{imageAddress} where  user_phone = #{phone}
+    </update>
     <resultMap id="userInfo" type="UserPojo">
         <id column="user_id" property="userId"></id>
         <result column="user_name" property="userName"/>

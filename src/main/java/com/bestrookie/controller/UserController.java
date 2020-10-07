@@ -1,25 +1,33 @@
 package com.bestrookie.controller;
 
 import com.bestrookie.model.MyResult;
-import com.bestrookie.pojo.UserPojo;
+import com.bestrookie.model.param.LoginUser;
 import com.bestrookie.service.sms.GetSmsService;
+import com.bestrookie.service.user.ImageUploadService;
 import com.bestrookie.service.user.PLoginService;
 import com.bestrookie.service.user.UserService;
-import com.bestrookie.utils.InitUser;
+import com.bestrookie.utils.TokenUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ClassPathUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Source;
-import java.net.http.HttpResponse;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : bestrookie
  * @date : 14:29 2020/10/3
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -31,14 +39,16 @@ public class UserController {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private PLoginService pLoginService;
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 账号密码登录
      * @return
      */
     @PostMapping("/login")
-    public MyResult login(@RequestBody HashMap<String, String> user, HttpServletResponse response){
-            MyResult myResult = userService.queryUserByName(user.get("phone"), user.get("password"));
+    public MyResult login(@RequestBody LoginUser user, HttpServletResponse response){
+            MyResult myResult = userService.queryUserByName(user.getPhone(), user.getPassword());
             response.setStatus(myResult.getCode());
             return myResult;
 
@@ -63,11 +73,30 @@ public class UserController {
         HashMap<String, String> hashMap = getSmsService.GetSms(phone.get("phone"));
         String userPhone = phone.get("phone");
         String code = hashMap.get(userPhone);
-        redisTemplate.opsForValue().set(userPhone,code);
+        redisTemplate.opsForValue().set(userPhone,code,5*60, TimeUnit.SECONDS);
         if (hashMap == null){
             response.setStatus(500);
             return "failed";
         }
         return "success";
+    }
+
+    /**
+     * 上传图片
+     * @param file
+     * @return
+     */
+    @PostMapping("/imageupload")
+    public MyResult imageUpload(MultipartFile file, HttpServletResponse response, HttpServletRequest request) throws IOException {
+
+        MyResult result = imageUploadService.imageUpload(file);
+        String token = request.getHeader("authorization");
+        System.out.println(token);
+        boolean verify = TokenUtils.verify(token);
+        System.out.println(verify);
+        MyResult myResult = userService.updateImage((String) result.getObj(), TokenUtils.getInfo(token));
+
+        return myResult;
+
     }
 }

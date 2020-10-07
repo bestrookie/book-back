@@ -3,7 +3,8 @@ package com.bestrookie.service.user;
 import com.bestrookie.mapper.UserMapper;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.pojo.UserPojo;
-import com.bestrookie.utils.InitUser;
+import com.bestrookie.utils.InitUserUtils;
+import com.bestrookie.utils.SImageUtils;
 import com.bestrookie.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,12 +32,13 @@ public class PLoginServiceImpl implements PLoginService {
             redisTemplate.opsForValue().getOperations().delete(phone);
             if (userMapper.queryUserByName(phone)!=null){
                 UserPojo userPojo = userMapper.queryUserByName(phone);
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("token",TokenUtils.token(phone));
-                hashMap.put("image",userPojo.getImage());
+                String token = TokenUtils.token(phone);
+                HashMap<String, String> hashMap = SImageUtils.sImage(token,userPojo.getImage());
+                String key = "T"+ userPojo.getUserPhone();
+                redisTemplate.opsForValue().set(key,token);
                 return MyResult.success(hashMap);
             }else {
-                UserPojo userPojo = InitUser.initUser(phone);
+                UserPojo userPojo = InitUserUtils.initUser(phone);
                 return userService.addUserInfo(userPojo);
             }
         }
