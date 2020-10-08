@@ -2,24 +2,20 @@ package com.bestrookie.controller;
 
 import com.bestrookie.model.MyResult;
 import com.bestrookie.model.param.LoginUser;
+import com.bestrookie.model.param.UpdatePasswordParam;
 import com.bestrookie.service.sms.GetSmsService;
 import com.bestrookie.service.user.ImageUploadService;
 import com.bestrookie.service.user.PLoginService;
 import com.bestrookie.service.user.UserService;
 import com.bestrookie.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ClassPathUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -80,7 +76,6 @@ public class UserController {
         }
         return "success";
     }
-
     /**
      * 上传图片
      * @param file
@@ -91,12 +86,62 @@ public class UserController {
 
         MyResult result = imageUploadService.imageUpload(file);
         String token = request.getHeader("authorization");
-        System.out.println(token);
-        boolean verify = TokenUtils.verify(token);
-        System.out.println(verify);
         MyResult myResult = userService.updateImage((String) result.getObj(), TokenUtils.getInfo(token));
-
+        response.setStatus(myResult.getCode());
         return myResult;
 
     }
+    /**
+     * 查看个人信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("/getinfo")
+    public MyResult getUserInfo(HttpServletRequest request,HttpServletResponse response){
+        String phone = TokenUtils.getInfo(request.getHeader("authorization"));
+        MyResult myResult = userService.getUserInfo(phone);
+        response.setStatus(myResult.getCode());
+        return myResult;
+    }
+    /**
+     * 修改用户名称
+     * @param userName
+     * @param response
+     * @param request
+     * @return
+     */
+    @PostMapping("/updateusername")
+    public MyResult updateUserName(@RequestBody HashMap<String, String> userName,HttpServletResponse response,HttpServletRequest request){
+        String phone = TokenUtils.getInfo(request.getHeader("authorization"));
+        MyResult myResult = new MyResult();
+        System.out.println(userName.get("userName"));
+        System.out.println(userName);
+        if (userName.get("userName") != null){
+            myResult = userService.updateUserName(userName.get("userName"), phone);
+        }else {
+            myResult = MyResult.failed("姓名不能为空",null,406);
+        }
+        response.setStatus(myResult.getCode());
+        return myResult;
+    }
+    /**
+     * 用户修改密码
+     * @param param
+     * @param response
+     * @param request
+     * @return
+     */
+    @PostMapping("/updatepassword")
+    public MyResult updateUserPassword(@RequestBody UpdatePasswordParam param,HttpServletResponse response,HttpServletRequest request){
+        String phone = TokenUtils.getInfo(request.getHeader("authorization"));
+        if (param == null){
+            response.setStatus(406);
+            return MyResult.failed("输入不能为空",null,406);
+        }
+        MyResult myResult = userService.updateUserPassword(param, phone);
+        response.setStatus(myResult.getCode());
+        return  myResult;
+    }
+
 }

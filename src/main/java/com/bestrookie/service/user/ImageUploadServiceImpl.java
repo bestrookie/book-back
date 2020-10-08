@@ -19,6 +19,13 @@ import java.io.IOException;
 public class ImageUploadServiceImpl implements ImageUploadService {
     @Value("${file.image-path}")
     private String imagePath;
+
+    /**
+     * 上传头像
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @Override
     public MyResult imageUpload(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()){

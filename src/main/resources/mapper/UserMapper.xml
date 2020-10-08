@@ -12,6 +12,15 @@
     <update id="updateImage" parameterType="String">
         UPDATE book_db.user set user_photo = #{imageAddress} where  user_phone = #{phone}
     </update>
+    <update id="updateUserName" parameterType="String">
+        UPDATE book_db.user set user_name = #{userName} where  user_phone = #{phone}
+    </update>
+    <select id="checkUserByName" parameterType="String" resultMap="userInfo">
+        select * from book_db.user where user_name = #{userName}
+    </select>
+    <update id="updateUserPassword" parameterType="String">
+        UPDATE book_db.user set user_password = #{userPassword} where  user_phone = #{phone}
+    </update>
     <resultMap id="userInfo" type="UserPojo">
         <id column="user_id" property="userId"></id>
         <result column="user_name" property="userName"/>
