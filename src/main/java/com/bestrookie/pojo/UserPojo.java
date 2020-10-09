@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
-import java.io.File;
-
 /**
  * @author : bestrookie
  * @date : 10:00 2020/10/3

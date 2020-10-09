@@ -13,7 +13,8 @@ import org.springframework.http.HttpStatus;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyResult {
+public class
+MyResult {
     private int code;
     private String msg;
     private Object obj;

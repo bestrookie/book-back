@@ -143,5 +143,24 @@ public class UserController {
         response.setStatus(myResult.getCode());
         return  myResult;
     }
+    /**
+     * 用户注销
+     * @param response
+     * @param request
+     * @return
+     */
+    @GetMapping("/logout")
+    public boolean logOut(HttpServletResponse response,HttpServletRequest request){
+        String phone = "T" + TokenUtils.getInfo(request.getHeader("authorization"));
+        if (phone == null || phone.isEmpty()){
+            return false;
+        }else {
+            if (redisTemplate.opsForValue().getOperations().delete(phone)){
+                return true;
+            }else {
+                return false;
+            }
+        }
+    }
 
 }
