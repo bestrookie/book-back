@@ -7,7 +7,9 @@ import com.bestrookie.service.sms.GetSmsService;
 import com.bestrookie.service.user.ImageUploadService;
 import com.bestrookie.service.user.PLoginService;
 import com.bestrookie.service.user.UserService;
+import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -112,13 +114,16 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateusername")
-    public MyResult updateUserName(@RequestBody HashMap<String, String> userName,HttpServletResponse response,HttpServletRequest request){
+    public MyResult updateUserName(@RequestBody HashMap<String, String> userName,HttpServletResponse response,HttpServletRequest request) throws IOException {
         String phone = TokenUtils.getInfo(request.getHeader("authorization"));
-        MyResult myResult = new MyResult();
-        System.out.println(userName.get("userName"));
-        System.out.println(userName);
+        MyResult myResult;
         if (userName.get("userName") != null){
-            myResult = userService.updateUserName(userName.get("userName"), phone);
+            SensitiveWordUtils.init();
+            if (SensitiveWordUtils.contains(userName.get("userName"))){
+                myResult = MyResult.failed("内容违规",null,406);
+            }else {
+                myResult = userService.updateUserName(userName.get("userName"), phone);
+            }
         }else {
             myResult = MyResult.failed("姓名不能为空",null,406);
         }
@@ -150,7 +155,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/logout")
-    public boolean logOut(HttpServletResponse response,HttpServletRequest request){
+    public boolean logOut(HttpServletRequest request){
         String phone = "T" + TokenUtils.getInfo(request.getHeader("authorization"));
         if (phone == null || phone.isEmpty()){
             return false;
