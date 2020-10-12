@@ -22,7 +22,7 @@ public class TokenUtils {
     //token秘钥
     private static final String TOKEN_SECRET = "xiaofeng";
 
-    public static String token (String phone){
+    public static String token (String phone,int userId){
 
         String token = "";
         try {
@@ -37,6 +37,7 @@ public class TokenUtils {
             //携带username，password信息，生成签名
             token = JWT.create()
                     .withHeader(header)
+                    .withClaim("userId",userId)
                     .withClaim("userName",phone).withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
@@ -71,6 +72,18 @@ public class TokenUtils {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+
+    }
+    public static int getId(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getClaim("userId").asInt();
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
         }
 
     }

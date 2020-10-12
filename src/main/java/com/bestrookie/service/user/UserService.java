@@ -57,5 +57,12 @@ public interface UserService {
       * @return
       */
      MyResult updateUserPassword(UpdatePasswordParam param, String phone);
+     /**
+      * 修改用户虚拟币
+      * @param userCoin
+      * @param phone
+      * @return
+      */
+     MyResult updateUserCoin(int userCoin,String phone);
 
 }

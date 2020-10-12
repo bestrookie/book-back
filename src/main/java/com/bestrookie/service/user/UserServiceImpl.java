@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public MyResult queryUserByName(String phone,String password) {
         UserPojo userPojo = userMapper.queryUserByName(phone);
         if (userPojo!=null && userPojo.getPassword().equals(password)){
-            String token = TokenUtils.token(phone);
+            String token = TokenUtils.token(phone,userPojo.getUserId());
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             //保留用户最后一条token
             String key = "T"+ phone;
@@ -51,8 +51,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public MyResult addUserInfo(UserPojo userPojo) {
         boolean flg = userMapper.addUserInfo(userPojo);
+         userPojo = userMapper.queryUserByName(userPojo.getUserPhone());
         if (flg == true){
-            String token = TokenUtils.token(userPojo.getUserPhone());
+            String token = TokenUtils.token(userPojo.getUserPhone(),userPojo.getUserId());
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             String key = "T"+ userPojo.getUserPhone();
             redisTemplate.opsForValue().set(key,token);
@@ -142,6 +143,21 @@ public class UserServiceImpl implements UserService {
             }else {
                 return MyResult.failed("修改失败",null,406);
             }
+        }
+    }
+    /**
+     * 修改用户虚拟币
+     * @param userCoin
+     * @param phone
+     * @return
+     */
+    @Override
+    public MyResult updateUserCoin(int userCoin, String phone) {
+        boolean flg = userMapper.updateUserCoin(userCoin, phone);
+        if (flg){
+            return MyResult.success(userCoin,"修改成功");
+        }else {
+            return  MyResult.failed("修改失败",null,406);
         }
     }
 

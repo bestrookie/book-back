@@ -1,6 +1,5 @@
 package com.bestrookie.utils;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.wltea.analyzer.core.Lexeme;
 import org.wltea.analyzer.core.IKSegmenter;
 
@@ -159,7 +158,6 @@ public class SensitiveWordUtils {
     public static void main(String[] args) {
         //初始化敏感词库
         SensitiveWordUtils.init();
-
         //需要处理的目标字符串
         String str="大sb";
 

@@ -32,7 +32,7 @@ public class PLoginServiceImpl implements PLoginService {
             redisTemplate.opsForValue().getOperations().delete(phone);
             if (userMapper.queryUserByName(phone)!=null){
                 UserPojo userPojo = userMapper.queryUserByName(phone);
-                String token = TokenUtils.token(phone);
+                String token = TokenUtils.token(phone,userPojo.getUserId());
                 HashMap<String, String> hashMap = SImageUtils.sImage(token,userPojo.getImage());
                 String key = "T"+ userPojo.getUserPhone();
                 redisTemplate.opsForValue().set(key,token);

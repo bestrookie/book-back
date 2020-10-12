@@ -2,6 +2,7 @@ package com.bestrookie.mapper;
 
 import com.bestrookie.pojo.UserPojo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -50,4 +51,11 @@ public interface UserMapper {
       * @return
       */
      boolean updateUserPassword(String userPassword,String phone);
+     /**
+      * 修改用户虚拟币
+      * @param userCoin
+      * @param phone
+      * @return
+      */
+     boolean updateUserCoin(@Param("userCoin") int userCoin, @Param("phone") String phone);
 }

@@ -3,23 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.UserMapper">
+<!--    根据手机号查询用户信息-->
     <select id="queryUserByName" parameterType="String" resultMap="userInfo">
         select * from book_db.user where user_phone = #{phone}
     </select>
+<!--    注册一个新用户-->
     <insert id="addUserInfo" parameterType="com.bestrookie.pojo.UserPojo" >
         INSERT INTO book_db.user (user_name,user_photo,user_password,user_phone) values (#{userName},#{image},#{password},#{userPhone})
     </insert>
+<!--    修改用户头像-->
     <update id="updateImage" parameterType="String">
         UPDATE book_db.user set user_photo = #{imageAddress} where  user_phone = #{phone}
     </update>
+<!--    修改用户名称-->
     <update id="updateUserName" parameterType="String">
         UPDATE book_db.user set user_name = #{userName} where  user_phone = #{phone}
     </update>
+<!--    根据用户名查询用户信息-->
     <select id="checkUserByName" parameterType="String" resultMap="userInfo">
         select * from book_db.user where user_name = #{userName}
     </select>
+<!--    修改用户密码-->
     <update id="updateUserPassword" parameterType="String">
         UPDATE book_db.user set user_password = #{userPassword} where  user_phone = #{phone}
+    </update>
+<!--    修改用户虚拟币信息-->
+    <update id="updateUserCoin">
+        UPDATE book_db.user set user_coin = #{userCoin} where user_phone = #{phone}
     </update>
     <resultMap id="userInfo" type="UserPojo">
         <id column="user_id" property="userId"></id>

@@ -150,7 +150,6 @@ public class UserController {
     }
     /**
      * 用户注销
-     * @param response
      * @param request
      * @return
      */
