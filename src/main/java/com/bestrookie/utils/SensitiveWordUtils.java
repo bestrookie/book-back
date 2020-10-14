@@ -13,9 +13,7 @@ import java.util.Set;
 /**
  * @author : bestrookie
  * @date : 10:56 2020/10/9
- */
-/**
- * 敏感词处理工具-IKAnalyzer 中文分词工具，借助分词进行敏感词过滤
+ * 敏感词分词工具
  */
 public class SensitiveWordUtils {
 

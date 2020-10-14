@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.BookDiscussionsMapper">
+    <resultMap id="bookdiscussionInfo" type="BookDiscussionsPojo">
+        <id column="bd_id" property="bdId"></id>
+        <result column="bd_name" property="bdName"/>
+        <result column="user_id" property="userId"/>
+        <result column="bd_photo" property="bdPhoto"/>
+        <result column="bd_des" property="bdDes"/>
+        <result column="bd_date" property="bdDate"/>
+    </resultMap>
+<!--    添加书圈-->
+    <insert id="addBookDiscussion" parameterType="com.bestrookie.pojo.BookDiscussionsPojo">
+        INSERT INTO book_db.book_discussions(bd_name,user_id,bd_des,bd_date) value
+        (#{bookDiscussionsPojo.bdName},
+        #{bookDiscussionsPojo.userId},
+        #{bookDiscussionsPojo.bdDes},
+        #{bookDiscussionsPojo.bdDate})
+    </insert>
+<!--    分页查询所有书圈-->
+    <select id="selectPage" resultMap="bookdiscussionInfo">
+        SELECT * FROM book_db.book_discussions
+    </select>
+<!--    根据id查询书圈-->
+    <select id="queryBookDiscussionById" resultMap="bookdiscussionInfo">
+        SELECT * FROM book_db.book_discussions where bd_id = #{discussionId}
+    </select>
+</mapper>

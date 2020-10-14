@@ -117,8 +117,9 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
 
 
-        }else
+        }else {
             return MyResult.failed("签到失败",false,507);
+        }
     }
     /**
      * 格式化签到表
@@ -128,7 +129,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     public MyResult deleteAllAttendance() {
         if (attendanceMapper.deleteAllAttendance()){
             return MyResult.success(true,"签到信息已经重置");
-        }else
+        }else {
             return MyResult.failed("重置签到信息失败",false,507);
+        }
     }
 }

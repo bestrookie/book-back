@@ -58,8 +58,9 @@ public class UserServiceImpl implements UserService {
             String key = "T"+ userPojo.getUserPhone();
             redisTemplate.opsForValue().set(key,token);
             return MyResult.success(hashMap,"注册成功");
-        }else
+        }else {
             return MyResult.failed("注册失败");
+        }
     }
     /**
      * 设置头像
@@ -72,8 +73,9 @@ public class UserServiceImpl implements UserService {
         boolean flg = userMapper.updateImage(imageAddress, phone);
         if (flg){
             return MyResult.success(imageAddress,"保存成功");
-        }else
+        }else{
             return MyResult.failed("保存失败",null,406);
+        }
     }
     /**
      * 根据手机号查询用户的信息
@@ -105,8 +107,9 @@ public class UserServiceImpl implements UserService {
             boolean flg = userMapper.updateUserName(userName, phone);
             if (flg){
                 return MyResult.success(userName,"修改成功");
-            }else
+            }else{
                 return MyResult.failed("修改失败",null,406);
+            }
         }
         return MyResult.failed("用户名已存在",null,406);
 
@@ -133,7 +136,8 @@ public class UserServiceImpl implements UserService {
      * @param phone
      * @return
      */
-    public MyResult updateUserPassword(UpdatePasswordParam param,String phone){
+    @Override
+    public MyResult updateUserPassword(UpdatePasswordParam param, String phone){
         if (!param.getCode().equals(redisTemplate.opsForValue().get(phone))){
             return MyResult.failed("验证码错误",null,405);
         }else {

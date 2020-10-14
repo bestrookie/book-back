@@ -72,3 +72,9 @@ sms:
 # 文件地址
 file:
   image-path: D:\\resources\\image
+#分页插件
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
