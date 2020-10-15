@@ -71,15 +71,23 @@ public class BookDiscussionsController {
         response.setStatus(myResult.getCode());
         return myResult;
     }
+
+    /**
+     * 根据id查询书圈
+     * @param response
+     * @param request
+     * @return
+     */
     @GetMapping("/querybyid")
     public MyResult queryBookDiscussionById(HttpServletResponse response,HttpServletRequest request){
         MyResult result = null;
+        int userId = TokenUtils.getId(request.getHeader("authorization"));
         if (request.getParameter("discussionId") != null){
             int discussionId = Integer.parseInt(request.getParameter("discussionId"));
             if (discussionId < 0 ){
                 result = MyResult.failed("id信息错误",null,408);
             }else {
-                result = bookDiscussionsService.queryDiscussionById(discussionId);
+                result = bookDiscussionsService.queryDiscussionById(userId,discussionId);
             }
         }else {
             result = MyResult.failed("id不能为空",null,408);

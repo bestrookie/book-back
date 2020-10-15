@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.BdUserMapper">
+    <resultMap id="bdUserInfo" type="BdUserPojo">
+        <id column="bdu_id" property="bdUserId"></id>
+        <result column="bdu_date" property="bduDate"/>
+        <result column="bd_id" property="bdId"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+    <resultMap id="queryInfo" type="DiscussionUserPojo">
+        <result column="user_name" property="userName"/>
+        <result column="user_photo" property="userPhoto"/>
+    </resultMap>
+<!--    加入书圈-->
+    <insert id="joinDiscussion" parameterType="com.bestrookie.pojo.BdUserPojo">
+        INSERT book_db.bduser (bdu_date,bd_id,user_id) values (#{bduDate},
+        #{bdId},
+        #{userId})
+    </insert>
+<!--    根据用户id和书圈id查询是否加入书圈-->
+    <select id="queryById" resultMap="bdUserInfo">
+        SELECT * from book_db.bduser where bd_id = #{discussionId} AND user_id =#{userId}
+    </select>
+<!--查询人数-->
+    <select id="queryNums" resultType="int">
+        SELECT COUNT(*) from book_db.bduser where bd_id = #{discussionId}
+    </select>
+<!--    退出书圈-->
+    <delete id="exitDiscussion">
+        DELETE FROM book_db.bduser where bd_id = #{discussionId} AND user_id =#{userId}
+    </delete>
+<!--查询某个书圈的所有人    -->
+    <select id="queryPopulation" resultMap="queryInfo">
+        SELECT user_name,user_photo FROM book_db.user
+        JOIN book_db.bduser
+        ON book_db.user.user_id = book_db.bduser.user_id
+        WHERE bd_id = #{discussionId}
+    </select>
+<!--    查询某个书圈的部分人-->
+    <select id="queryPopulationLimit" resultMap="queryInfo">
+        SELECT user_name,user_photo FROM book_db.user
+        JOIN book_db.bduser
+        ON book_db.user.user_id = book_db.bduser.user_id
+        WHERE bd_id = #{discussionId} Limit #{limit}
+    </select>
+</mapper>

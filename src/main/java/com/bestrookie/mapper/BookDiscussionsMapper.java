@@ -2,6 +2,7 @@ package com.bestrookie.mapper;
 
 import com.bestrookie.pojo.BookDiscussionsPojo;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * @author : bestrookie
  * @date : 10:28 2020/10/13
  */
+@Repository
 @Mapper
 public interface BookDiscussionsMapper {
     /**

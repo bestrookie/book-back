@@ -3,11 +3,13 @@ package com.bestrookie.mapper;
 import com.bestrookie.pojo.AttendancePojo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author : bestrookie
  * @date : 16:18 2020/10/10
  */
+@Repository
 @Mapper
 public interface AttendanceMapper {
     /**

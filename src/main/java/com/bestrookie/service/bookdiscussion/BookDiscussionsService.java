@@ -25,9 +25,10 @@ public interface BookDiscussionsService {
      */
     PageResult queryDiscussion(PageRequestParam param);
     /**
-     * 根据id查询书圈
+     * 根据书圈id查询信息
+     * @param userId
      * @param discussionId
      * @return
      */
-    MyResult queryDiscussionById(int discussionId);
+    MyResult queryDiscussionById(int userId,int discussionId);
 }

@@ -5,12 +5,15 @@ import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookDiscussionsPojo;
+import com.bestrookie.service.bduser.BdUserService;
 import com.bestrookie.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,6 +24,8 @@ import java.util.List;
 public class BookDiscussionsServiceImpl implements BookDiscussionsService {
     @Autowired
     BookDiscussionsMapper bookDiscussionsMapper;
+    @Autowired
+    BdUserService bdUserService;
     /**
      *创建书圈
      * @param bookDiscussionsPojo
@@ -49,10 +54,14 @@ public class BookDiscussionsServiceImpl implements BookDiscussionsService {
      * @return
      */
     @Override
-    public MyResult queryDiscussionById(int discussionId) {
+    public MyResult queryDiscussionById(int userId,int discussionId) {
         BookDiscussionsPojo bookDiscussionsPojo = bookDiscussionsMapper.queryBookDiscussionById(discussionId);
+        HashMap<String, Object> result = new HashMap<>();
         if (bookDiscussionsPojo != null){
-            return MyResult.success(bookDiscussionsPojo,"查询成功");
+            result.put("state",bdUserService.stateByJoin(userId,discussionId));
+            result.put("num",bdUserService.queryNums(discussionId));
+            result.put("obj",bookDiscussionsPojo);
+            return MyResult.success(result,"查询成功");
         }else {
             return MyResult.failed("查询失败",null,508);
         }

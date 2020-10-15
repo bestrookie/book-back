@@ -23,7 +23,7 @@
     <select id="checkUserByName" parameterType="String" resultMap="userInfo">
         select * from book_db.user where user_name = #{userName}
     </select>
-<!--    修改用户密码-->
+    <!--    修改用户密码-->
     <update id="updateUserPassword" parameterType="String">
         UPDATE book_db.user set user_password = #{userPassword} where  user_phone = #{phone}
     </update>
