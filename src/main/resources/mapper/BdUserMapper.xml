@@ -15,7 +15,7 @@
     </resultMap>
 <!--    加入书圈-->
     <insert id="joinDiscussion" parameterType="com.bestrookie.pojo.BdUserPojo">
-        INSERT book_db.bduser (bdu_date,bd_id,user_id) values (#{bduDate},
+        INSERT INTO book_db.bduser (bdu_date,bd_id,user_id) values (#{bduDate},
         #{bdId},
         #{userId})
     </insert>
