@@ -85,10 +85,14 @@ public class UserController {
      */
     @PostMapping("/imageupload")
     public MyResult imageUpload(MultipartFile file, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+        MyResult myResult;
         MyResult result = imageUploadService.imageUpload(file);
-        String token = request.getHeader("authorization");
-        MyResult myResult = userService.updateImage((String) result.getObj(), TokenUtils.getInfo(token));
+        if (result.getCode() != 200){
+            myResult = result;
+        }else {
+            String token = request.getHeader("authorization");
+            myResult = userService.updateImage((String) result.getObj(), TokenUtils.getInfo(token));
+        }
         response.setStatus(myResult.getCode());
         return myResult;
 

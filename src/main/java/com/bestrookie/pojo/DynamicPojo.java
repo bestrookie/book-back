@@ -1,10 +1,10 @@
 package com.bestrookie.pojo;
 
+import com.bestrookie.service.givelike.GiveLikeService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
-
+import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author : bestrookie
  * @date : 19:42 2020/10/15
@@ -20,4 +20,6 @@ public class DynamicPojo {
     private String dAbstract;
     private int bdId;
     private UserPojo user;
+    private int likeNum;
+    private boolean isLike;
 }

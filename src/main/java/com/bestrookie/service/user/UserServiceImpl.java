@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     public MyResult getUserInfo(String phone) {
         UserPojo userPojo = userMapper.queryUserByName(phone);
         if (userPojo!=null){
-            if (userPojo.getPassword().isEmpty()){
+            if (userPojo.getPassword() == null){
                 userPojo.setPassword("empty");
             }else{
                 userPojo.setPassword("exist");

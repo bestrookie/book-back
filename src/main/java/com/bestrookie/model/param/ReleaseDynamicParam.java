@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReleaseDynamicParam {
     private int bdId;
-    private String dynamicContent;
-    private String dynamicAbstract;
+    private String content;
+    private String abstracts;
 }

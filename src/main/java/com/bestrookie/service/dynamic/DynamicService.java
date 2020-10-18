@@ -16,11 +16,26 @@ public interface DynamicService {
      * @param discussionId
      * @return
      */
-    PageResult queryDynamic(PageRequestParam param,int discussionId);
+    PageResult queryDynamic(PageRequestParam param,int discussionId,int userId);
     /**
      * 发布动态
      * @param dynamicPojo
      * @return
      */
     MyResult releaseDynamic(DynamicPojo dynamicPojo);
+    /**
+     * 查看动态详情
+     * @param dynamicId
+     * @param userId
+     * @return
+     */
+    MyResult queryDynamicById(int dynamicId,int userId);
+
+    /**
+     * 删除动态
+     * @param dynamicId
+     * @param userId
+     * @return
+     */
+    MyResult deleteDynamicById(int dynamicId,int userId);
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.GiveLikeMapper">
+    <resultMap id="giveLikeInfo" type="GiveLikePojo">
+        <id column="like_id" property="likeId"></id>
+        <result column="like_date" property="likeDate"/>
+        <result column="user_id" property="userId"/>
+        <result column="d_id" property="dynamicId"/>
+    </resultMap>
+<!--    添加点赞信息-->
+    <insert id="addGiveLike" parameterType="com.bestrookie.pojo.GiveLikePojo">
+        INSERT INTO book_db.give_like (like_date,user_id,d_id) values (#{likeDate},#{userId},#{dynamicId})
+    </insert>
+    <!--    获取点赞数-->
+    <select id="giveLikeNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.give_like where d_id = #{dynamicId}
+    </select>
+<!--    是否点赞-->
+    <select id="isLiked" resultMap="giveLikeInfo">
+        SELECT * FROM book_db.give_like WHERE d_id = #{dynamicId} ANd user_id = #{userId}
+    </select>
+    <delete id="deleteDynamicById">
+        DELETE FROM book_db.give_like WHERE book_db.give_like.d_id = #{dynamicId} And book_db.give_like.user_id = #{userId}
+    </delete>
+
+</mapper>

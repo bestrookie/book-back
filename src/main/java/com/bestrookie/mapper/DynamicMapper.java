@@ -2,8 +2,8 @@ package com.bestrookie.mapper;
 
 import com.bestrookie.pojo.DynamicPojo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 /**
@@ -25,4 +25,18 @@ public interface DynamicMapper {
      * @return
      */
     boolean addDynamic(DynamicPojo dynamicPojo);
+    /**
+     * 根据id查询动态
+     * @param dynamicId
+     * @return
+             */
+    DynamicPojo queryDynamicById(int dynamicId);
+    /**
+     * 根据id删除动态
+     * @param dynamicId
+     * @param userId
+     * @return
+     */
+    boolean deleteDynamicById(@Param("dynamicId") int dynamicId, @Param("userId") int userId);
+
 }
