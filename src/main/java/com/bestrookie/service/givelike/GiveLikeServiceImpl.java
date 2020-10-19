@@ -23,7 +23,7 @@ public class GiveLikeServiceImpl implements GiveLikeService {
      */
     @Override
     public MyResult giveLike(GiveLikePojo giveLikePojo) {
-        if (isLiked(giveLikePojo.getDynamicId(),giveLikePojo.getUserId())){
+        if (isLiked(giveLikePojo.getDynamicId(),giveLikePojo.getUserId()) == false){
             if (giveLikePojo.getUserId() > 0 || giveLikePojo.getDynamicId() > 0){
                 if (giveLikeMapper.addGiveLike(giveLikePojo)){
                     HashMap<String, Object>result = new HashMap<>();
