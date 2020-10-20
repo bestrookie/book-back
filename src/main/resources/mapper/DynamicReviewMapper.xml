@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.DynamicReviewMapper">
+<!--    用户信息-->
+    <resultMap id="userInfo" type="UserPojo">
+        <id column="user_id" property="userId"></id>
+        <result column="user_name" property="userName"/>
+        <result column="user_password" property="password"/>
+        <result column="user_photo" property="image"/>
+        <result column="user_coin" property="userCoin"/>
+        <result column="user_role" property="role"/>
+        <result column="user_phone" property="userPhone"/>
+    </resultMap>
+<!--    子评论信息-->
+    <resultMap id="sonReviewInfo" type="DynamicReviewPojo">
+        <id column="dr_id" property="drId"></id>
+        <result column="dr_content" property="drContent"/>
+        <result column="dr_date" property="drDate"/>
+        <result column="dr_pid" property="drPid"/>
+        <result column="dr_spid" property="drSpid"/>
+        <result column="user_id" property="userId"/>
+        <result column="d_id" property="dynamicId"/>
+        <association property="userPojo" resultMap="userInfo"/>
+        <association property="repUserPojo" select="com.bestrookie.mapper.DynamicReviewMapper.queryRepUser" column="dr_pid"/>
+    </resultMap>
+<!--    评论信息-->
+    <resultMap id="reviewInfo" type="DynamicReviewPojo">
+        <id column="dr_id" property="drId"></id>
+        <result column="dr_content" property="drContent"/>
+        <result column="dr_date" property="drDate"/>
+        <result column="dr_pid" property="drPid"/>
+        <result column="dr_spid" property="drSpid"/>
+        <result column="user_id" property="userId"/>
+        <result column="d_id" property="dynamicId"/>
+        <association property="userPojo" resultMap="userInfo"/>
+        <association property="sonReview"  select="com.bestrookie.mapper.DynamicReviewMapper.querySonReviews" column="{dynamicId=d_id,parentId=dr_id}"/>
+    </resultMap>
+<!--查询子评论-->
+    <select parameterType="java.util.Map" id="querySonReviews" resultMap="sonReviewInfo">
+        SELECT book_db.dynamic_review.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.dynamic_review
+        JOIN book_db.user
+        on book_db.dynamic_review.user_id = book_db.user.user_id
+        WHERE book_db.dynamic_review.d_id = #{dynamicId} AND book_db.dynamic_review.dr_spid = #{parentId}
+        ORDER BY book_db.dynamic_review.dr_date
+    </select>
+<!--    查询所有评论-->
+    <select id="queryDynamicReviews" resultMap="reviewInfo">
+        SELECT book_db.dynamic_review.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.dynamic_review
+        JOIN book_db.user
+        on book_db.dynamic_review.user_id = book_db.user.user_id
+        WHERE  book_db.dynamic_review.d_id = #{dynamicId} AND book_db.dynamic_review.dr_spid = 0
+        ORDER BY  book_db.dynamic_review.dr_date DESC
+    </select>
+<!--    查询回复人的信息-->
+    <select id="queryRepUser" resultMap="userInfo">
+        SELECT book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.dynamic_review
+        JOIN book_db.user
+        on book_db.dynamic_review.user_id = book_db.user.user_id
+        WHERE  book_db.dynamic_review.dr_id = #{parentId} AND book_db.dynamic_review.dr_spid != 0
+    </select>
+<!--    查询评论数量-->
+    <select id="reviewCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.dynamic_review WHERE book_db.dynamic_review.d_id = #{dynamicId}
+    </select>
+<!--    删除评论根据id-->
+    <delete id="deleteReviewById">
+        DELETE FROM book_db.dynamic_review WHERE book_db.dynamic_review.dr_id = #{reviewId} AND book_db.dynamic_review.user_id = #{userId}
+    </delete>
+<!--    直接删除评论-->
+    <delete id="deleteReview">
+        DELETE FROM book_db.dynamic_review WHERE book_db.dynamic_review.dr_id = #{reviewId}
+    </delete>
+<!--    添加评论-->
+    <insert id="addReview" parameterType="com.bestrookie.pojo.DynamicReviewPojo">
+        INSERT INTO book_db.dynamic_review (dr_content,dr_date,dr_pid,dr_spid,user_id,d_id)
+        values (#{dynamicReviewPojo.drContent},#{dynamicReviewPojo.drDate},#{dynamicReviewPojo.drPid},#{dynamicReviewPojo.drSpid},#{dynamicReviewPojo.userId},#{dynamicReviewPojo.dynamicId})
+    </insert>
+</mapper>

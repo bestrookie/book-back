@@ -23,6 +23,7 @@
             <id column="user_id" property="userId"></id>
         </association>
         <association property="likeNum" select="com.bestrookie.mapper.GiveLikeMapper.giveLikeNum" column="d_id"/>
+        <association property="reviewsNum" select="com.bestrookie.mapper.DynamicReviewMapper.reviewCount" column="d_id"/>
     </resultMap>
 <!--    根据id删除动态-->
     <delete id="deleteDynamicById">
@@ -38,7 +39,7 @@
     </select>
     <!--    添加动态信息-->
     <insert id="addDynamic" parameterType="com.bestrookie.pojo.DynamicPojo">
-        INSERT INTO book_db.dynamic (user_id,d_date,d_content,d_abstract,bd_id) value (#{userId},#{dDate},#{dContent},#{dAbstract},#{bdId})
+        INSERT INTO book_db.dynamic (user_id,d_date,d_content,d_abstract,bd_id) values (#{userId},#{dDate},#{dContent},#{dAbstract},#{bdId})
     </insert>
     <!--    根据id查询动态-->
     <select id="queryDynamicById" resultMap="dynamicInfo">

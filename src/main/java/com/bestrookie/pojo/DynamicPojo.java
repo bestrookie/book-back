@@ -21,5 +21,6 @@ public class DynamicPojo {
     private int bdId;
     private UserPojo user;
     private int likeNum;
+    private int reviewsNum;
     private boolean isLike;
 }

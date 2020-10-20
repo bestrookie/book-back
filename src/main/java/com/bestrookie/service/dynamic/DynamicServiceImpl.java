@@ -81,6 +81,7 @@ public class DynamicServiceImpl implements DynamicService {
                 }else {
                     result.put("my",false);
                 }
+                result.put("nowUser",userId);
                 dynamicPojo.setLike(giveLikeService.isLiked(dynamicId,userId));
                 result.put("dynamic",dynamicPojo);
                 return MyResult.success(result);

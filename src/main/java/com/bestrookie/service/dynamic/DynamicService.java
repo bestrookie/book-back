@@ -14,6 +14,7 @@ public interface DynamicService {
      * 查询动态信息
      * @param param
      * @param discussionId
+     * @param userId
      * @return
      */
     PageResult queryDynamic(PageRequestParam param,int discussionId,int userId);
