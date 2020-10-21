@@ -2,11 +2,13 @@ package com.bestrookie.controller;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.pojo.GiveLikePojo;
 import com.bestrookie.service.givelike.GiveLikeService;
+import com.bestrookie.utils.IsTrueUtils;
 import com.bestrookie.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.wltea.analyzer.core.IKSegmenter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,13 +33,13 @@ public class GiveLikeController {
     MyResult giveLike(HttpServletResponse response, HttpServletRequest request){
         GiveLikePojo giveLikePojo = new GiveLikePojo();
         MyResult result = null;
-        giveLikePojo.setDynamicId(Integer.parseInt(request.getParameter("dynamicId")));
-        giveLikePojo.setLikeDate(System.currentTimeMillis());
-        giveLikePojo.setUserId(TokenUtils.getId(request.getHeader("authorization")));
-        if (giveLikePojo == null){
-            result = MyResult.failed("传入参数为空",null,410);
-        }else {
+        if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
+            giveLikePojo.setDynamicId(Integer.parseInt(request.getParameter("dynamicId")));
+            giveLikePojo.setLikeDate(System.currentTimeMillis());
+            giveLikePojo.setUserId(TokenUtils.getId(request.getHeader("authorization")));
             result = giveLikeService.giveLike(giveLikePojo);
+        }else {
+            result = MyResult.failed("参数错误",null,412);
         }
         response.setStatus(result.getCode());
         return result;
@@ -52,10 +54,10 @@ public class GiveLikeController {
     @GetMapping("/cancellike")
     MyResult cancelLiked(HttpServletRequest request,HttpServletResponse response){
         MyResult result = null;
-        if (Integer.parseInt(request.getParameter("dynamicId")) > 0 && TokenUtils.getId(request.getHeader("authorization")) > 0){
+        if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
             result = giveLikeService.cancelLiked( Integer.parseInt(request.getParameter("dynamicId")),TokenUtils.getId(request.getHeader("authorization")));
         }else {
-            result = MyResult.failed("传入参数错误",null,410);
+            result = MyResult.failed("传入参数错误",null,412);
         }
         response.setStatus(result.getCode());
         return  result;

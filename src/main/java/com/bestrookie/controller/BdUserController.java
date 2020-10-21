@@ -3,6 +3,7 @@ package com.bestrookie.controller;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.pojo.BdUserPojo;
 import com.bestrookie.service.bduser.BdUserService;
+import com.bestrookie.utils.IsTrueUtils;
 import com.bestrookie.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +31,15 @@ public class BdUserController {
     @GetMapping("/join")
     public MyResult joinDiscussion(HttpServletRequest request,HttpServletResponse response) {
         BdUserPojo bdUser = new BdUserPojo();
-        bdUser.setBdId(Integer.parseInt(request.getParameter("bdId")));
-        bdUser.setBduDate(System.currentTimeMillis());
-        bdUser.setUserId(TokenUtils.getId(request.getHeader("authorization")));
-        MyResult result = bdUserService.joinDiscussion(bdUser);
+        MyResult result;
+        if (IsTrueUtils.isTrue(request.getParameter("bdId"))){
+            bdUser.setBdId(Integer.parseInt(request.getParameter("bdId")));
+            bdUser.setBduDate(System.currentTimeMillis());
+            bdUser.setUserId(TokenUtils.getId(request.getHeader("authorization")));
+            result = bdUserService.joinDiscussion(bdUser);
+        }else {
+            result = MyResult.failed("参数错误",null,412);
+        }
         response.setStatus(result.getCode());
         return result;
     }
@@ -46,13 +52,13 @@ public class BdUserController {
      */
     @GetMapping("/exit")
     public MyResult exitDiscussion(HttpServletRequest request, HttpServletResponse response){
-        int userId = TokenUtils.getId(request.getHeader("authorization"));
-        int discussionId = Integer.parseInt(request.getParameter("bdId"));
         MyResult result;
-        if (userId>0 && discussionId > 0){
+        if (IsTrueUtils.isTrue(request.getParameter("bdId"))){
+            int userId = TokenUtils.getId(request.getHeader("authorization"));
+            int discussionId = Integer.parseInt(request.getParameter("bdId"));
             result = bdUserService.exitDiscussion(userId,discussionId);
         }else {
-            result = MyResult.failed("id不能为负数",null,408);
+            result = MyResult.failed("参数错误",null,412);
         }
         response.setStatus(result.getCode());
         return result;
@@ -65,17 +71,17 @@ public class BdUserController {
      */
     @GetMapping("/queryuser")
     public MyResult queryDiscussionUser(HttpServletResponse response,HttpServletRequest request){
-        int limit = Integer.parseInt(request.getParameter("limit"));
-        int discussionId = Integer.parseInt(request.getParameter("bdId"));
         MyResult result;
-        if (limit >= 0 || discussionId > 0){
-            if (limit == 0){
-                result = bdUserService.queryPopulation(discussionId);
-            }else {
-                result = bdUserService.queryPopulationLimit(discussionId,limit);
-            }
+        if (IsTrueUtils.isTrue(request.getParameter("limit")) == true && IsTrueUtils.isTrue(request.getParameter("bdId")) == true){
+            int limit = Integer.parseInt(request.getParameter("limit"));
+            int discussionId = Integer.parseInt(request.getParameter("bdId"));
+                if (limit == 0){
+                    result = bdUserService.queryPopulation(discussionId);
+                }else {
+                    result = bdUserService.queryPopulationLimit(discussionId,limit);
+                }
         }else {
-            result = MyResult.failed("参数错误",null,409);
+            result = MyResult.failed("参数错误",null,412);
         }
         response.setStatus(result.getCode());
         return result;
