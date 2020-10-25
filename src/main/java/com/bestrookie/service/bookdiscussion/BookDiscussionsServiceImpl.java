@@ -6,12 +6,14 @@ import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookDiscussionsPojo;
 import com.bestrookie.service.bduser.BdUserService;
+import com.bestrookie.service.userbanned.UserBannedService;
 import com.bestrookie.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +25,11 @@ import java.util.List;
 @Service
 public class BookDiscussionsServiceImpl implements BookDiscussionsService {
     @Autowired
-    BookDiscussionsMapper bookDiscussionsMapper;
+    private BookDiscussionsMapper bookDiscussionsMapper;
     @Autowired
-    BdUserService bdUserService;
+    private BdUserService bdUserService;
+    @Autowired
+    private UserBannedService userBannedService;
     /**
      *创建书圈
      * @param bookDiscussionsPojo
@@ -60,6 +64,7 @@ public class BookDiscussionsServiceImpl implements BookDiscussionsService {
         if (bookDiscussionsPojo != null){
             result.put("state",bdUserService.stateByJoin(userId,discussionId));
             result.put("num",bdUserService.queryNums(discussionId));
+            result.put("isBanned",userBannedService.isUserBanned(userId));
             result.put("obj",bookDiscussionsPojo);
             return MyResult.success(result,"查询成功");
         }else {

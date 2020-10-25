@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @author : bestrookie
@@ -24,17 +25,20 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (!(object instanceof HandlerMethod)){
             return true;
         }
-
-        if (token!=null){
+        if (token != null && !Objects.equals(token,"null")){
             if (TokenUtils.verify(token)){
                 String info = "T"+TokenUtils.getInfo(token);
                 if (token.equals(redisTemplate.opsForValue().get(info))){
                     return true;
+                }else {
+                    response.setStatus(413);
                 }
+            }else {
+                response.setStatus(403);
             }
-
+        }else {
+            response.setStatus(414);
         }
-        response.setStatus(403);
         return false;
     }
 

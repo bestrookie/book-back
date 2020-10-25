@@ -2,15 +2,22 @@ package com.bestrookie.service.user;
 
 import com.bestrookie.mapper.UserMapper;
 import com.bestrookie.model.MyResult;
+import com.bestrookie.model.PageResult;
+import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.model.param.UpdatePasswordParam;
 import com.bestrookie.pojo.UserPojo;
+import com.bestrookie.utils.PageUtils;
 import com.bestrookie.utils.SImageUtils;
 import com.bestrookie.utils.TokenUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author : bestrookie
@@ -32,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MyResult queryUserByName(String phone,String password) {
         UserPojo userPojo = userMapper.queryUserByName(phone);
-        if (userPojo!=null && userPojo.getPassword().equals(password)){
+        if (userPojo!=null && Objects.equals(userPojo.getPassword(),password)){
             String token = TokenUtils.token(phone,userPojo.getUserId());
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             //保留用户最后一条token
@@ -163,6 +170,26 @@ public class UserServiceImpl implements UserService {
         }else {
             return  MyResult.failed("修改失败",null,406);
         }
+    }
+
+    /**
+     * 查询所有用户
+     * @param param
+     * @return
+     */
+    @Override
+    public PageResult queryAllUsers(PageRequestParam param) {
+        return PageUtils.getPageResult(param,getUserPageInfo(param));
+    }
+    /**
+     * 调用分页插件完成分页
+     * @param param
+     * @return
+     */
+    private PageInfo<UserPojo> getUserPageInfo(PageRequestParam param){
+        PageHelper.startPage(param.getPageNumber(),param.getPageSize());
+        List<UserPojo> userPojo = userMapper.queryAllUsers();
+        return new PageInfo<>(userPojo);
     }
 
 }

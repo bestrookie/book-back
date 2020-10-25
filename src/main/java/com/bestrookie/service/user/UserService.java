@@ -1,6 +1,8 @@
 package com.bestrookie.service.user;
 
 import com.bestrookie.model.MyResult;
+import com.bestrookie.model.PageResult;
+import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.model.param.UpdatePasswordParam;
 import com.bestrookie.pojo.UserPojo;
 
@@ -64,5 +66,12 @@ public interface UserService {
       * @return
       */
      MyResult updateUserCoin(int userCoin,String phone);
+
+     /**
+      * 查询所有用户
+      * @param param
+      * @return
+      */
+     PageResult queryAllUsers(PageRequestParam param);
 
 }

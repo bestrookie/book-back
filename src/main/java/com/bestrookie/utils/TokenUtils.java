@@ -85,6 +85,16 @@ public class TokenUtils {
             e.printStackTrace();
             return 0;
         }
-
+    }
+    public static int getRole(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getClaim("role").asInt();
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

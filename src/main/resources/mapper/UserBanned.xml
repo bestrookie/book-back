@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.UserBannedMapper">
+    <!--    用户信息-->
+    <resultMap id="userInfo" type="UserPojo">
+        <id column="user_id" property="userId"></id>
+        <result column="user_name" property="userName"/>
+        <result column="user_password" property="password"/>
+        <result column="user_photo" property="image"/>
+        <result column="user_coin" property="userCoin"/>
+        <result column="user_role" property="role"/>
+        <result column="user_phone" property="userPhone"/>
+    </resultMap>
+<!--    用户封禁信息-->
+    <resultMap id="bannedInfo" type="UserBannedPojo">
+        <id column="banned_id" property="bannedId"></id>
+        <result column="banned_date" property="bannedDate"/>
+        <result column="banned_rdate" property="removeDate"/>
+        <result column="banned_des" property="bannedDes"/>
+        <result column="user_id" property="userId"/>
+        <association property="userPojo" resultMap="userInfo"/>
+    </resultMap>
+<!--    封禁信息-->
+    <resultMap id="userBannedInfo" type="UserBannedPojo">
+        <id column="banned_id" property="bannedId"></id>
+        <result column="banned_date" property="bannedDate"/>
+        <result column="banned_rdate" property="removeDate"/>
+        <result column="banned_des" property="bannedDes"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+<!--    添加封禁信息-->
+    <insert id="addBannedInfo" parameterType="com.bestrookie.pojo.UserBannedPojo">
+        INSERT  INTO  book_db.user_banned(banned_date,banned_rdate,banned_des,user_id) VALUES
+        (#{bannedDate},#{removeDate},#{bannedDes},#{userId})
+    </insert>
+<!--    查询封禁信息以及用户信息-->
+    <select id="queryBannedInfos" resultMap="bannedInfo">
+        SELECT book_db.user_banned.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.user_banned
+        JOIN book_db.user
+        ON book_db.user_banned.user_id = book_db.user.user_id
+        ORDER BY  book_db.user_banned.banned_date DESC
+    </select>
+<!--    根据用户id查询封禁信息-->
+    <select id="queryBannedInfoById" resultMap="userBannedInfo">
+        SELECT * FROM book_db.user_banned  WHERE user_id = #{userId} ORDER BY  book_db.user_banned.banned_rdate DESC Limit 1
+    </select>
+<!--解除禁言-->
+    <update id="removeBannedInfoById">
+        UPDATE book_db.user_banned SET book_db.user_banned.banned_rdate = #{rDate} WHERE book_db.user_banned.banned_id =#{bannedId}
+    </update>
+
+</mapper>

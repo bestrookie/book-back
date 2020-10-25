@@ -6,6 +6,7 @@ import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.DynamicPojo;
 import com.bestrookie.service.givelike.GiveLikeService;
+import com.bestrookie.service.userbanned.UserBannedService;
 import com.bestrookie.utils.PageUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
 import com.github.pagehelper.PageHelper;
@@ -27,6 +28,8 @@ public class DynamicServiceImpl implements DynamicService {
     private DynamicMapper dynamicMapper;
     @Autowired
     private GiveLikeService giveLikeService;
+    @Autowired
+    UserBannedService userBannedService;
 
     /**
      * 查询动态信息
@@ -81,6 +84,7 @@ public class DynamicServiceImpl implements DynamicService {
                 }else {
                     result.put("my",false);
                 }
+                result.put("isBanned",userBannedService.isUserBanned(userId));
                 result.put("nowUser",userId);
                 dynamicPojo.setLike(giveLikeService.isLiked(dynamicId,userId));
                 result.put("dynamic",dynamicPojo);

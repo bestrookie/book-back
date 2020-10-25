@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 /**
  * @author : bestrookie
@@ -60,4 +62,10 @@ public interface UserMapper {
       * @return
       */
      boolean updateUserCoin(@Param("userCoin") int userCoin, @Param("phone") String phone);
+
+     /**
+      * 查询所有用户
+      * @return
+      */
+     List<UserPojo> queryAllUsers();
 }

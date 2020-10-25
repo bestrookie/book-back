@@ -1,6 +1,4 @@
 package com.bestrookie.service.user;
-
-import com.bestrookie.constant.ResultConstant;
 import com.bestrookie.model.MyResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
