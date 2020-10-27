@@ -66,6 +66,7 @@ public class BookDiscussionsServiceImpl implements BookDiscussionsService {
             result.put("num",bdUserService.queryNums(discussionId));
             result.put("isBanned",userBannedService.isUserBanned(userId));
             result.put("obj",bookDiscussionsPojo);
+            result.put("myId",userId);
             return MyResult.success(result,"查询成功");
         }else {
             return MyResult.failed("查询失败",null,508);

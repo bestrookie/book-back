@@ -22,12 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
-
     /**
      * 获取签到信息
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义结果集
      */
     @GetMapping("/getattendance")
     public MyResult getAttendanceInfo(HttpServletRequest request, HttpServletResponse response){
@@ -38,9 +37,9 @@ public class AttendanceController {
     }
     /**
      *修改签到信息
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义结果集
      */
     @GetMapping("/attendance")
     public MyResult updateAttendance(HttpServletRequest request,HttpServletResponse response){

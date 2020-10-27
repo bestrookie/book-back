@@ -68,15 +68,20 @@ public class DynamicReviewServiceImpl implements DynamicReviewService{
      */
     @Override
     public MyResult releaseDynamicReview(DynamicReviewPojo dynamicReviewPojo) {
-        if (dynamicReviewPojo != null){
-            if (dynamicReviewMapper.addReview(dynamicReviewPojo)){
-                return MyResult.success(true,"发布成功");
+        try{
+            if (dynamicReviewPojo != null){
+                if (dynamicReviewMapper.addReview(dynamicReviewPojo)){
+                    return MyResult.success(true,"发布成功");
+                }else {
+                    return MyResult.failed("发布失败",false,511);
+                }
             }else {
-                return MyResult.failed("发布失败",false,511);
+                return MyResult.failed("信息为空",false,411);
             }
-        }else {
-            return MyResult.failed("信息为空",false,411);
+        }catch (Exception e){
+            return MyResult.failed("原评论已删除",false,511);
         }
+
     }
 
     @Override

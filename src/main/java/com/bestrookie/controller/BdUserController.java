@@ -22,11 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 public class BdUserController {
     @Autowired
     private BdUserService bdUserService;
-
     /**
      * 加入书圈
-     * @param request
-     * @return
+     * @param request 请求参数
+     * @return 自定义结果集
      */
     @GetMapping("/join")
     public MyResult joinDiscussion(HttpServletRequest request,HttpServletResponse response) {
@@ -46,9 +45,9 @@ public class BdUserController {
 
     /**
      * 退出书圈
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义结果集
      */
     @GetMapping("/exit")
     public MyResult exitDiscussion(HttpServletRequest request, HttpServletResponse response){

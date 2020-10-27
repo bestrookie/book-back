@@ -2,6 +2,7 @@ package com.bestrookie.controller;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.pojo.GiveLikePojo;
 import com.bestrookie.service.givelike.GiveLikeService;
+import com.bestrookie.service.message.MessageService;
 import com.bestrookie.utils.IsTrueUtils;
 import com.bestrookie.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 public class GiveLikeController {
     @Autowired
     private GiveLikeService giveLikeService;
+    @Autowired
+    private MessageService messageService;
 
     /**
      * 点赞
@@ -55,6 +58,7 @@ public class GiveLikeController {
     MyResult cancelLiked(HttpServletRequest request,HttpServletResponse response){
         MyResult result = null;
         if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
+            messageService.updateFlg(TokenUtils.getId(request.getHeader("authorization")),Integer.parseInt(request.getParameter("dynamicId")));
             result = giveLikeService.cancelLiked( Integer.parseInt(request.getParameter("dynamicId")),TokenUtils.getId(request.getHeader("authorization")));
         }else {
             result = MyResult.failed("传入参数错误",null,412);
