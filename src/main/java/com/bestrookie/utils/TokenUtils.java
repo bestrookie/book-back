@@ -8,14 +8,16 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 /**
  * @desc   使用token验证用户是否登录
- * @author zm
+ * @author bestrookie
  **/
+@Slf4j
 public class TokenUtils {
     //设置过期时间
     private static final long EXPIRE_DATE=24*60*60*1000;
@@ -41,7 +43,7 @@ public class TokenUtils {
                     .withClaim("userName",phone).withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期或错误");
             return  null;
         }
         return token;
@@ -58,7 +60,7 @@ public class TokenUtils {
             DecodedJWT jwt = verifier.verify(token);
             return true;
         }catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期或错误");
             return  false;
         }
     }
@@ -70,7 +72,7 @@ public class TokenUtils {
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim("userName").asString();
         }catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期或错误");
             return null;
         }
 
@@ -82,7 +84,7 @@ public class TokenUtils {
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim("userId").asInt();
         }catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期或错误");
             return 0;
         }
     }
@@ -93,7 +95,7 @@ public class TokenUtils {
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim("role").asInt();
         }catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期或错误");
             return 0;
         }
     }

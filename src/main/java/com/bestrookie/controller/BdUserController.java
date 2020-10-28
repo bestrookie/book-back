@@ -22,22 +22,24 @@ import javax.servlet.http.HttpServletResponse;
 public class BdUserController {
     @Autowired
     private BdUserService bdUserService;
+
     /**
      * 加入书圈
+     *
      * @param request 请求参数
      * @return 自定义结果集
      */
     @GetMapping("/join")
-    public MyResult joinDiscussion(HttpServletRequest request,HttpServletResponse response) {
+    public MyResult joinDiscussion(HttpServletRequest request, HttpServletResponse response) {
         BdUserPojo bdUser = new BdUserPojo();
         MyResult result;
-        if (IsTrueUtils.isTrue(request.getParameter("bdId"))){
+        if (IsTrueUtils.isTrue(request.getParameter("bdId"))) {
             bdUser.setBdId(Integer.parseInt(request.getParameter("bdId")));
             bdUser.setBduDate(System.currentTimeMillis());
             bdUser.setUserId(TokenUtils.getId(request.getHeader("authorization")));
             result = bdUserService.joinDiscussion(bdUser);
-        }else {
-            result = MyResult.failed("参数错误",null,412);
+        } else {
+            result = MyResult.failed("参数错误", null, 412);
         }
         response.setStatus(result.getCode());
         return result;
@@ -45,42 +47,45 @@ public class BdUserController {
 
     /**
      * 退出书圈
-     * @param request 请求参数
+     *
+     * @param request  请求参数
      * @param response 响应参数
      * @return 自定义结果集
      */
     @GetMapping("/exit")
-    public MyResult exitDiscussion(HttpServletRequest request, HttpServletResponse response){
+    public MyResult exitDiscussion(HttpServletRequest request, HttpServletResponse response) {
         MyResult result;
-        if (IsTrueUtils.isTrue(request.getParameter("bdId"))){
+        if (IsTrueUtils.isTrue(request.getParameter("bdId"))) {
             int userId = TokenUtils.getId(request.getHeader("authorization"));
             int discussionId = Integer.parseInt(request.getParameter("bdId"));
-            result = bdUserService.exitDiscussion(userId,discussionId);
-        }else {
-            result = MyResult.failed("参数错误",null,412);
+            result = bdUserService.exitDiscussion(userId, discussionId);
+        } else {
+            result = MyResult.failed("参数错误", null, 412);
         }
         response.setStatus(result.getCode());
         return result;
     }
+
     /**
      * 获取圈友列表
+     *
      * @param response
      * @param request
      * @return
      */
     @GetMapping("/queryuser")
-    public MyResult queryDiscussionUser(HttpServletResponse response,HttpServletRequest request){
+    public MyResult queryDiscussionUser(HttpServletResponse response, HttpServletRequest request) {
         MyResult result;
-        if (IsTrueUtils.isTrue(request.getParameter("limit")) == true && IsTrueUtils.isTrue(request.getParameter("bdId")) == true){
+        if (Integer.parseInt(request.getParameter("limit")) >= 0 && IsTrueUtils.isTrue(request.getParameter("bdId")) == true) {
             int limit = Integer.parseInt(request.getParameter("limit"));
             int discussionId = Integer.parseInt(request.getParameter("bdId"));
-                if (limit == 0){
-                    result = bdUserService.queryPopulation(discussionId);
-                }else {
-                    result = bdUserService.queryPopulationLimit(discussionId,limit);
-                }
-        }else {
-            result = MyResult.failed("参数错误",null,412);
+            if (limit == 0) {
+                result = bdUserService.queryPopulation(discussionId);
+            } else {
+                result = bdUserService.queryPopulationLimit(discussionId, limit);
+            }
+        } else {
+            result = MyResult.failed("参数错误", null, 412);
         }
         response.setStatus(result.getCode());
         return result;

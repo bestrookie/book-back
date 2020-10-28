@@ -1,12 +1,15 @@
 package com.bestrookie.handler;
 
 import com.bestrookie.pojo.MessagePojo;
+import com.bestrookie.pojo.NoticePojo;
 import com.bestrookie.service.message.MessageService;
+import com.bestrookie.service.notice.NoticeService;
 import com.bestrookie.utils.TokenUtils;
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.OnConnect;
+import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ public class MessageEventHandler {
     private SocketIOServer socketIOServer;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private NoticeService noticeService;
     public static ConcurrentHashMap<String, SocketIOClient> clientHashMap = new ConcurrentHashMap<>();
 
     /**
@@ -35,6 +40,7 @@ public class MessageEventHandler {
     public void onConnect(SocketIOClient client){
         client.sendEvent("MESSAGE","onConnect back");
     }
+
 
     /**
      * 设置登录信息
@@ -66,7 +72,6 @@ public class MessageEventHandler {
         data = messageService.queryMessageById(data.getMsgId());
         targetClient.sendEvent("REVIEW",data);
     }
-
     /**
      * 发布点赞消息
      * @param client
@@ -85,6 +90,18 @@ public class MessageEventHandler {
         if(messageService.queryMsg(data.getUserId(),data.getDynamicId()) == 1){
             targetClient.sendEvent("LIKE",data);
         }
+    }
 
+    /**
+     * 公告广播
+     */
+    @OnEvent(value = "send_notice")
+    public void sendNotice(int noticeId){
+        NoticePojo noticePojo = noticeService.queryNoticeById(noticeId);
+        for (SocketIOClient client : clientHashMap.values()){
+            if (client.isChannelOpen()){
+                client.sendEvent("NOTICE",noticePojo);
+            }
+        }
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.NoticeMapper">
+<!--    公告信息-->
+    <resultMap id="noticeInfo" type="com.bestrookie.pojo.NoticePojo">
+        <id column="notice_id" property="noticeId"></id>
+        <result column="notice_date" property="noticeDate"/>
+        <result column="notice_content" property="noticeContent"/>
+        <result column="notice_title" property="noticeTitle"/>
+        <association property="nums" select="com.bestrookie.mapper.NoticesReadMapper.noticesReadNum" column="notice_id"/>
+    </resultMap>
+<!--    添加公告-->
+    <insert id="addNotice" useGeneratedKeys="true" keyProperty="noticeId" parameterType="com.bestrookie.pojo.NoticePojo">
+        INSERT INTO book_db.notice (notice_date,notice_content,notice_title) VALUES
+        (#{noticeDate},#{noticeContent},#{noticeTitle})
+    </insert>
+<!--    查看所有公告-->
+    <select id="queryNotice" resultMap="noticeInfo">
+        SELECT * FROM book_db.notice ORDER BY notice_date DESC
+    </select>
+<!--    删除公告-->
+    <delete id="deleteNotice">
+        DELETE FROM book_db.notice WHERE notice_id = #{noticeId}
+    </delete>
+<!--    根据id查询公告-->
+    <select id="queryNoticeById" resultMap="noticeInfo">
+        SELECT * FROM book_db.notice WHERE notice_id = #{noticeId}
+    </select>
+
+</mapper>
