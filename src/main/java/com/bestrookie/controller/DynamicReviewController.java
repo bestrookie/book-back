@@ -85,7 +85,7 @@ public class DynamicReviewController {
     public MyResult releaseDynamicReview(HttpServletRequest request, HttpServletResponse response, @RequestBody ReleaseDynamicReviewParam param){
         MyResult result;
         if (param.getReviewContent() == null){
-            result = MyResult.failed("参数错误",false,411);
+            result = MyResult.failed("参数错误",false,412);
         }else {
             SensitiveWordUtils.init();
             if (SensitiveWordUtils.contains(param.getReviewContent())){

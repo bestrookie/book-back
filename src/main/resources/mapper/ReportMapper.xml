@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.ReportMapper">
+    <resultMap id="reportInfo" type="com.bestrookie.pojo.ReportPojo">
+        <id column="report_id" property="reportId"></id>
+        <result column="report_date" property="reportDate"/>
+        <result column="report_des" property="reportDes"/>
+        <result column="user_id" property="userId"/>
+        <result column="target_id" property="targetId"/>
+        <result column="report_type" property="reportType"/>
+        <result column="report_state" property="reportState"/>
+    </resultMap>
+<!--    添加举报信息-->
+    <insert id="addReportInfo" parameterType="com.bestrookie.pojo.ReportPojo">
+        INSERT INTO book_db.report (report_date,report_des,user_id,target_id,report_type)
+        VALUES (#{reportDate},#{reportDes},#{userId},#{targetId},#{reportType})
+    </insert>
+<!--    查看所有举报信息-->
+    <select id="queryReportInfo" resultMap="reportInfo">
+        SELECT * FROM book_db.report
+        ORDER BY report_date DESC
+        <if test="type == 1">
+            WHERE report_state = FALSE
+        </if>
+        <if test="type == 2 ">
+            WHERE report_state = TRUE
+        </if>
+    </select>
+<!--    改变举报信息状态-->
+    <update id="solveReport" parameterType="int">
+        UPDATE book_db.report SET report_sate = true WHERE report_id = #{reportId}
+    </update>
+</mapper>

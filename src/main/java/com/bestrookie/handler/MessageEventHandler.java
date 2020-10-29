@@ -104,4 +104,14 @@ public class MessageEventHandler {
             }
         }
     }
+
+    /**
+     * 向用户发送举报已经处理
+     * @param userId
+     */
+    @OnEvent(value = "solve_report")
+    public void solveReport(int userId){
+        SocketIOClient client = clientHashMap.get(userId);
+        client.sendEvent("REPORT","你的举报已受理");
+    }
 }
