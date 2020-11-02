@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.LogMapper">
+    <resultMap id="logInfo" type="com.bestrookie.pojo.LogPojo">
+        <id column="log_id" property="logId"></id>
+        <result column="log_date" property="logDate"/>
+        <result column="log_operate" property="logOperate"/>
+        <result column="user_id" property="userId"/>
+        <result column="log_ip" property="logIp"/>
+    </resultMap>
+<!--    添加日志信息-->
+    <insert id="addLogInfo" parameterType="com.bestrookie.pojo.LogPojo">
+        INSERT INTO book_db.admin_login
+        (log_date,log_operate,user_id,log_ip)
+        values (#{logDate},#{logOperate},#{userId},#{logIp})
+    </insert>
+
+</mapper>

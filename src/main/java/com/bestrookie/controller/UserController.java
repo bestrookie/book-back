@@ -1,18 +1,14 @@
 package com.bestrookie.controller;
 
 import com.bestrookie.model.MyResult;
-import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.LoginUser;
-import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.model.param.UpdatePasswordParam;
 import com.bestrookie.service.sms.GetSmsService;
 import com.bestrookie.service.user.ImageUploadService;
 import com.bestrookie.service.user.PLoginService;
 import com.bestrookie.service.user.UserService;
-import com.bestrookie.utils.IsTrueUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -44,55 +40,61 @@ public class UserController {
     private ImageUploadService imageUploadService;
 
     /**
-     * 账号密码登录
-     * @return
+     * @param user 前端表格参数
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @PostMapping("/login")
-    public MyResult login(@RequestBody LoginUser user, HttpServletResponse response){
-            MyResult myResult = userService.queryUserByName(user.getPhone(), user.getPassword());
-            response.setStatus(myResult.getCode());
-            return myResult;
+    public MyResult login(@RequestBody LoginUser user, HttpServletResponse response) {
+        MyResult myResult = userService.queryUserByName(user.getPhone(), user.getPassword());
+        response.setStatus(myResult.getCode());
+        return myResult;
 
     }
+
     /**
-     * 手机登录
-     * @return
+     * 手机号登录
+     * @param verify 手机号 验证码
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @PostMapping("/plogin")
-    public MyResult register(@RequestBody HashMap<String, String> verify,HttpServletResponse response){
+    public MyResult register(@RequestBody HashMap<String, String> verify, HttpServletResponse response) {
         MyResult myResult = pLoginService.pLogin(verify.get("phone"), verify.get("code"));
         response.setStatus(myResult.getCode());
         return myResult;
     }
+
     /**
      * 获取验证码
-     * @param phone
-     * @return
+     * @param phone 手机号
+     * @return 自定义返回类型
      */
     @PostMapping("/getsms")
-    public String GetSms(@RequestBody HashMap<String, String> phone,HttpServletResponse response){
+    public String getSms(@RequestBody HashMap<String, String> phone, HttpServletResponse response) {
         HashMap<String, String> hashMap = getSmsService.GetSms(phone.get("phone"));
         String userPhone = phone.get("phone");
         String code = hashMap.get(userPhone);
-        redisTemplate.opsForValue().set(userPhone,code,5*60, TimeUnit.SECONDS);
-        if (hashMap == null){
+        redisTemplate.opsForValue().set(userPhone, code, 5 * 60, TimeUnit.SECONDS);
+        if (hashMap.size() == 0) {
             response.setStatus(500);
             return "failed";
         }
         return "success";
     }
+
     /**
      * 上传图片
-     * @param file
-     * @return
+     * @param file 照片文件
+     * @return 自定义返回类型
      */
     @PostMapping("/imageupload")
     public MyResult imageUpload(MultipartFile file, HttpServletResponse response, HttpServletRequest request) throws IOException {
         MyResult myResult;
         MyResult result = imageUploadService.imageUpload(file);
-        if (result.getCode() != 200){
+        if (result.getCode() != 200) {
             myResult = result;
-        }else {
+        } else {
             String token = request.getHeader("authorization");
             myResult = userService.updateImage((String) result.getObj(), TokenUtils.getInfo(token));
         }
@@ -100,77 +102,78 @@ public class UserController {
         return myResult;
 
     }
+
     /**
      * 查看个人信息
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @GetMapping("/getinfo")
-    public MyResult getUserInfo(HttpServletRequest request,HttpServletResponse response){
+    public MyResult getUserInfo(HttpServletRequest request, HttpServletResponse response) {
         String phone = TokenUtils.getInfo(request.getHeader("authorization"));
         MyResult myResult = userService.getUserInfo(phone);
         response.setStatus(myResult.getCode());
         return myResult;
     }
+
     /**
      * 修改用户名称
-     * @param userName
-     * @param response
-     * @param request
-     * @return
+     * @param userName 用户名称
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @PostMapping("/updateusername")
-    public MyResult updateUserName(@RequestBody HashMap<String, String> userName,HttpServletResponse response,HttpServletRequest request) throws IOException {
+    public MyResult updateUserName(@RequestBody HashMap<String, String> userName, HttpServletResponse response, HttpServletRequest request) throws IOException {
         String phone = TokenUtils.getInfo(request.getHeader("authorization"));
         MyResult myResult;
-        if (userName.get("userName") != null){
+        if (userName.get("userName") != null) {
             SensitiveWordUtils.init();
-            if (SensitiveWordUtils.contains(userName.get("userName"))){
-                myResult = MyResult.failed("内容违规",null,406);
-            }else {
+            if (SensitiveWordUtils.contains(userName.get("userName"))) {
+                myResult = MyResult.failed("内容违规", null, 406);
+            } else {
                 myResult = userService.updateUserName(userName.get("userName"), phone);
             }
-        }else {
-            myResult = MyResult.failed("姓名不能为空",null,406);
+        } else {
+            myResult = MyResult.failed("姓名不能为空", null, 406);
         }
         response.setStatus(myResult.getCode());
         return myResult;
     }
+
     /**
      * 用户修改密码
-     * @param param
-     * @param response
-     * @param request
-     * @return
+     * @param param  前端表格数据
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义结果集
      */
     @PostMapping("/updatepassword")
-    public MyResult updateUserPassword(@RequestBody UpdatePasswordParam param,HttpServletResponse response,HttpServletRequest request){
+    public MyResult updateUserPassword(@RequestBody UpdatePasswordParam param, HttpServletResponse response, HttpServletRequest request) {
         String phone = TokenUtils.getInfo(request.getHeader("authorization"));
-        if (param == null){
+        if (param == null) {
             response.setStatus(406);
-            return MyResult.failed("输入不能为空",null,406);
+            return MyResult.failed("输入不能为空", null, 406);
         }
         MyResult myResult = userService.updateUserPassword(param, phone);
         response.setStatus(myResult.getCode());
-        return  myResult;
+        return myResult;
     }
+
     /**
      * 用户注销
-     * @param request
-     * @return
+     * @param request 请求参数
+     * @return 自定义返回结果集
      */
     @GetMapping("/logout")
-    public boolean logOut(HttpServletRequest request){
+    public MyResult logOut(HttpServletRequest request) {
         String phone = "T" + TokenUtils.getInfo(request.getHeader("authorization"));
-        if (phone == null || phone.isEmpty()){
-            return false;
-        }else {
-            if (redisTemplate.opsForValue().getOperations().delete(phone)){
-                return true;
-            }else {
-                return false;
-            }
+        try {
+            redisTemplate.opsForValue().getOperations().delete(phone);
+            return MyResult.success(true);
+        } catch (Exception e) {
+            return MyResult.failed("注销失败", false, 506);
         }
     }
 

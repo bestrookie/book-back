@@ -51,5 +51,23 @@
     <update id="removeBannedInfoById">
         UPDATE book_db.user_banned SET book_db.user_banned.banned_rdate = #{rDate} WHERE book_db.user_banned.banned_id =#{bannedId}
     </update>
+<!--    查询正在封禁-->
+    <select id="queryBanned" resultMap="bannedInfo">
+        SELECT book_db.user_banned.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.user_banned
+        JOIN book_db.user
+        ON book_db.user_banned.user_id = book_db.user.user_id
+        WHERE book_db.user_banned.banned_rdate > #{nowDate}
+        ORDER BY  book_db.user_banned.banned_date DESC
+    </select>
+<!--    查询解封-->
+    <select id="queryUnBanned" resultMap="bannedInfo">
+        SELECT book_db.user_banned.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.user_banned
+        JOIN book_db.user
+        ON book_db.user_banned.user_id = book_db.user.user_id
+        WHERE #{nowDate}> book_db.user_banned.banned_rdate
+        ORDER BY  book_db.user_banned.banned_date DESC
+    </select>
 
 </mapper>

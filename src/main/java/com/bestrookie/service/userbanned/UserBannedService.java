@@ -11,31 +11,32 @@ import com.bestrookie.pojo.UserBannedPojo;
  */
 public interface UserBannedService {
     /**
-     * 分页查询用户封禁信息
-     * @param param
-     * @return
+     * 分页查询封禁信息
+     * @param param 分页参数
+     * @param type 查询类型
+     * @return 分页查询结果
      */
-    PageResult queryUserBannedInfo(PageRequestParam param);
+    PageResult queryUserBannedInfo(PageRequestParam param,int type);
 
     /**
      * 根据用户id禁言
-     * @param bannedPojo
-     * @return
+     * @param bannedPojo 禁言信息实体
+     * @return 自定义返回类型
      */
     MyResult bannedUserById(UserBannedPojo bannedPojo);
 
     /**
      * 解除禁言
-     * @param bannedId
-     * @param rDate
-     * @return
+     * @param bannedId 禁言信息id
+     * @param rDate 解禁时间
+     * @return 自定义返回类型
      */
     MyResult removeBannedById(int bannedId, long rDate);
 
     /**
      * 查询用户是否禁言
-     * @param userId
-     * @return
+     * @param userId 用户id
+     * @return 是否禁言
      */
     boolean isUserBanned(int userId);
 }

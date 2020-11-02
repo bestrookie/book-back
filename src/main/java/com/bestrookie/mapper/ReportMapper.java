@@ -23,11 +23,23 @@ public interface ReportMapper {
      * 查看所有举报信息
      * @return
      */
-    List<ReportPojo> queryReportInfo(int type);
+    List<ReportPojo> queryReportInfo();
     /**
      * 改变举报信息状态
      * @param reportId
      * @return
      */
     boolean solveReport(int reportId);
+    /**
+     * 为解决举报数量
+     * @return
+     */
+    int unSolveReport();
+    /**
+     * 根据类型查看举报信息
+     * @param type
+     * @return
+     */
+    List<ReportPojo> queryReportInfoByType(int type);
+
 }

@@ -39,7 +39,6 @@ public interface MessageMapper {
      * @return 是否成功
      */
     boolean hasReadAll(int userId);
-
     /**
      * 根据id查询msg信息
      * @param msgId : 消息id
@@ -53,7 +52,6 @@ public interface MessageMapper {
      * @return
      */
     int queryMsg(@Param(value = "userId") int userId, @Param(value = "dynamicId") int dynamicId);
-
     /**
      * 给多余消息打标记
      * @param userId
@@ -61,4 +59,10 @@ public interface MessageMapper {
      * @return
      */
     boolean updateFlg(@Param(value = "userId") int userId,@Param(value = "dynamicId") int dynamicId);
+    /**
+     * 查询系统通知
+     * @param userId
+     * @return
+     */
+    List<MessagePojo> querySystemMsg(int userId);
 }

@@ -5,11 +5,8 @@ import com.bestrookie.pojo.NoticePojo;
 import com.bestrookie.service.message.MessageService;
 import com.bestrookie.service.notice.NoticeService;
 import com.bestrookie.utils.TokenUtils;
-import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
-import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.OnConnect;
-import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class MessageEventHandler {
     @Autowired
-    private SocketIOServer socketIOServer;
-    @Autowired
     private MessageService messageService;
     @Autowired
     private NoticeService noticeService;
@@ -34,7 +29,7 @@ public class MessageEventHandler {
 
     /**
      * 客户端连接
-     * @param client
+     * @param client 登录用户
      */
     @OnConnect
     public void onConnect(SocketIOClient client){
@@ -44,12 +39,11 @@ public class MessageEventHandler {
 
     /**
      * 设置登录信息
-     * @param client
-     * @param request
-     * @param data
+     * @param client 登录客户
+     * @param data 消息实体
      */
     @OnEvent(value = "set_info")
-    public void receiveMsg(SocketIOClient client, AckRequest request, MessagePojo data){
+    public void receiveMsg(SocketIOClient client, MessagePojo data){
         int userId = TokenUtils.getId(data.getMsg());
         clientHashMap.put(String.valueOf(userId),client);
         log.info("客户端:" + client.getSessionId() + "uid=" + userId);
@@ -57,12 +51,10 @@ public class MessageEventHandler {
 
     /**
      * 发送评论消息
-     * @param client
-     * @param request
-     * @param data
+     * @param data 消息实体
      */
     @OnEvent(value = "send_review")
-    public void sendReview(SocketIOClient client, AckRequest request, MessagePojo data){
+    public void sendReview( MessagePojo data){
         int targetId = data.getTargetId();
         data.setType(1);
         data.setMsgDate(System.currentTimeMillis());
@@ -70,16 +62,16 @@ public class MessageEventHandler {
         messageService.saveMessage(data);
         SocketIOClient targetClient = clientHashMap.get(String.valueOf(targetId));
         data = messageService.queryMessageById(data.getMsgId());
-        targetClient.sendEvent("REVIEW",data);
+        if (targetClient != null){
+            targetClient.sendEvent("REVIEW",data);
+        }
     }
     /**
      * 发布点赞消息
-     * @param client
-     * @param request
-     * @param data
+     * @param data 消息实体
      */
     @OnEvent(value = "send_like")
-    public void sendLike(SocketIOClient client, AckRequest request, MessagePojo data){
+    public void sendLike( MessagePojo data){
         int targetId = data.getTargetId();
         data.setType(0);
         data.setMsgDate(System.currentTimeMillis());
@@ -88,7 +80,9 @@ public class MessageEventHandler {
         SocketIOClient targetClient = clientHashMap.get(String.valueOf(targetId));
         data = messageService.queryMessageById(data.getMsgId());
         if(messageService.queryMsg(data.getUserId(),data.getDynamicId()) == 1){
-            targetClient.sendEvent("LIKE",data);
+            if (targetClient != null){
+                targetClient.sendEvent("LIKE",data);
+            }
         }
     }
 
@@ -107,11 +101,50 @@ public class MessageEventHandler {
 
     /**
      * 向用户发送举报已经处理
-     * @param userId
+     * @param userId 用户id
      */
     @OnEvent(value = "solve_report")
     public void solveReport(int userId){
-        SocketIOClient client = clientHashMap.get(userId);
-        client.sendEvent("REPORT","你的举报已受理");
+        MessagePojo msg = new MessagePojo();
+        msg.setUserId(1);
+        msg.setAvatarUrl("image/01.png");
+        msg.setTargetId(userId);
+        msg.setMsgDate(System.currentTimeMillis());
+        msg.setType(2);
+        msg.setUserName("admin");
+        msg.setMsg("你的举报已经受理，感谢为网络环境做出的贡献");
+        messageService.saveMessage(msg);
+        SocketIOClient client = clientHashMap.get(String.valueOf(userId));
+        if (client != null){
+            client.sendEvent("SYSTEM",msg);
+        }
+    }
+
+    /**
+     * 向用户发送禁言通知
+     * @param msg 信息实体
+     */
+    @OnEvent(value = "banned")
+    public void banned(MessagePojo msg){
+        msg.setType(2);
+        msg.setAvatarUrl("image/01.png");
+        msg.setUserName("admin");
+        msg.setMsgDate(System.currentTimeMillis());
+        msg.setUserId(1);
+        messageService.saveMessage(msg);
+        SocketIOClient client = clientHashMap.get(String.valueOf(msg.getTargetId()));
+        if (client != null){
+            client.sendEvent("SYSTEM",msg);
+        }
+    }
+
+    /**
+     * 注销是移除client
+     * @param msg 消息实体
+     */
+    @OnEvent(value = "logout")
+    public void logout(MessagePojo msg){
+        int userId  = TokenUtils.getId(msg.getToken());
+        clientHashMap.remove(String.valueOf(userId));
     }
 }

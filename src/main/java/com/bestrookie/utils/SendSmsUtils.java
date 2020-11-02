@@ -34,14 +34,16 @@ public class SendSmsUtils {
 
 
     public static HashMap<String, String> send(String phone){
-        String[] secretKey = new String[2];
+        String[] secretKey = new String[3];
         int i = 0;
         Set<String> strings = readTxtByLine("D:\\resources\\password\\key.txt");
         for (String string : strings) {
             secretKey[i] = string;
             i++;
         }
+
         String code = RandomStringUtils.randomNumeric(6);
+        System.out.println(code);
         HashMap<String, String> result = new HashMap();
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", secretKey[1], secretKey[0]);
         IAcsClient client = new DefaultAcsClient(profile);
@@ -55,7 +57,7 @@ public class SendSmsUtils {
         request.putQueryParameter("PhoneNumbers", phone);
         request.putQueryParameter("SignName", SIGN_NAME);
         request.putQueryParameter("TemplateCode", TEMPLATE_CODE);
-        request.putQueryParameter("TemplateParam","{code:"+code+"}");
+        request.putQueryParameter("TemplateParam","{code:"+"'"+code+"'"+"}");
         try {
             CommonResponse response = client.getCommonResponse(request);
             result.put(phone,code);

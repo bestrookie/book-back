@@ -11,6 +11,7 @@
         <result column="target_id" property="targetId"/>
         <result column="report_type" property="reportType"/>
         <result column="report_state" property="reportState"/>
+        <result column="user_name" property="userName"/>
     </resultMap>
 <!--    添加举报信息-->
     <insert id="addReportInfo" parameterType="com.bestrookie.pojo.ReportPojo">
@@ -19,17 +20,27 @@
     </insert>
 <!--    查看所有举报信息-->
     <select id="queryReportInfo" resultMap="reportInfo">
-        SELECT * FROM book_db.report
+        SELECT book_db.report.*,book_db.user.user_name
+        FROM book_db.report
+        JOIN book_db.user
+        ON book_db.report.user_id = book_db.user.user_id
         ORDER BY report_date DESC
-        <if test="type == 1">
-            WHERE report_state = FALSE
-        </if>
-        <if test="type == 2 ">
-            WHERE report_state = TRUE
-        </if>
     </select>
 <!--    改变举报信息状态-->
     <update id="solveReport" parameterType="int">
-        UPDATE book_db.report SET report_sate = true WHERE report_id = #{reportId}
+        UPDATE book_db.report SET report_state = true WHERE report_id = #{reportId}
     </update>
+<!--    未解决举报数量-->
+    <select id="unSolveReport" resultType="int">
+
+    </select>
+<!--    根据类型查看举报信息-->
+    <select id="queryReportInfoByType" resultMap="reportInfo">
+        SELECT book_db.report.*,book_db.user.user_name
+        FROM book_db.report
+        JOIN book_db.user
+        ON book_db.report.user_id = book_db.user.user_id
+        WHERE report_state = #{type}
+        ORDER BY report_date DESC
+    </select>
 </mapper>

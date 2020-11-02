@@ -34,16 +34,18 @@ public class ReportController {
         if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))){
             PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
                     Integer.parseInt(request.getParameter("pageSize")));
-            PageResult pageResult = reportService.queryReports(param,Integer.parseInt(request.getParameter("type")));
+            PageResult pageResult = new PageResult();
+            pageResult = reportService.queryReports(param,Integer.parseInt(request.getParameter("type")));
             if (pageResult == null) {
-                result = MyResult.failed("查看举报消息", null, 516);
+                result = MyResult.failed("查看举报消息失败", null, 516);
             } else {
+                pageResult.setTotalSize(reportService.unSolveReport());
                 result = MyResult.success(pageResult);
             }
         }else {
             result = MyResult.failed("参数错误", null, 412);
         }
-        response.setStatus(516);
+        response.setStatus(result.getCode());
         return result;
     }
     /**

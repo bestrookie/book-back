@@ -6,7 +6,6 @@ import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.service.message.MessageService;
 import com.bestrookie.utils.IsTrueUtils;
 import com.bestrookie.utils.TokenUtils;
-import com.mysql.cj.jdbc.MysqlDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +51,34 @@ public class MessageController {
         return result;
 
     }
+
+    /**
+     * 查看系统消息
+     * @param response ： 响应参数
+     * @param request ： 请求参数
+     * @return 自定义返回类型
+     */
+    @GetMapping("/querysystem")
+    public MyResult querySystemMsg(HttpServletResponse response, HttpServletRequest request) {
+        MyResult result;
+        if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))) {
+            PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
+                    Integer.parseInt(request.getParameter("pageSize")));
+            int userId = TokenUtils.getId(request.getHeader("authorization"));
+            PageResult pageResult = messageService.querySystemMsg(param,userId);
+            if (pageResult == null) {
+                result = MyResult.failed("查看系统消息失败", null, 514);
+            } else {
+                result = MyResult.success(pageResult);
+            }
+        } else {
+            result = MyResult.failed("参数错误", null, 412);
+        }
+        response.setStatus(result.getCode());
+        return result;
+
+    }
+
 
     /**
      * 已读消息

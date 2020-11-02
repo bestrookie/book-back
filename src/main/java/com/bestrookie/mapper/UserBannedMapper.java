@@ -2,6 +2,7 @@ package com.bestrookie.mapper;
 import com.bestrookie.pojo.UserBannedPojo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -36,4 +37,17 @@ public interface UserBannedMapper {
      * @return
      */
     boolean removeBannedInfoById(@Param(value = "bannedId") int bannedId,@Param(value = "rDate") long rDate);
+
+    /**
+     * 查询正在封禁
+     * @param nowDate
+     * @return
+     */
+    List<UserBannedPojo> queryBanned(long nowDate);
+    /**
+     * 查询已经解封
+     * @param nowDate
+     * @return
+     */
+    List<UserBannedPojo> queryUnBanned(long nowDate);
 }

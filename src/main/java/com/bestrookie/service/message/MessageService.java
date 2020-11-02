@@ -4,7 +4,6 @@ import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.MessagePojo;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author : bestrookie
@@ -45,16 +44,23 @@ public interface MessageService {
     MessagePojo queryMessageById(int msgId);
     /**
      * 查询是否存在此消息
-     * @param userId
-     * @param dynamicId
-     * @return
+     * @param userId 用户id
+     * @param dynamicId 动态id
+     * @return 如果返回值为0则不存在
      */
     int queryMsg(int userId,int dynamicId);
     /**
      * 给多余消息打标记
-     * @param userId
-     * @param dynamicId
-     * @return
+     * @param userId 用户id
+     * @param dynamicId 动态id
+     * @return 是否成功
      */
     boolean updateFlg(int userId,int dynamicId);
+    /**
+     * 查询系统消息
+     * @param param 分页参数
+     * @param userId 用户id
+     * @return 分页结果
+     */
+    PageResult querySystemMsg(PageRequestParam param,int userId);
 }

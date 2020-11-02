@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 账号密码登录
-     * @param phone
-     * @param password
-     * @return
+     * @param phone 手机号
+     * @param password 密码
+     * @return 自定义返回结果集
      */
     @Override
     public MyResult queryUserByName(String phone,String password) {
@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             //保留用户最后一条token
             String key = "T"+ phone;
+            assert token != null;
             redisTemplate.opsForValue().set(key,token);
             return MyResult.success(hashMap,"登陆成功");
         }else{
@@ -52,17 +53,18 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 注册一个新用户
-     * @param userPojo
-     * @return
+     * @param userPojo 用户信息实体
+     * @return 自定义返回结果集
      */
     @Override
     public MyResult addUserInfo(UserPojo userPojo) {
         boolean flg = userMapper.addUserInfo(userPojo);
-         userPojo = userMapper.queryUserByName(userPojo.getUserPhone());
-        if (flg == true){
+        userPojo = userMapper.queryUserByName(userPojo.getUserPhone());
+        if (flg){
             String token = TokenUtils.token(userPojo.getUserPhone(),userPojo.getUserId());
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             String key = "T"+ userPojo.getUserPhone();
+            assert token != null;
             redisTemplate.opsForValue().set(key,token);
             return MyResult.success(hashMap,"注册成功");
         }else {
@@ -71,9 +73,9 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 设置头像
-     * @param imageAddress
-     * @param phone
-     * @return
+     * @param imageAddress 图片地址
+     * @param phone 手机号
+     * @return 自定义返回类型
      */
     @Override
     public MyResult updateImage(String imageAddress,String phone) {
@@ -86,8 +88,8 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 根据手机号查询用户的信息
-     * @param phone
-     * @return
+     * @param phone 手机号
+     * @return 自定义返回类型
      */
     @Override
     public MyResult getUserInfo(String phone) {
@@ -98,15 +100,16 @@ public class UserServiceImpl implements UserService {
             }else{
                 userPojo.setPassword("exist");
             }return MyResult.success(userPojo);
-        }
+        }else {
             return MyResult.failed("查询失败");
+        }
 
     }
     /**
      * 修改用户名称
-     * @param userName
-     * @param phone
-     * @return
+     * @param userName 用户名称
+     * @param phone 手机号
+     * @return 自定义返回类型
      */
     @Override
     public MyResult updateUserName(String userName, String phone) {
@@ -123,8 +126,8 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 根据用户名查找用户
-     * @param userName
-     * @return
+     * @param userName 用户名称
+     * @return 自定义返回类型
      */
     @Override
     public MyResult checkUserName(String userName) {
@@ -132,16 +135,17 @@ public class UserServiceImpl implements UserService {
             UserPojo userPojo = userMapper.checkUserByName(userName);
             if (userPojo != null){
                 return MyResult.success(userPojo,"查找成功");
-            }else
+            }else{
                 return MyResult.failed("未找到该用户",null,404);
+            }
         }
         return MyResult.failed("姓名不能为空");
     }
     /**
      * 用户修改密码
-     * @param param
-     * @param phone
-     * @return
+     * @param param 前端表格参数
+     * @param phone 手机号
+     * @return 自定义返回类型
      */
     @Override
     public MyResult updateUserPassword(UpdatePasswordParam param, String phone){
@@ -158,9 +162,9 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 修改用户虚拟币
-     * @param userCoin
-     * @param phone
-     * @return
+     * @param userCoin 虚拟币数量
+     * @param phone 手机号
+     * @return 自定义返回类型
      */
     @Override
     public MyResult updateUserCoin(int userCoin, String phone) {
@@ -174,8 +178,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 查询所有用户
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 分页结果
      */
     @Override
     public PageResult queryAllUsers(PageRequestParam param) {
@@ -183,8 +187,8 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 调用分页插件完成分页
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 分页结果
      */
     private PageInfo<UserPojo> getUserPageInfo(PageRequestParam param){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());

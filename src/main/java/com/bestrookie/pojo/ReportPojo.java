@@ -16,9 +16,10 @@ public class ReportPojo {
     private long reportDate;
     private String reportDes;
     private int userId;
+    private String userName;
     private int targetId;
     private int reportType;
-    private int reportState;
+    private boolean reportState;
     public static final String[] reportTypeName = {"动态","书圈","书籍"};
     public String getReportTypeName() {
         return reportTypeName[reportType];

@@ -29,4 +29,10 @@ public interface ReportService {
      * @return
      */
     MyResult solveReport(int reportId);
+
+    /**
+     * 未处理举报数量
+     * @return
+     */
+    int unSolveReport();
 }

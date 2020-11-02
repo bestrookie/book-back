@@ -22,7 +22,17 @@
         FROM book_db.message
         JOIN book_db.user
         ON book_db.message.user_id = book_db.user.user_id
-        WHERE book_db.message.target_id = #{userId} AND msg_flg = false
+        WHERE book_db.message.target_id = #{userId} AND msg_flg = false AND book_db.message.user_id != 1
+        ORDER BY
+        book_db.message.msg_date DESC
+    </select>
+<!--    查询系统消息-->
+    <select id="querySystemMsg" resultMap="msgInfo">
+        SELECT book_db.message.*,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.message
+        JOIN book_db.user
+        ON book_db.message.user_id = book_db.user.user_id
+        WHERE book_db.message.target_id = #{userId} AND book_db.message.user_id = 1
         ORDER BY
         book_db.message.msg_date DESC
     </select>

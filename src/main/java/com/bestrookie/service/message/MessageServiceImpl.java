@@ -28,7 +28,7 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public PageResult queryMsgByUserId(PageRequestParam param, int userId) {
-        return PageUtils.getPageResult(param,getMessageInfo(param,userId));
+        return PageUtils.getPageResult(param,getMessageInfo(param,userId,0));
     }
     /**
      * 保存即时消息
@@ -86,14 +86,31 @@ public class MessageServiceImpl implements MessageService {
     }
 
     /**
+     * 查询系统消息
+     * @param param 分页参数
+     * @param userId 用户id
+     * @return 分页结果
+     */
+    @Override
+    public PageResult querySystemMsg(PageRequestParam param, int userId) {
+        return PageUtils.getPageResult(param,getMessageInfo(param,userId,1));
+    }
+
+    /**
      * 调用分页插件
      * @param param 分页参数
      * @param userId 用户id
      * @return 分页结果
      */
-    private PageInfo<MessagePojo> getMessageInfo(PageRequestParam param,int userId){
+    private PageInfo<MessagePojo> getMessageInfo(PageRequestParam param,int userId,int flg){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
-        List<MessagePojo> messages = messageMapper.queryAllMessages(userId);
+        List<MessagePojo> messages;
+        if (flg == 0){
+            messages = messageMapper.queryAllMessages(userId);
+        }else {
+            messages = messageMapper.querySystemMsg(userId);
+        }
+
         return new PageInfo<>(messages);
     }
 }

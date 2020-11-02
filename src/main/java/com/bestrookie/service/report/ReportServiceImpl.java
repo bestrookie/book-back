@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +61,11 @@ public class ReportServiceImpl implements ReportService{
         }
     }
 
+    @Override
+    public int unSolveReport() {
+        return reportMapper.unSolveReport();
+    }
+
     /**
      * 调用分页插件
      * @param param
@@ -67,7 +73,12 @@ public class ReportServiceImpl implements ReportService{
      */
     private PageInfo<ReportPojo> getReportInfo(PageRequestParam param,int type){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
-        List<ReportPojo> reports = reportMapper.queryReportInfo(type);
+        List<ReportPojo> reports = new ArrayList<>();
+        if (type > 1){
+            reports = reportMapper.queryReportInfo();
+        }else {
+            reports = reportMapper.queryReportInfoByType(type);
+        }
         return new PageInfo<>(reports);
     }
 }

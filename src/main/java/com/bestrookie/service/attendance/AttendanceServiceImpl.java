@@ -24,17 +24,17 @@ public class AttendanceServiceImpl implements AttendanceService {
     private AttendanceMapper attendanceMapper;
     @Autowired
     private UserService userService;
-    private static int DAY_1 = 100;
-    private static int DAY_2 = 200;
-    private static int DAY_3 = 400;
-    private static int DAY_4 = 400;
-    private static int DAY_5 = 500;
-    private static int DAY_6 = 500;
-    private static int DAY_7 = 1000;
+    private static final int DAY_1 = 100;
+    private static final int DAY_2 = 200;
+    private static final int DAY_3 = 400;
+    private static final int DAY_4 = 400;
+    private static final int DAY_5 = 500;
+    private static final int DAY_6 = 500;
+    private static final int DAY_7 = 1000;
     /**
      * 查询签到信息
-     * @param userId
-     * @return
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult getUserAttendanceIfo(int userId) {
@@ -52,8 +52,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
     /**
      * 过滤签到信息
-     * @param attendancePojo
-     * @return
+     * @param attendancePojo 签到信息实体
+     * @return 自定义返回结果集
      */
     @Override
     public MyResult getAttendanceMainInfo(AttendancePojo attendancePojo) {
@@ -61,15 +61,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         long attendanceDate = attendancePojo.getAttendanceDate();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Timestamp(attendanceDate));
-        return MyResult.success(
-                Map.of("attendanceDate", DateUtils.isSameDay(Calendar.getInstance(), calendar),
-                "attendanceTimes", attendanceTimes
-        ));
+        return MyResult.success(Map.of("attendanceDate", DateUtils.isSameDay(Calendar.getInstance(), calendar), "attendanceTimes", attendanceTimes));
     }
+
     /**
-     * 修改签到信息
-     * @param userId
-     * @return
+     * 签到
+     * @param userId 用户id
+     * @param phone 用户手机号
+     * @return 自定义返回结果集
      */
     @Override
     public MyResult updateAttendanceInfo(int userId,String phone) {
@@ -123,7 +122,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
     /**
      * 格式化签到表
-     * @return
+     * @return 自定义结果集
      */
     @Override
     public MyResult deleteAllAttendance() {
