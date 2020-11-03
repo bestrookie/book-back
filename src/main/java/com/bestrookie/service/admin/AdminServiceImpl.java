@@ -24,17 +24,18 @@ public class AdminServiceImpl implements AdminService {
     private RedisTemplate<String, String> redisTemplate;
     /**
      * 管理员登录
-     * @param account
-     * @param password
-     * @return
+     * @param account 账号
+     * @param password 密码
+     * @return 自定义返回类型
      */
     @Override
     public MyResult adminLogin(String account, String password) {
         UserPojo userPojo = userMapper.queryUserByName(account);
         if (userPojo != null && Objects.equals(userPojo.getPassword(),password) && userPojo.getRole() == 1){
-            String token = TokenUtils.token(account,userPojo.getUserId());
+            String token = TokenUtils.token(account,userPojo.getUserId(),1);
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             String key = "T"+account;
+            assert token != null;
             redisTemplate.opsForValue().set(key,token);
             return MyResult.success(hashMap,"登陆成功");
         }else {

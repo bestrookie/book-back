@@ -34,7 +34,7 @@ public class ReportController {
         if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))){
             PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
                     Integer.parseInt(request.getParameter("pageSize")));
-            PageResult pageResult = new PageResult();
+            PageResult pageResult;
             pageResult = reportService.queryReports(param,Integer.parseInt(request.getParameter("type")));
             if (pageResult == null) {
                 result = MyResult.failed("查看举报消息失败", null, 516);
@@ -58,7 +58,6 @@ public class ReportController {
     @PostMapping("/addreport")
     public MyResult addReportInfo(HttpServletRequest request, HttpServletResponse response,@RequestBody ReportParam param) {
         MyResult result;
-        System.out.println(param.toString());
         if (param.getDescription() != null && param.getReportType() >= 0 && param.getReportType() < 3){
             ReportPojo reportPojo = new ReportPojo();
             reportPojo.setReportDate(System.currentTimeMillis());
@@ -75,9 +74,9 @@ public class ReportController {
     }
     /**
      * 处理举报
-     * @param response
-     * @param request
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @GetMapping("/solvereport")
     public MyResult solveReport(HttpServletResponse response,HttpServletRequest request){

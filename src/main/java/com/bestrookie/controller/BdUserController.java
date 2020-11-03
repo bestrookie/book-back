@@ -69,14 +69,14 @@ public class BdUserController {
     /**
      * 获取圈友列表
      *
-     * @param response
-     * @param request
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @GetMapping("/queryuser")
     public MyResult queryDiscussionUser(HttpServletResponse response, HttpServletRequest request) {
         MyResult result;
-        if (Integer.parseInt(request.getParameter("limit")) >= 0 && IsTrueUtils.isTrue(request.getParameter("bdId")) == true) {
+        if (Integer.parseInt(request.getParameter("limit")) >= 0 && IsTrueUtils.isTrue(request.getParameter("bdId"))) {
             int limit = Integer.parseInt(request.getParameter("limit"));
             int discussionId = Integer.parseInt(request.getParameter("bdId"));
             if (limit == 0) {

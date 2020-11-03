@@ -1,7 +1,6 @@
 package com.bestrookie.mapper;
 
 import com.bestrookie.pojo.UserPojo;
-import org.apache.catalina.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,53 +18,53 @@ public interface UserMapper {
      /**
       * 根据手机号查询账户信息
       * @param phone 手机号
-      * @return
+      * @return 账号信息实体
       */
      UserPojo queryUserByName(String phone);
      /**
       * 增加一个新用户
-      * @param userPojo
-      * @return
+      * @param userPojo 用户信息实体
+      * @return 是否添加成功
       */
      boolean addUserInfo(UserPojo userPojo);
      /**
       * 根据手机号更新账户的头像
-      * @param imageAddress
-      * @param phone
-      * @return
+      * @param imageAddress 图片地址
+      * @param phone 手机号
+      * @return 是否修改成功
       */
      boolean updateImage(String imageAddress,String phone);
      /**
       * 修改用户名称
-      * @param userName
-      * @param phone
-      * @return
+      * @param userName 用户名称
+      * @param phone 手机号
+      * @return 是否修改成功
       */
      boolean updateUserName(String userName,String phone);
      /**
       * 根据姓名查询用户
-      * @param userName
-      * @return
+      * @param userName 用户名称
+      * @return 自定义返回类型
       */
-     UserPojo checkUserByName(String userName);
+     List<UserPojo> checkUserByName(String userName);
      /**
       * 修改密码
-      * @param userPassword
-      * @param phone
-      * @return
+      * @param userPassword 密码
+      * @param phone 手机号
+      * @return 是否修改成功
       */
      boolean updateUserPassword(String userPassword,String phone);
      /**
       * 修改用户虚拟币
-      * @param userCoin
-      * @param phone
-      * @return
+      * @param userCoin 虚拟币
+      * @param phone 手机号
+      * @return 是否修改成功
       */
      boolean updateUserCoin(@Param("userCoin") int userCoin, @Param("phone") String phone);
 
      /**
       * 查询所有用户
-      * @return
+      * @return 用户实体
       */
      List<UserPojo> queryAllUsers();
 }

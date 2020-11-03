@@ -20,8 +20,9 @@
         UPDATE book_db.user set user_name = #{userName} where  user_phone = #{phone}
     </update>
 <!--    根据用户名查询用户信息-->
-    <select id="checkUserByName" parameterType="String" resultMap="userInfo">
-        select * from book_db.user where user_name = #{userName}
+    <select id="checkUserByName" parameterType="String" resultMap="user">
+        select book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo,book_db.user.user_coin,book_db.user.user_role,book_db.user.user_phone
+        from book_db.user where user_name = #{userName}
     </select>
     <!--    修改用户密码-->
     <update id="updateUserPassword" parameterType="String">
@@ -37,7 +38,7 @@
         FROM book_db.user
     </select>
 <!--    用户信息-->
-    <resultMap id="userInfo" type="UserPojo">
+    <resultMap id="userInfo" type="com.bestrookie.pojo.UserPojo">
         <id column="user_id" property="userId"></id>
         <result column="user_name" property="userName"/>
         <result column="user_password" property="password"/>
@@ -47,7 +48,7 @@
         <result column="user_phone" property="userPhone"/>
     </resultMap>
 <!--    管理员查看用户信息-->
-    <resultMap id="user" type="UserPojo">
+    <resultMap id="user" type="com.bestrookie.pojo.UserPojo">
         <id column="user_id" property="userId"></id>
         <result column="user_name" property="userName"/>
         <result column="user_password" property="password"/>

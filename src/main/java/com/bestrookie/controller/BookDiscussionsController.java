@@ -28,11 +28,10 @@ public class BookDiscussionsController {
 
     /**
      * 创建书圈
-     *
-     * @param response
-     * @param request
-     * @param param
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @param param 分页参数
+     * @return 自定义返回类型
      */
     @SneakyThrows
     @PostMapping("/adddiscussion")
@@ -41,6 +40,7 @@ public class BookDiscussionsController {
         MyResult result;
         BookDiscussionsPojo bookDiscussionsPojo = null;
         if (SensitiveWordUtils.contains(param.getDbName()) && SensitiveWordUtils.contains(param.getDbDesc())) {
+            assert false;
             bookDiscussionsPojo.setUserId(userId);
             bookDiscussionsPojo.setBdName(param.getDbName());
             bookDiscussionsPojo.setBdDes(param.getDbDesc());
@@ -49,20 +49,20 @@ public class BookDiscussionsController {
         } else {
             result = MyResult.failed("输入信息包含敏感词汇", null, 408);
         }
+        response.setStatus(result.getCode());
         return result;
     }
-
     /**
      * 分页查找书圈信息
      *
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @GetMapping("/querydiscussion")
     public MyResult queryBookDiscussions(HttpServletRequest request, HttpServletResponse response) {
         MyResult myResult = null;
-        if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) == true && IsTrueUtils.isTrue(request.getParameter("pageSize")) == true) {
+        if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))) {
             PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
                     Integer.parseInt(request.getParameter("pageSize")));
             PageResult result = bookDiscussionsService.queryDiscussion(param);
@@ -81,9 +81,9 @@ public class BookDiscussionsController {
     /**
      * 根据id查询书圈
      *
-     * @param response
-     * @param request
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @GetMapping("/querybyid")
     public MyResult queryBookDiscussionById(HttpServletResponse response, HttpServletRequest request) {

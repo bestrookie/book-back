@@ -10,8 +10,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,7 +47,7 @@ public class ReportServiceImpl implements ReportService{
 
     /**
      * 处理举报信息
-     * @param reportId
+     * @param reportId 举报信息id
      * @return 自定义返回类型
      */
     @Override
@@ -68,12 +66,12 @@ public class ReportServiceImpl implements ReportService{
 
     /**
      * 调用分页插件
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 分页结果
      */
     private PageInfo<ReportPojo> getReportInfo(PageRequestParam param,int type){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
-        List<ReportPojo> reports = new ArrayList<>();
+        List<ReportPojo> reports;
         if (type > 1){
             reports = reportMapper.queryReportInfo();
         }else {

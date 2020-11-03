@@ -19,7 +19,6 @@ public interface LogMapper {
      * @return
      */
     boolean addLogInfo(LogPojo logPojo);
-
     /**
      * 查看日志信息
      * @return

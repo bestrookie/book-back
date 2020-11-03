@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.LogMapper">
     <resultMap id="logInfo" type="com.bestrookie.pojo.LogPojo">
-        <id column="log_id" property="logId"></id>
+        <id column="log_id" property="logId"/>
         <result column="log_date" property="logDate"/>
         <result column="log_operate" property="logOperate"/>
         <result column="user_id" property="userId"/>
@@ -12,9 +12,14 @@
     </resultMap>
 <!--    添加日志信息-->
     <insert id="addLogInfo" parameterType="com.bestrookie.pojo.LogPojo">
-        INSERT INTO book_db.admin_login
+        INSERT INTO book_db.admin_log
         (log_date,log_operate,user_id,log_ip)
         values (#{logDate},#{logOperate},#{userId},#{logIp})
     </insert>
+<!--    查看日志信息-->
+    <select id="queryLogInfo" resultMap="logInfo">
+        SELECT * FROM book_db.admin_log
+        ORDER BY log_date DESC
+    </select>
 
 </mapper>

@@ -25,9 +25,9 @@ public class DynamicController {
     private DynamicService dynamicService;
     /**
      * 分页查询动态
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @GetMapping("/querydynamic")
     public MyResult queryDynamic(HttpServletRequest request, HttpServletResponse response){

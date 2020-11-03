@@ -147,4 +147,13 @@ public class MessageEventHandler {
         int userId  = TokenUtils.getId(msg.getToken());
         clientHashMap.remove(String.valueOf(userId));
     }
+
+    /**
+     * 收到举报信息
+     */
+    @OnEvent(value = "receive_report")
+    public void receiveReport(){
+        SocketIOClient client = clientHashMap.get("1");
+        client.sendEvent("REPORT","收到一条举报信息");
+    }
 }

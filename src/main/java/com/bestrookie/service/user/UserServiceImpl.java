@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public MyResult queryUserByName(String phone,String password) {
         UserPojo userPojo = userMapper.queryUserByName(phone);
         if (userPojo!=null && Objects.equals(userPojo.getPassword(),password)){
-            String token = TokenUtils.token(phone,userPojo.getUserId());
+            String token = TokenUtils.token(phone,userPojo.getUserId(),0);
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             //保留用户最后一条token
             String key = "T"+ phone;
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         boolean flg = userMapper.addUserInfo(userPojo);
         userPojo = userMapper.queryUserByName(userPojo.getUserPhone());
         if (flg){
-            String token = TokenUtils.token(userPojo.getUserPhone(),userPojo.getUserId());
+            String token = TokenUtils.token(userPojo.getUserPhone(),userPojo.getUserId(),0);
             HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
             String key = "T"+ userPojo.getUserPhone();
             assert token != null;
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MyResult checkUserName(String userName) {
         if (userName != null){
-            UserPojo userPojo = userMapper.checkUserByName(userName);
+            List<UserPojo> userPojo = userMapper.checkUserByName(userName);
             if (userPojo != null){
                 return MyResult.success(userPojo,"查找成功");
             }else{

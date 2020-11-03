@@ -4,8 +4,11 @@ import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.BannedParam;
 import com.bestrookie.model.param.PageRequestParam;
+import com.bestrookie.pojo.LogPojo;
 import com.bestrookie.pojo.UserBannedPojo;
+import com.bestrookie.service.adminlog.AdminLogService;
 import com.bestrookie.service.userbanned.UserBannedService;
+import com.bestrookie.utils.InitLogInfoUtils;
 import com.bestrookie.utils.IsTrueUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,8 @@ public class UserBannedController {
     private final static long ONE_MONTH = 2592000000L;
     @Autowired
     private UserBannedService userBannedService;
+    @Autowired
+    private AdminLogService logService;
 
     /**
      * 查询所有禁言用户
@@ -61,12 +66,13 @@ public class UserBannedController {
      * @return 自定结果集
      */
     @PostMapping("/banneduser")
-    public MyResult BannedUserById(HttpServletResponse response, @RequestBody BannedParam param) {
+    public MyResult bannedUserById(HttpServletResponse response, @RequestBody BannedParam param,HttpServletRequest request) {
         MyResult result;
         UserBannedPojo userBannedPojo = new UserBannedPojo();
         userBannedPojo.setUserId(param.getUserId());
         userBannedPojo.setBannedDes(param.getBannedDes());
         userBannedPojo.setBannedDate(System.currentTimeMillis());
+        String desBanned = "对用户"+param.getUserId()+"进行禁言操作";
         if (param.isCustom()) {
             userBannedPojo.setRemoveDate(System.currentTimeMillis() + param.getTime());
         } else {
@@ -87,6 +93,8 @@ public class UserBannedController {
                     break;
             }
         }
+        LogPojo log = InitLogInfoUtils.initLogInfo(request,desBanned);
+        logService.addAdminLog(log);
         result = userBannedService.bannedUserById(userBannedPojo);
         response.setStatus(result.getCode());
         return result;
@@ -99,9 +107,16 @@ public class UserBannedController {
      * @return 自定义结果集
      */
     @GetMapping("/removebanned")
-    public MyResult RemoveBannedById(HttpServletRequest request, HttpServletResponse response) {
-        Integer.parseInt(request.getParameter("bannedId"));
-        MyResult result = userBannedService.removeBannedById(Integer.parseInt(request.getParameter("bannedId")), System.currentTimeMillis());
+    public MyResult removeBannedById(HttpServletRequest request, HttpServletResponse response) {
+        MyResult result;
+        if (IsTrueUtils.isTrue(request.getParameter("bannedId"))){
+            String desBanned = "对封禁记录"+request.getParameter("bannedId")+"进行解除禁言操作";
+            LogPojo logPojo = InitLogInfoUtils.initLogInfo(request,desBanned);
+            logService.addAdminLog(logPojo);
+            result = userBannedService.removeBannedById(Integer.parseInt(request.getParameter("bannedId")), System.currentTimeMillis());
+        }else {
+            result = MyResult.failed("参数错误",false,412);
+        }
         response.setStatus(result.getCode());
         return result;
     }

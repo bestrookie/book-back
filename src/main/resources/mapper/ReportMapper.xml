@@ -32,7 +32,7 @@
     </update>
 <!--    未解决举报数量-->
     <select id="unSolveReport" resultType="int">
-
+        select count(*) FROM book_db.report where report_state = false
     </select>
 <!--    根据类型查看举报信息-->
     <select id="queryReportInfoByType" resultMap="reportInfo">

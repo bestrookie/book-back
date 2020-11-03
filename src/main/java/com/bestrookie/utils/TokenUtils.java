@@ -19,12 +19,16 @@ import java.util.Map;
  **/
 @Slf4j
 public class TokenUtils {
-    //设置过期时间
+    /**
+     * 设置过期时间
+     */
     private static final long EXPIRE_DATE=24*60*60*1000;
-    //token秘钥
+    /**
+     * token密钥
+     */
     private static final String TOKEN_SECRET = "xiaofeng";
 
-    public static String token (String phone,int userId){
+    public static String token (String phone,int userId,int userRole){
 
         String token = "";
         try {
@@ -40,6 +44,7 @@ public class TokenUtils {
             token = JWT.create()
                     .withHeader(header)
                     .withClaim("userId",userId)
+                    .withClaim("role",userRole)
                     .withClaim("userName",phone).withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
@@ -60,6 +65,7 @@ public class TokenUtils {
             DecodedJWT jwt = verifier.verify(token);
             return true;
         }catch (Exception e){
+
             log.info("token过期或错误");
             return  false;
         }
@@ -72,6 +78,7 @@ public class TokenUtils {
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim("userName").asString();
         }catch (Exception e){
+
             log.info("token过期或错误");
             return null;
         }
