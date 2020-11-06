@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.AttendanceMapper">
-    <resultMap id="attendanceInfo" type="AttendancePojo">
+    <resultMap id="attendanceInfo" type="com.bestrookie.pojo.AttendancePojo">
         <id column="attendance_id" property="attendanceId"></id>
         <result column="user_id" property="userId"/>
         <result column="attendance_date" property="attendanceDate"/>

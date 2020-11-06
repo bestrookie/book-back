@@ -29,8 +29,8 @@ public class BookDiscussionsController {
     /**
      * 创建书圈
      * @param response 响应参数
-     * @param request 请求参数
-     * @param param 分页参数
+     * @param request  请求参数
+     * @param param    分页参数
      * @return 自定义返回类型
      */
     @SneakyThrows
@@ -52,10 +52,10 @@ public class BookDiscussionsController {
         response.setStatus(result.getCode());
         return result;
     }
+
     /**
      * 分页查找书圈信息
-     *
-     * @param request 请求参数
+     * @param request  请求参数
      * @param response 响应参数
      * @return 自定义返回类型
      */
@@ -80,9 +80,8 @@ public class BookDiscussionsController {
 
     /**
      * 根据id查询书圈
-     *
      * @param response 响应参数
-     * @param request 请求参数
+     * @param request  请求参数
      * @return 自定义返回类型
      */
     @GetMapping("/querybyid")

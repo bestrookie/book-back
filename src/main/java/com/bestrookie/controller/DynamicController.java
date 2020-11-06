@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 
 /**
  * @author : bestrookie
@@ -31,7 +30,7 @@ public class DynamicController {
      */
     @GetMapping("/querydynamic")
     public MyResult queryDynamic(HttpServletRequest request, HttpServletResponse response){
-        MyResult result = null;
+        MyResult result;
         if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize")) && IsTrueUtils.isTrue(request.getParameter("bdId"))){
             PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
                     Integer.parseInt(request.getParameter("pageSize")));
@@ -50,10 +49,10 @@ public class DynamicController {
 
     /**
      * 发布动态
-     * @param response
-     * @param request
-     * @param param
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @param param 分页参数
+     * @return 自定义返回类型
      */
     @PostMapping("/releasedynamic")
     public MyResult releaseDynamic(HttpServletResponse response, HttpServletRequest request, @RequestBody ReleaseDynamicParam param){
@@ -79,13 +78,13 @@ public class DynamicController {
 
     /**
      * 根据id查询动态
-     * @param response
-     * @param request
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @GetMapping("querybyid")
     public MyResult queryDynamicById(HttpServletRequest request,HttpServletResponse response){
-        MyResult result = null;
+        MyResult result ;
         if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
             result = dynamicService.queryDynamicById(Integer.parseInt(request.getParameter("dynamicId")),TokenUtils.getId(request.getHeader("authorization")));
         }else {
@@ -94,9 +93,16 @@ public class DynamicController {
         response.setStatus(result.getCode());
         return  result;
     }
+
+    /**
+     * 删除动态
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
+     */
     @GetMapping("/deletedynamic")
     public MyResult deleteDynamic(HttpServletResponse response,HttpServletRequest request){
-        MyResult result = null;
+        MyResult result ;
         if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
             result = dynamicService.deleteDynamicById(Integer.parseInt(request.getParameter("dynamicId")),TokenUtils.getId(request.getHeader("authorization")));
         }else {

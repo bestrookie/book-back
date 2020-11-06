@@ -14,21 +14,28 @@ import java.util.List;
 public interface BookDiscussionsService {
     /**
      * 添加书圈
-     * @param bookDiscussionsPojo
-     * @return
+     * @param bookDiscussionsPojo 书圈信息实体
+     * @return 自定义返回类型
      */
     MyResult addBookDiscussion(BookDiscussionsPojo bookDiscussionsPojo);
     /**
      * 分页查询书圈信息
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 自定义返回类型
      */
     PageResult queryDiscussion(PageRequestParam param);
     /**
      * 根据书圈id查询信息
-     * @param userId
-     * @param discussionId
-     * @return
+     * @param userId 用户id
+     * @param discussionId 书圈id
+     * @return 自定义返回类型
      */
     MyResult queryDiscussionById(int userId,int discussionId);
+
+    /**
+     * 删除书圈
+     * @param discussionId 书圈id
+     * @return 自定义返回类型
+     */
+    MyResult deleteDiscussion(int discussionId);
 }

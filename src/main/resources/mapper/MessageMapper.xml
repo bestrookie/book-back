@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.MessageMapper">
-    <resultMap id="msgInfo" type="MessagePojo">
+    <resultMap id="msgInfo" type="com.bestrookie.pojo.MessagePojo">
         <id column="msg_id" property="msgId"></id>
         <result column="msg_msg" property="msg"/>
         <result column="msg_read" property="read"/>

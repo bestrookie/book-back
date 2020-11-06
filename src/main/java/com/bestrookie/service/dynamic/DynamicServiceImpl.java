@@ -11,6 +11,7 @@ import com.bestrookie.utils.PageUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.PageObjectUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,9 @@ public class DynamicServiceImpl implements DynamicService {
 
     /**
      * 查询动态信息
-     * @param param
-     * @param discussionId
-     * @return
+     * @param param 分页参数
+     * @param discussionId 书圈id
+     * @return 分页结果
      */
     @Override
     public PageResult queryDynamic(PageRequestParam param,int discussionId,int userId) {
@@ -43,8 +44,8 @@ public class DynamicServiceImpl implements DynamicService {
     }
     /**
      * 发布动态
-     * @param dynamicPojo
-     * @return
+     * @param dynamicPojo 动态信息
+     * @return 自定义返回类型
      */
     @SneakyThrows
     @Override
@@ -67,9 +68,9 @@ public class DynamicServiceImpl implements DynamicService {
 
     /**
      * 查看动态详情
-     * @param dynamicId
-     * @param userId
-     * @return
+     * @param dynamicId 动态id
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult queryDynamicById(int dynamicId,int userId) {
@@ -97,9 +98,9 @@ public class DynamicServiceImpl implements DynamicService {
 
     /**
      * 删除动态
-     * @param dynamicId
-     * @param userId
-     * @return
+     * @param dynamicId 动态id
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult deleteDynamicById(int dynamicId, int userId) {
@@ -115,9 +116,33 @@ public class DynamicServiceImpl implements DynamicService {
     }
 
     /**
+     * 查询所有动态信息
+     * @param param 分页参数
+     * @return 自定义返回类型
+     */
+    @Override
+    public PageResult queryAllDynamic(PageRequestParam param) {
+        return PageUtils.getPageResult(param,getAllDynamicInfo(param));
+    }
+
+    /**
+     * 管理院删除动态
+     * @param dynamicId 动态id
+     * @return 自定义返回类型
+     */
+    @Override
+    public MyResult deleteDynamic(int dynamicId) {
+        if (dynamicMapper.deleteDynamic(dynamicId)){
+            return  MyResult.success(true);
+        }else {
+            return  MyResult.failed("删除失败",false,509);
+        }
+    }
+
+    /**
      * 调用分页插件完成分页
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 分页结果
      */
     private PageInfo<DynamicPojo> getDynamicInfo(PageRequestParam param,int discussionId,int userId){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
@@ -125,7 +150,18 @@ public class DynamicServiceImpl implements DynamicService {
         for (DynamicPojo dynamic : dynamics) {
             dynamic.setLike(giveLikeService.isLiked(dynamic.getDId(),userId));
         }
-        return new PageInfo<DynamicPojo>(dynamics);
+        return new PageInfo<>(dynamics);
+    }
+
+    /**
+     * 分页查询所有书圈
+     * @param param 分页参数
+     * @return 分页结果
+     */
+    private PageInfo<DynamicPojo> getAllDynamicInfo(PageRequestParam param){
+        PageHelper.startPage(param.getPageNumber(),param.getPageSize());
+        List<DynamicPojo> dynamics = dynamicMapper.queryAllDynamic();
+        return new PageInfo<>(dynamics);
     }
 
 }

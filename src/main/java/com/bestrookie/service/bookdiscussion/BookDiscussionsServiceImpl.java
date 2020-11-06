@@ -30,56 +30,77 @@ public class BookDiscussionsServiceImpl implements BookDiscussionsService {
     private BdUserService bdUserService;
     @Autowired
     private UserBannedService userBannedService;
+
     /**
-     *创建书圈
+     * 创建书圈
+     *
      * @param bookDiscussionsPojo
      * @return
      */
     @Override
     public MyResult addBookDiscussion(BookDiscussionsPojo bookDiscussionsPojo) {
-         if (bookDiscussionsMapper.addBookDiscussion(bookDiscussionsPojo)){
-             return MyResult.success(bookDiscussionsPojo,"成功创建书圈");
-         }else{
-             return MyResult.failed("创建书圈失败",null,508);
-         }
+        if (bookDiscussionsMapper.addBookDiscussion(bookDiscussionsPojo)) {
+            return MyResult.success(bookDiscussionsPojo, "成功创建书圈");
+        } else {
+            return MyResult.failed("创建书圈失败", null, 508);
+        }
     }
+
     /**
      * 查询书圈信息
+     *
      * @param param
      * @return
      */
     @Override
     public PageResult queryDiscussion(PageRequestParam param) {
-        return PageUtils.getPageResult(param,getPageInfo(param));
+        return PageUtils.getPageResult(param, getPageInfo(param));
     }
+
     /**
      * 根据id查询书圈
+     *
      * @param discussionId
      * @return
      */
     @Override
-    public MyResult queryDiscussionById(int userId,int discussionId) {
+    public MyResult queryDiscussionById(int userId, int discussionId) {
         BookDiscussionsPojo bookDiscussionsPojo = bookDiscussionsMapper.queryBookDiscussionById(discussionId);
         HashMap<String, Object> result = new HashMap<>();
-        if (bookDiscussionsPojo != null){
-            result.put("state",bdUserService.stateByJoin(userId,discussionId));
-            result.put("num",bdUserService.queryNums(discussionId));
-            result.put("isBanned",userBannedService.isUserBanned(userId));
-            result.put("obj",bookDiscussionsPojo);
-            result.put("myId",userId);
-            return MyResult.success(result,"查询成功");
+        if (bookDiscussionsPojo != null) {
+            result.put("state", bdUserService.stateByJoin(userId, discussionId));
+            result.put("num", bdUserService.queryNums(discussionId));
+            result.put("isBanned", userBannedService.isUserBanned(userId));
+            result.put("obj", bookDiscussionsPojo);
+            result.put("myId", userId);
+            return MyResult.success(result, "查询成功");
+        } else {
+            return MyResult.failed("查询失败", null, 508);
+        }
+    }
+
+    /**
+     * 删除书圈
+     * @param discussionId 书圈id
+     * @return 自定义返回类型
+     */
+    @Override
+    public MyResult deleteDiscussion(int discussionId) {
+        if (bookDiscussionsMapper.deleteBookDiscussion(discussionId)){
+            return MyResult.success(true,"删除成功");
         }else {
-            return MyResult.failed("查询失败",null,508);
+            return MyResult.failed("删除失败",false,508);
         }
     }
 
     /**
      * 调用分页插件完成分页
+     *
      * @param param
      * @return
      */
-    private PageInfo<BookDiscussionsPojo> getPageInfo(PageRequestParam param){
-        PageHelper.startPage(param.getPageNumber(),param.getPageSize());
+    private PageInfo<BookDiscussionsPojo> getPageInfo(PageRequestParam param) {
+        PageHelper.startPage(param.getPageNumber(), param.getPageSize());
         List<BookDiscussionsPojo> discussions = bookDiscussionsMapper.selectPage();
         return new PageInfo<BookDiscussionsPojo>(discussions);
     }

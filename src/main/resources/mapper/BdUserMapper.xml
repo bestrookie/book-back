@@ -3,13 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.BdUserMapper">
-    <resultMap id="bdUserInfo" type="BdUserPojo">
+    <resultMap id="bdUserInfo" type="com.bestrookie.pojo.BdUserPojo">
         <id column="bdu_id" property="bdUserId"></id>
         <result column="bdu_date" property="bduDate"/>
         <result column="bd_id" property="bdId"/>
         <result column="user_id" property="userId"/>
     </resultMap>
-    <resultMap id="queryInfo" type="DiscussionUserPojo">
+    <resultMap id="queryInfo" type="com.bestrookie.pojo.DiscussionUserPojo">
         <result column="user_name" property="userName"/>
         <result column="user_photo" property="userPhoto"/>
     </resultMap>
