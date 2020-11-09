@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.GiveLikeMapper">
-    <resultMap id="giveLikeInfo" type="GiveLikePojo">
+    <resultMap id="giveLikeInfo" type="com.bestrookie.pojo.GiveLikePojo">
         <id column="like_id" property="likeId"></id>
         <result column="like_date" property="likeDate"/>
         <result column="user_id" property="userId"/>

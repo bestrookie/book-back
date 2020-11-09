@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.BookTypeMapper">
+<!--    类型信息-->
+    <resultMap id="typeInfo" type="com.bestrookie.pojo.BookTypePojo">
+        <id column="bt_id" property="typeId"/>
+        <result column="bt_name" property="typeName"/>
+    </resultMap>
+<!--    查询所有的类型信息-->
+    <select id="queryBookType" resultMap="typeInfo">
+        SELECT * FROM book_db.book_type
+    </select>
+
+</mapper>

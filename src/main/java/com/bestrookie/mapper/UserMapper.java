@@ -67,4 +67,11 @@ public interface UserMapper {
       * @return 用户实体
       */
      List<UserPojo> queryAllUsers();
+
+     /**
+      * 根据id查询用户信息
+      * @param userId 用户id
+      * @return 用户信息
+      */
+     UserPojo queryUserById(@Param(value = "userId") int userId);
 }

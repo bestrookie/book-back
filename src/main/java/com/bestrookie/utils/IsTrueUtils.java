@@ -1,5 +1,9 @@
 package com.bestrookie.utils;
 
+import com.bestrookie.pojo.BookPojo;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.regex.Pattern;
 
 /**
@@ -22,9 +26,5 @@ public class IsTrueUtils {
             }
         }
         return flg;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(isTrue("aaaaa"));
     }
 }

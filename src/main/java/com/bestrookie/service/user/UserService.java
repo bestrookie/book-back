@@ -63,14 +63,20 @@ public interface UserService {
       * 修改用户虚拟币
       * @param userCoin 虚拟币数量
       * @param phone 手机号
-      * @return 自定义返回类型
       */
-     MyResult updateUserCoin(int userCoin,String phone);
+     void updateUserCoin(int userCoin, String phone);
      /**
       * 查询所有用户
       * @param param 分页参数
       * @return 自定义返回类型
       */
      PageResult queryAllUsers(PageRequestParam param);
+
+     /**
+      * 根据用户id查找用户信息
+      * @param userId 用户id
+      * @return 用户信息
+      */
+     UserPojo queryUserById(int userId);
 
 }

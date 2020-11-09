@@ -11,6 +11,7 @@ import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
+    @Value("${file.banWord-path}")
+    private String wordPath;
     @Autowired
     private UserService userService;
     @Autowired
@@ -129,7 +132,7 @@ public class UserController {
         String phone = TokenUtils.getInfo(request.getHeader("authorization"));
         MyResult myResult;
         if (userName.get("userName") != null) {
-            SensitiveWordUtils.init();
+            SensitiveWordUtils.init(wordPath);
             if (SensitiveWordUtils.contains(userName.get("userName"))) {
                 myResult = MyResult.failed("内容违规", null, 406);
             } else {

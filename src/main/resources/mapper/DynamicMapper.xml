@@ -19,46 +19,55 @@
         <result column="d_content" property="dContent"/>
         <result column="d_abstract" property="dAbstract"/>
         <result column="bd_id" property="bdId"/>
-        <association property="user"  resultMap="userInfo">
+        <association property="user" resultMap="userInfo">
             <id column="user_id" property="userId"/>
         </association>
         <association property="likeNum" select="com.bestrookie.mapper.GiveLikeMapper.giveLikeNum" column="d_id"/>
-        <association property="reviewsNum" select="com.bestrookie.mapper.DynamicReviewMapper.reviewCount" column="d_id"/>
+        <association property="reviewsNum" select="com.bestrookie.mapper.DynamicReviewMapper.reviewCount"
+                     column="d_id"/>
     </resultMap>
-<!--    根据id删除动态-->
+    <!--    根据id删除动态-->
     <delete id="deleteDynamicById">
-        DELETE FROM book_db.dynamic WHERE book_db.dynamic.d_id = #{dynamicId} and book_db.dynamic.user_id = #{userId}
+        DELETE
+        FROM book_db.dynamic
+        WHERE book_db.dynamic.d_id = #{dynamicId}
+          and book_db.dynamic.user_id = #{userId}
     </delete>
-<!--    管理员删除动态-->
+    <!--    管理员删除动态-->
     <delete id="deleteDynamic">
-         DELETE FROM book_db.dynamic WHERE book_db.dynamic.d_id = #{dynamicId}
+        DELETE
+        FROM book_db.dynamic
+        WHERE book_db.dynamic.d_id = #{dynamicId}
     </delete>
     <!--    分页查询动态信息-->
     <select id="queryDynamic" resultMap="dynamicInfo">
-    SELECT  book_db.dynamic.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
-    FROM book_db.dynamic
-    join book_db.user
-    on book_db.dynamic.user_id = book_db.user.user_id
-    WHERE book_db.dynamic.bd_id = #{discussionId} ORDER BY book_db.dynamic.d_date DESC
+        SELECT book_db.dynamic.*, book_db.user.user_id, book_db.user.user_name, book_db.user.user_photo
+        FROM book_db.dynamic
+                 join book_db.user
+                      on book_db.dynamic.user_id = book_db.user.user_id
+        WHERE book_db.dynamic.bd_id = #{discussionId}
+        ORDER BY book_db.dynamic.d_date DESC
     </select>
     <!--    添加动态信息-->
     <insert id="addDynamic" parameterType="com.bestrookie.pojo.DynamicPojo">
-        INSERT INTO book_db.dynamic (user_id,d_date,d_content,d_abstract,bd_id) values (#{userId},#{dDate},#{dContent},#{dAbstract},#{bdId})
+        INSERT INTO book_db.dynamic (user_id, d_date, d_content, d_abstract, bd_id)
+        values (#{userId}, #{dDate}, #{dContent}, #{dAbstract}, #{bdId})
     </insert>
     <!--    根据id查询动态-->
     <select id="queryDynamicById" resultMap="dynamicInfo">
-    SELECT  book_db.dynamic.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo FROM book_db.dynamic
-    join book_db.user
-    on book_db.dynamic.user_id = book_db.user.user_id
-    WHERE book_db.dynamic.d_id = #{dynamicId}
+        SELECT book_db.dynamic.*, book_db.user.user_id, book_db.user.user_name, book_db.user.user_photo
+        FROM book_db.dynamic
+                 join book_db.user
+                      on book_db.dynamic.user_id = book_db.user.user_id
+        WHERE book_db.dynamic.d_id = #{dynamicId}
     </select>
-<!--    查询所有动态-->
+    <!--    查询所有动态-->
     <select id="queryAllDynamic" resultMap="dynamicInfo">
-    SELECT  book_db.dynamic.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
-    FROM book_db.dynamic
-    join book_db.user
-    on book_db.dynamic.user_id = book_db.user.user_id
-    ORDER BY book_db.dynamic.d_date DESC
+        SELECT book_db.dynamic.*, book_db.user.user_id, book_db.user.user_name, book_db.user.user_photo
+        FROM book_db.dynamic
+                 join book_db.user
+                      on book_db.dynamic.user_id = book_db.user.user_id
+        ORDER BY book_db.dynamic.d_date DESC
     </select>
 
 </mapper>

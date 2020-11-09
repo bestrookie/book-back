@@ -22,7 +22,7 @@
         FROM book_db.message
         JOIN book_db.user
         ON book_db.message.user_id = book_db.user.user_id
-        WHERE book_db.message.target_id = #{userId} AND msg_flg = false AND book_db.message.user_id != 1
+        WHERE book_db.message.target_id = #{userId} AND msg_flg = false  AND msg_type != 2
         ORDER BY
         book_db.message.msg_date DESC
     </select>
@@ -32,7 +32,7 @@
         FROM book_db.message
         JOIN book_db.user
         ON book_db.message.user_id = book_db.user.user_id
-        WHERE book_db.message.target_id = #{userId} AND book_db.message.user_id = 1
+        WHERE book_db.message.target_id = #{userId} AND msg_type = 2
         ORDER BY
         book_db.message.msg_date DESC
     </select>

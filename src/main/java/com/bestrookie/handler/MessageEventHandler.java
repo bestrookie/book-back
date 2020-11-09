@@ -156,4 +156,19 @@ public class MessageEventHandler {
         SocketIOClient client = clientHashMap.get("1");
         client.sendEvent("REPORT","收到一条举报信息");
     }
+    public void auditPass(int userId,String msg){
+        MessagePojo msgObj = new MessagePojo();
+        msgObj.setType(2);
+        msgObj.setMsg(msg);
+        msgObj.setUserName("系统");
+        msgObj.setMsgDate(System.currentTimeMillis());
+        msgObj.setAvatarUrl("image/02.png");
+        msgObj.setUserId(1);
+        msgObj.setTargetId(userId);
+        messageService.saveMessage(msgObj);
+        SocketIOClient client = clientHashMap.get(String.valueOf(userId));
+        if (client != null){
+            client.sendEvent("SYSTEM",msgObj);
+        }
+    }
 }

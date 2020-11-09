@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.PageObjectUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,6 +32,8 @@ public class DynamicServiceImpl implements DynamicService {
     private GiveLikeService giveLikeService;
     @Autowired
     UserBannedService userBannedService;
+    @Value("${file.banWord-path}")
+    private String wordPath;
 
     /**
      * 查询动态信息
@@ -53,7 +56,7 @@ public class DynamicServiceImpl implements DynamicService {
         if (dynamicPojo == null){
             return MyResult.failed("动态信息不能为空",null,409);
         }else {
-            SensitiveWordUtils.init();
+            SensitiveWordUtils.init(wordPath);
             if (SensitiveWordUtils.contains(dynamicPojo.getDAbstract())){
                 return MyResult.failed("内容违规",null,409);
             }else {

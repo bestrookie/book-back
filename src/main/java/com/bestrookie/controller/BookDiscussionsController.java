@@ -61,7 +61,7 @@ public class BookDiscussionsController {
      */
     @GetMapping("/querydiscussion")
     public MyResult queryBookDiscussions(HttpServletRequest request, HttpServletResponse response) {
-        MyResult myResult = null;
+        MyResult myResult;
         if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))) {
             PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
                     Integer.parseInt(request.getParameter("pageSize")));
@@ -86,7 +86,7 @@ public class BookDiscussionsController {
      */
     @GetMapping("/querybyid")
     public MyResult queryBookDiscussionById(HttpServletResponse response, HttpServletRequest request) {
-        MyResult result = null;
+        MyResult result;
         int userId = TokenUtils.getId(request.getHeader("authorization"));
         if (IsTrueUtils.isTrue(request.getParameter("discussionId"))) {
             int discussionId = Integer.parseInt(request.getParameter("discussionId"));

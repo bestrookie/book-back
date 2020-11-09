@@ -72,6 +72,8 @@ sms:
 # 文件地址
 file:
   image-path: D:\\resources\\image
+  book-path : D:\\resources\\books\\
+  banWord-path : D:\\resources\\banwords\banword.txt
 #分页插件
 pagehelper:
   helper-dialect: mysql

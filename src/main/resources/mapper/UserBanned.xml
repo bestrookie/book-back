@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.UserBannedMapper">
     <!--    用户信息-->
-    <resultMap id="userInfo" type="UserPojo">
-        <id column="user_id" property="userId"></id>
+    <resultMap id="userInfo" type="com.bestrookie.pojo.UserPojo">
+        <id column="user_id" property="userId"/>
         <result column="user_name" property="userName"/>
         <result column="user_password" property="password"/>
         <result column="user_photo" property="image"/>
@@ -14,8 +14,8 @@
         <result column="user_phone" property="userPhone"/>
     </resultMap>
 <!--    用户封禁信息-->
-    <resultMap id="bannedInfo" type="UserBannedPojo">
-        <id column="banned_id" property="bannedId"></id>
+    <resultMap id="bannedInfo" type="com.bestrookie.pojo.UserBannedPojo">
+        <id column="banned_id" property="bannedId"/>
         <result column="banned_date" property="bannedDate"/>
         <result column="banned_rdate" property="removeDate"/>
         <result column="banned_des" property="bannedDes"/>
@@ -23,8 +23,8 @@
         <association property="userPojo" resultMap="userInfo"/>
     </resultMap>
 <!--    封禁信息-->
-    <resultMap id="userBannedInfo" type="UserBannedPojo">
-        <id column="banned_id" property="bannedId"></id>
+    <resultMap id="userBannedInfo" type="com.bestrookie.pojo.UserBannedPojo">
+        <id column="banned_id" property="bannedId"/>
         <result column="banned_date" property="bannedDate"/>
         <result column="banned_rdate" property="removeDate"/>
         <result column="banned_des" property="bannedDes"/>

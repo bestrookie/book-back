@@ -1,5 +1,6 @@
 package com.bestrookie.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.wltea.analyzer.core.Lexeme;
 import org.wltea.analyzer.core.IKSegmenter;
 
@@ -16,13 +17,12 @@ import java.util.Set;
  * 敏感词分词工具
  */
 public class SensitiveWordUtils {
-
     //敏感词集合
     public static HashMap sensitiveWordMap;
 
     //初始化敏感词库
-    public static synchronized void init(){
-        String filePath = "D:\\resources\\banwords\\banword.txt";
+    public static synchronized void init(String filePath){
+//        String filePath = "D:\\resources\\banwords\\banword.txt";
         Set<String> sensitiveWordSet = readTxtByLine(filePath);
         //初始化敏感词容器，减少扩容操作
         sensitiveWordMap=new HashMap(sensitiveWordSet.size());
@@ -63,7 +63,7 @@ public class SensitiveWordUtils {
      * @return 敏感词集合
      * @throws IOException
      */
-    private static Set<String> getSensitiveWord(String txt) throws IOException {
+    public static Set<String> getSensitiveWord(String txt) throws IOException {
         Set<String> sensitiveWordSet=new HashSet<>();
         //将语句进行分词
         List<String> wordList=segment(txt);
@@ -154,8 +154,9 @@ public class SensitiveWordUtils {
     }
     //测试
     public static void main(String[] args) {
+        String filePath = "D:\\resources\\banwords\\banword.txt";
         //初始化敏感词库
-        SensitiveWordUtils.init();
+        SensitiveWordUtils.init(filePath);
         //需要处理的目标字符串
         String str="大sb";
 

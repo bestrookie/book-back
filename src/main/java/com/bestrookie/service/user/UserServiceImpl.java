@@ -164,16 +164,10 @@ public class UserServiceImpl implements UserService {
      * 修改用户虚拟币
      * @param userCoin 虚拟币数量
      * @param phone 手机号
-     * @return 自定义返回类型
      */
     @Override
-    public MyResult updateUserCoin(int userCoin, String phone) {
-        boolean flg = userMapper.updateUserCoin(userCoin, phone);
-        if (flg){
-            return MyResult.success(userCoin,"修改成功");
-        }else {
-            return  MyResult.failed("修改失败",null,406);
-        }
+    public void updateUserCoin(int userCoin, String phone) {
+        userMapper.updateUserCoin(userCoin, phone);
     }
 
     /**
@@ -185,6 +179,17 @@ public class UserServiceImpl implements UserService {
     public PageResult queryAllUsers(PageRequestParam param) {
         return PageUtils.getPageResult(param,getUserPageInfo(param));
     }
+
+    /**
+     * 根据用户id查找信息
+     * @param userId 用户id
+     * @return 用户信息
+     */
+    @Override
+    public UserPojo queryUserById(int userId) {
+        return userMapper.queryUserById(userId);
+    }
+
     /**
      * 调用分页插件完成分页
      * @param param 分页参数

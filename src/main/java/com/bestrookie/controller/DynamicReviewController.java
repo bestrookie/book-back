@@ -11,6 +11,7 @@ import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 public class DynamicReviewController {
     @Autowired
     private DynamicReviewService dynamicReviewService;
+    @Value("${file.banWord-path}")
+    private String filePath;
     /**
      * 查看评论
      * @param request
@@ -87,7 +90,7 @@ public class DynamicReviewController {
         if (param.getReviewContent() == null){
             result = MyResult.failed("参数错误",false,412);
         }else {
-            SensitiveWordUtils.init();
+            SensitiveWordUtils.init(filePath);
             if (SensitiveWordUtils.contains(param.getReviewContent())){
                 result = MyResult.failed("内容违规",false,411);
             }else {

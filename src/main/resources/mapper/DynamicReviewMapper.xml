@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.DynamicReviewMapper">
 <!--    用户信息-->
-    <resultMap id="userInfo" type="UserPojo">
-        <id column="user_id" property="userId"></id>
+    <resultMap id="userInfo" type="com.bestrookie.pojo.UserPojo">
+        <id column="user_id" property="userId"/>
         <result column="user_name" property="userName"/>
         <result column="user_password" property="password"/>
         <result column="user_photo" property="image"/>
@@ -14,8 +14,8 @@
         <result column="user_phone" property="userPhone"/>
     </resultMap>
 <!--    子评论信息-->
-    <resultMap id="sonReviewInfo" type="DynamicReviewPojo">
-        <id column="dr_id" property="drId"></id>
+    <resultMap id="sonReviewInfo" type="com.bestrookie.pojo.DynamicReviewPojo">
+        <id column="dr_id" property="drId"/>
         <result column="dr_content" property="drContent"/>
         <result column="dr_date" property="drDate"/>
         <result column="dr_pid" property="drPid"/>
@@ -26,8 +26,8 @@
         <association property="repUserPojo" select="com.bestrookie.mapper.DynamicReviewMapper.queryRepUser" column="dr_pid"/>
     </resultMap>
 <!--    评论信息-->
-    <resultMap id="reviewInfo" type="DynamicReviewPojo">
-        <id column="dr_id" property="drId"></id>
+    <resultMap id="reviewInfo" type="com.bestrookie.pojo.DynamicReviewPojo">
+        <id column="dr_id" property="drId"/>
         <result column="dr_content" property="drContent"/>
         <result column="dr_date" property="drDate"/>
         <result column="dr_pid" property="drPid"/>
@@ -54,14 +54,6 @@
         on book_db.dynamic_review.user_id = book_db.user.user_id
         WHERE  book_db.dynamic_review.d_id = #{dynamicId} AND book_db.dynamic_review.dr_spid = 0
         ORDER BY  book_db.dynamic_review.dr_date DESC
-    </select>
-<!--    查询回复人的信息-->
-    <select id="queryRepUser" resultMap="userInfo">
-        SELECT book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
-        FROM book_db.dynamic_review
-        JOIN book_db.user
-        on book_db.dynamic_review.user_id = book_db.user.user_id
-        WHERE  book_db.dynamic_review.dr_id = #{parentId} AND book_db.dynamic_review.dr_spid != 0
     </select>
 <!--    查询评论数量-->
     <select id="reviewCount" resultType="java.lang.Integer">
