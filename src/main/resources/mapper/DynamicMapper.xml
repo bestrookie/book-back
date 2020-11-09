@@ -3,28 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.DynamicMapper">
-    <resultMap id="userInfo" type="com.bestrookie.pojo.UserPojo">
-        <id column="user_id" property="userId"></id>
-        <result column="user_name" property="userName"/>
-        <result column="user_password" property="password"/>
-        <result column="user_photo" property="image"/>
-        <result column="user_coin" property="userCoin"/>
-        <result column="user_role" property="role"/>
-        <result column="user_phone" property="userPhone"/>
-    </resultMap>
     <resultMap id="dynamicInfo" type="com.bestrookie.pojo.DynamicPojo">
-        <id column="d_id" property="dId"></id>
+        <id column="d_id" property="dId"/>
         <result column="user_id" property="userId"/>
         <result column="d_date" property="dDate"/>
         <result column="d_content" property="dContent"/>
         <result column="d_abstract" property="dAbstract"/>
         <result column="bd_id" property="bdId"/>
-        <association property="user" resultMap="userInfo">
-            <id column="user_id" property="userId"/>
-        </association>
+        <association property="user" resultMap="com.bestrookie.mapper.UserMapper.userInfo"/>
         <association property="likeNum" select="com.bestrookie.mapper.GiveLikeMapper.giveLikeNum" column="d_id"/>
-        <association property="reviewsNum" select="com.bestrookie.mapper.DynamicReviewMapper.reviewCount"
-                     column="d_id"/>
+        <association property="reviewsNum" select="com.bestrookie.mapper.DynamicReviewMapper.reviewCount" column="d_id"/>
     </resultMap>
     <!--    根据id删除动态-->
     <delete id="deleteDynamicById">

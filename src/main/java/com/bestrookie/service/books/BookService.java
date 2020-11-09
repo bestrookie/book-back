@@ -1,6 +1,8 @@
 package com.bestrookie.service.books;
 
 import com.bestrookie.model.MyResult;
+import com.bestrookie.model.PageResult;
+import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
 
 /**
@@ -28,11 +30,24 @@ public interface BookService {
      * @param state 状态
      */
     void updateBookState(String identity, boolean state);
-
     /**
      * 根据书的状态码修改书的价格
      * @param identity 身份码
      * @param price 价格
      */
     void updateBookPriceByIdentity(String identity, int price);
+    /**
+     * 根据d查询书籍信息
+     * @param bookId 书籍id
+     * @return 自定义返回类型
+     */
+    MyResult queryBookById(int bookId);
+
+    /**
+     * 上传历史
+     * @param userId 用户id
+     * @param param 分页参数
+     * @return 分页结果
+     */
+    PageResult queryMyUpload(PageRequestParam param, int userId);
 }

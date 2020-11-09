@@ -21,6 +21,8 @@
         <result column="b_state" property="bookState"/>
         <result column="b_price" property="bookPrice"/>
         <result column="b_discount" property="bookDiscount"/>
+        <result column="bt_name" property="typeName"/>
+        <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
     </resultMap>
 <!--    添加书籍信息-->
     <insert id="addBookMapper" parameterType="com.bestrookie.pojo.BookPojo">
@@ -29,16 +31,41 @@
         VALUES
         (#{bookName},#{author},#{image},#{resource},#{publishDate},#{publisher},#{userId},#{type},#{identity},#{uploadDate})
     </insert>
+<!--    根据身份码查询是否存在书籍-->
     <select id="queryExistsIdentity" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM book_db.books WHERE b_identity = #{identity}
     </select>
-<!--    修改书的状态码-->
+<!--    查询所有书籍-->
+    <select id="queryAllBooks" resultMap="bookInfo">
+        SELECT book_db.books.*,book_db.book_type.bt_name
+        FROM book_db.books
+        JOIN book_db.book_type
+        ON books.type_id = book_type.bt_id
+        WHERE b_state = true
+    </select>
+<!--    根据id查找书籍信息-->
+    <select id="queryBookById" resultMap="bookInfo">
+        SELECT book_db.books.*,book_db.book_type.bt_name
+        FROM book_db.books
+                 JOIN book_db.book_type
+                      ON books.type_id = book_type.bt_id
+        WHERE b_state = true AND b_id = #{bookId}
+    </select>
+<!--    根据userId查询书籍-->
+    <select id="queryMyUpload" resultMap="bookInfo">
+        SELECT * FROM book_db.books WHERE user_id = #{userId}
+    </select>
+    <!--    修改书的状态码-->
     <update id="updateBookState">
         UPDATE book_db.books SET b_state = #{state} WHERE b_identity = #{identity}
     </update>
 <!--    根据书的状态码修改价格-->
     <update id="updateBookPriceByIdentity">
         Update book_db.books SET b_price = #{price} WHERE b_identity = #{identity}
+    </update>
+<!--    修改点击量信息-->
+    <update id="updateBookSearch">
+        UPDATE book_db.books SET b_click_count =#{clickCount} WHERE b_id =#{bookId}
     </update>
 
 

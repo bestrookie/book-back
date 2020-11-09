@@ -2,9 +2,16 @@ package com.bestrookie.service.books;
 
 import com.bestrookie.mapper.BookMapper;
 import com.bestrookie.model.MyResult;
+import com.bestrookie.model.PageResult;
+import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
+import com.bestrookie.utils.PageUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author : bestrookie
@@ -61,5 +68,38 @@ public class BookServiceImpl implements BookService {
     @Override
     public void updateBookPriceByIdentity(String identity, int price) {
         bookMapper.updateBookPriceByIdentity(identity, price);
+    }
+    /**
+     * 根据id查询书籍信息
+     * @param bookId 书籍id
+     * @return 自定义返回类型
+     */
+    @Override
+    public MyResult queryBookById(int bookId) {
+        BookPojo bookPojo = bookMapper.queryBookById(bookId);
+        if (bookPojo != null){
+            bookPojo.setBookClick(bookPojo.getBookClick() + 1);
+            bookMapper.updateBookSearch(bookPojo.getBookId(),bookPojo.getBookClick());
+            return MyResult.success(bookPojo,"查询成功");
+        }else {
+            return MyResult.failed("查询失败",null,518);
+        }
+    }
+
+    /**
+     * 上传历史
+     * @param userId 用户id
+     * @param param 分页参数
+     * @return 分页结果
+     */
+    @Override
+    public PageResult queryMyUpload(PageRequestParam param, int userId) {
+        return PageUtils.getPageResult(param,getBookInfo(param,userId));
+    }
+    private PageInfo<BookPojo> getBookInfo(PageRequestParam param,int userId){
+        PageHelper.startPage(param.getPageNumber(),param.getPageSize());
+        List<BookPojo> books = bookMapper.queryMyUpload(userId);
+        return new PageInfo<>(books);
+
     }
 }

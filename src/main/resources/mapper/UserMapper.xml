@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.UserMapper">
 <!--    根据手机号查询用户信息-->
-    <select id="queryUserByName" parameterType="String" resultMap="userInfo">
+    <select id="queryUserByName" parameterType="string" resultMap="userInfo">
         select * from book_db.user where user_phone = #{phone}
     </select>
 <!--    注册一个新用户-->
@@ -12,20 +12,20 @@
         INSERT INTO book_db.user (user_name,user_photo,user_password,user_phone) values (#{userName},#{image},#{password},#{userPhone})
     </insert>
 <!--    修改用户头像-->
-    <update id="updateImage" parameterType="String">
+    <update id="updateImage" parameterType="string">
         UPDATE book_db.user set user_photo = #{imageAddress} where  user_phone = #{phone}
     </update>
 <!--    修改用户名称-->
-    <update id="updateUserName" parameterType="String">
+    <update id="updateUserName" parameterType="string">
         UPDATE book_db.user set user_name = #{userName} where  user_phone = #{phone}
     </update>
 <!--    根据用户名查询用户信息-->
-    <select id="checkUserByName" parameterType="String" resultMap="user">
+    <select id="checkUserByName" parameterType="string" resultMap="user">
         select book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo,book_db.user.user_coin,book_db.user.user_role,book_db.user.user_phone
         from book_db.user where user_name = #{userName}
     </select>
     <!--    修改用户密码-->
-    <update id="updateUserPassword" parameterType="String">
+    <update id="updateUserPassword" parameterType="string">
         UPDATE book_db.user set user_password = #{userPassword} where  user_phone = #{phone}
     </update>
 <!--    修改用户虚拟币信息-->
@@ -38,7 +38,8 @@
         FROM book_db.user
     </select>
     <select id="queryUserById" resultMap="userInfo">
-        SELECT * FROM book_db.user WHERE user_id = #{userId}
+        SELECT book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo,book_db.user.user_coin,book_db.user.user_role,book_db.user.user_phone
+        FROM book_db.user WHERE user_id = #{userId}
     </select>
     <!--    用户信息-->
     <resultMap id="userInfo" type="com.bestrookie.pojo.UserPojo">

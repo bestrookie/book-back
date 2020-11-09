@@ -1,15 +1,16 @@
 package com.bestrookie.utils;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,14 +61,29 @@ public class PdfUtils {
     @SneakyThrows
     public static void main(String[] args) {
         System.out.println(new Date());
-        String str = "\\s*|\t|\r|\n";
-        String content = getContent("F:\\我的坚果云\\资料\\JAVA核心知识点整理.pdf");
-        Pattern pattern = Pattern.compile(str);
-        Matcher m = pattern.matcher(content);
-        content = m.replaceAll("");
-        System.out.println(getContent("F:\\我的坚果云\\资料\\Spring实战（第3版）.pdf"));
-        System.out.println(getContent("F:\\我的坚果云\\资料\\Spring实战（第3版）.pdf").length());
-        System.out.println(content.length());
+        partitionPdfFile("F:\\我的坚果云\\资料\\JAVA核心知识点整理.pdf","F:\\我的坚果云\\资料\\122.pdf",1,100);
         System.out.println(new Date());
+    }
+    public static void partitionPdfFile(String pdfFile,String newFile, int from, int end) {
+        Document document ;
+        PdfCopy copy;
+        try {
+            PdfReader reader = new PdfReader(pdfFile);
+            int n = reader.getNumberOfPages();
+            if (end == 0) {
+                end = n;
+            }
+            document = new Document(reader.getPageSize(1));
+            copy = new PdfCopy(document, new FileOutputStream(newFile));
+            document.open();
+            for (int j = from; j <= end; j++) {
+                document.newPage();
+                PdfImportedPage page = copy.getImportedPage(reader, j);
+                copy.addPage(page);
+            }
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

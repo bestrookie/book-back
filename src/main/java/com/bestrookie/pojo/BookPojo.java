@@ -28,4 +28,6 @@ public class BookPojo {
     private boolean bookState;
     private int bookPrice;
     private float bookDiscount;
+    private String typeName;
+    private UserPojo user;
 }
