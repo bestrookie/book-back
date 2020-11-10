@@ -85,6 +85,13 @@ public class BookController {
         response.setStatus(result.getCode());
         return result;
     }
+
+    /**
+     * 我的上传
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回值
+     */
     @GetMapping("/queryupload")
     public MyResult queryMyUpload(HttpServletResponse response,HttpServletRequest request){
         MyResult result;

@@ -19,4 +19,5 @@ public class BookDiscussionsPojo {
     private long bdDate;
     private String userName;
     private int peopleNum;
+    private int bookId;
 }

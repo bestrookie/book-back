@@ -4,24 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.BookDiscussionsMapper">
     <resultMap id="bookdiscussionInfo" type="com.bestrookie.pojo.BookDiscussionsPojo">
-        <id column="bd_id" property="bdId"></id>
+        <id column="bd_id" property="bdId"/>
         <result column="bd_name" property="bdName"/>
         <result column="user_id" property="userId"/>
         <result column="bd_photo" property="bdPhoto"/>
         <result column="bd_des" property="bdDes"/>
         <result column="bd_date" property="bdDate"/>
         <result column="user_name" property="userName"/>
+        <result column="b_id" property="bookId"/>
         <association property="peopleNum" select="com.bestrookie.mapper.BdUserMapper.queryNums" column="bd_id"/>
     </resultMap>
 <!--    添加书圈-->
-    <insert id="addBookDiscussion" parameterType="com.bestrookie.pojo.BookDiscussionsPojo">
+    <insert id="addBookDiscussion" useGeneratedKeys="true" keyProperty="bdId" parameterType="com.bestrookie.pojo.BookDiscussionsPojo">
         INSERT INTO book_db.book_discussions
-        (bd_name,user_id,bd_des,bd_date)
+        (bd_name,user_id,bd_des,bd_date,b_id,bd_photo)
         values
-        (#{bookDiscussionsPojo.bdName},
-        #{bookDiscussionsPojo.userId},
-        #{bookDiscussionsPojo.bdDes},
-        #{bookDiscussionsPojo.bdDate})
+        (#{bdName},#{userId},#{bdDes},#{bdDate},#{bookId},#{bdPhoto})
     </insert>
 <!--    删除书圈-->
     <delete id="deleteBookDiscussion">
@@ -38,5 +36,12 @@
 <!--    根据id查询书圈-->
     <select id="queryBookDiscussionById" resultMap="bookdiscussionInfo">
         SELECT * FROM book_db.book_discussions where bd_id = #{discussionId}
+    </select>
+<!--    查询此书的书圈数量-->
+    <select id="isBookDiscussionExist" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_discussions where b_id = #{bookId}
+    </select>
+    <select id="queryDiscussionId" resultType="java.lang.Integer">
+        SELECT book_db.book_discussions.bd_id FROM book_db.book_discussions WHERE b_id =#{bookId}
     </select>
 </mapper>

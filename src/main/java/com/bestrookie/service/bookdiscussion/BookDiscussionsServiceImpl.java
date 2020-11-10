@@ -4,6 +4,7 @@ import com.bestrookie.mapper.BookDiscussionsMapper;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
+import com.bestrookie.pojo.BdUserPojo;
 import com.bestrookie.pojo.BookDiscussionsPojo;
 import com.bestrookie.service.bduser.BdUserService;
 import com.bestrookie.service.userbanned.UserBannedService;
@@ -13,8 +14,6 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.PrivilegedAction;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,35 +32,40 @@ public class BookDiscussionsServiceImpl implements BookDiscussionsService {
 
     /**
      * 创建书圈
-     *
-     * @param bookDiscussionsPojo
-     * @return
+     * @param bookDiscussionsPojo 书圈信息
+     * @return 自定义返回类型
      */
     @Override
     public MyResult addBookDiscussion(BookDiscussionsPojo bookDiscussionsPojo) {
-        if (bookDiscussionsMapper.addBookDiscussion(bookDiscussionsPojo)) {
-            return MyResult.success(bookDiscussionsPojo, "成功创建书圈");
-        } else {
-            return MyResult.failed("创建书圈失败", null, 508);
+        if (!isDiscussionExist(bookDiscussionsPojo.getBookId())){
+            if (bookDiscussionsMapper.addBookDiscussion(bookDiscussionsPojo)) {
+                BdUserPojo bdUserPojo = new BdUserPojo();
+                bdUserPojo.setUserId(bookDiscussionsPojo.getUserId());
+                bdUserPojo.setBduDate(System.currentTimeMillis());
+                bdUserPojo.setBdId(bookDiscussionsPojo.getBdId());
+                bdUserService.joinDiscussion(bdUserPojo);
+                return MyResult.success(bookDiscussionsPojo.getBdId(), "成功创建书圈");
+            } else {
+                return MyResult.failed("创建书圈失败", null, 508);
+            }
+        }else {
+            return MyResult.failed("已经存在书圈", null, 508);
         }
-    }
 
+    }
     /**
      * 查询书圈信息
-     *
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 分页结果
      */
     @Override
     public PageResult queryDiscussion(PageRequestParam param) {
         return PageUtils.getPageResult(param, getPageInfo(param));
     }
-
     /**
      * 根据id查询书圈
-     *
-     * @param discussionId
-     * @return
+     * @param discussionId 书圈id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult queryDiscussionById(int userId, int discussionId) {
@@ -94,14 +98,24 @@ public class BookDiscussionsServiceImpl implements BookDiscussionsService {
     }
 
     /**
+     * 查询这本书是否存在书圈
+     * @param bookId 书籍id
+     * @return 是否存在
+     */
+    @Override
+    public boolean isDiscussionExist(int bookId) {
+        int count = bookDiscussionsMapper.isBookDiscussionExist(bookId);
+        return count != 0;
+    }
+
+    /**
      * 调用分页插件完成分页
-     *
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 自定义返回类型
      */
     private PageInfo<BookDiscussionsPojo> getPageInfo(PageRequestParam param) {
         PageHelper.startPage(param.getPageNumber(), param.getPageSize());
         List<BookDiscussionsPojo> discussions = bookDiscussionsMapper.selectPage();
-        return new PageInfo<BookDiscussionsPojo>(discussions);
+        return new PageInfo<>(discussions);
     }
 }

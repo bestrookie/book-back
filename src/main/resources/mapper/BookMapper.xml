@@ -22,6 +22,7 @@
         <result column="b_price" property="bookPrice"/>
         <result column="b_discount" property="bookDiscount"/>
         <result column="bt_name" property="typeName"/>
+        <association property="discussionId" select="com.bestrookie.mapper.BookDiscussionsMapper.queryDiscussionId" column="b_id"/>
         <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
     </resultMap>
 <!--    添加书籍信息-->

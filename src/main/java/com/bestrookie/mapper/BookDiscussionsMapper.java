@@ -4,6 +4,7 @@ import com.bestrookie.pojo.BookDiscussionsPojo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -31,12 +32,25 @@ public interface BookDiscussionsMapper {
      * @return 书圈实体
      */
     BookDiscussionsPojo queryBookDiscussionById(int discussionId);
-
     /**
      * 删除书圈
      * @param discussionId 书圈id
      * @return 是否删除成功
      */
     boolean deleteBookDiscussion(@Param(value = "discussionId") int discussionId);
+
+    /**
+     * 查询是否存在书圈
+     * @param bookId 书籍id
+     * @return 书圈的数量
+     */
+    int isBookDiscussionExist(@Param(value = "bookId") int bookId);
+
+    /**
+     * 查询书圈id
+     * @param bookId 书籍id
+     * @return 书圈id
+     */
+    int queryDiscussionId(@Param(value = "bookId") int bookId);
 
 }

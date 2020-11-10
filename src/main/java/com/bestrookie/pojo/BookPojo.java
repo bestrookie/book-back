@@ -32,4 +32,5 @@ public class BookPojo {
     private UserPojo user;
     private boolean myReview;
     private double value;
+    private int discussionId = 0;
 }

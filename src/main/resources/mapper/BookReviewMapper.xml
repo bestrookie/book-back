@@ -28,7 +28,7 @@
     </select>
 <!--    查看所有评论-->
     <select id="queryAllReviews" resultMap="bookReviewInfo">
-        SELECT * FROM book_db.book_review WHERE b_id =#{bookId}
+        SELECT * FROM book_db.book_review WHERE b_id =#{bookId} ORDER BY br_date DESC
     </select>
 
 </mapper>

@@ -38,4 +38,12 @@ public interface BookDiscussionsService {
      * @return 自定义返回类型
      */
     MyResult deleteDiscussion(int discussionId);
+
+    /**
+     * 查询这本书是否存在书圈
+     * @param bookId 书籍id
+     * @return 是否存在
+     */
+    boolean isDiscussionExist(int bookId);
+
 }

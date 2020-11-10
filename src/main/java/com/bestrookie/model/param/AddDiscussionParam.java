@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddDiscussionParam {
     private String dbName;
-    private String dbDesc;
+    private String dbDes;
+    private int bookId;
+    private String discussionCover;
 }

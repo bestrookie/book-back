@@ -75,6 +75,9 @@ public class BookReviewServiceImpl implements BookReviewService {
         int sun = 0;
         double result = 0;
         List<BookReviewPojo> bookReviews = bookReviewMapper.queryAllReviews(bookId);
+        if (bookReviews.size() == 0){
+            return result;
+        }
         for (BookReviewPojo bookReview : bookReviews) {
             sun = sun + bookReview.getValue();
         }

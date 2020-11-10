@@ -11,6 +11,7 @@ import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 public class BookDiscussionsController {
     @Autowired
     private BookDiscussionsService bookDiscussionsService;
+    @Value("${file.banWord-path}")
+    private String wordPath;
 
     /**
      * 创建书圈
@@ -35,16 +38,18 @@ public class BookDiscussionsController {
      */
     @SneakyThrows
     @PostMapping("/adddiscussion")
-    public MyResult addDiscussion(HttpServletResponse response, HttpServletRequest request, AddDiscussionParam param) {
-        int userId = TokenUtils.getId(request.getHeader("authorization"));
+    public MyResult addDiscussion(HttpServletResponse response, HttpServletRequest request,@RequestBody AddDiscussionParam param) {
         MyResult result;
-        BookDiscussionsPojo bookDiscussionsPojo = null;
-        if (SensitiveWordUtils.contains(param.getDbName()) && SensitiveWordUtils.contains(param.getDbDesc())) {
-            assert false;
-            bookDiscussionsPojo.setUserId(userId);
+        SensitiveWordUtils.init(wordPath);
+        System.out.println(param.toString());
+        if (!(SensitiveWordUtils.contains(param.getDbName()) && SensitiveWordUtils.contains(param.getDbDes()))) {
+            BookDiscussionsPojo bookDiscussionsPojo = new BookDiscussionsPojo();
+            bookDiscussionsPojo.setUserId(TokenUtils.getId(request.getHeader("authorization")));
             bookDiscussionsPojo.setBdName(param.getDbName());
-            bookDiscussionsPojo.setBdDes(param.getDbDesc());
+            bookDiscussionsPojo.setBdDes(param.getDbDes());
             bookDiscussionsPojo.setBdDate(System.currentTimeMillis());
+            bookDiscussionsPojo.setBookId(param.getBookId());
+            bookDiscussionsPojo.setBdPhoto(param.getDiscussionCover());
             result = bookDiscussionsService.addBookDiscussion(bookDiscussionsPojo);
         } else {
             result = MyResult.failed("输入信息包含敏感词汇", null, 408);

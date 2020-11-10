@@ -47,7 +47,7 @@
     </update>
 <!--   修改全部信息为已读-->
     <update id="hasReadAll">
-            UPDATE book_db.message SET msg_read = true where target_id = #{userId} AND msg_flg = false
+        UPDATE book_db.message SET msg_read = true where target_id = #{userId} AND msg_flg = false
     </update>
 <!--    根据id查询消息-->
     <select id="queryMessageById" resultMap="msgInfo">
