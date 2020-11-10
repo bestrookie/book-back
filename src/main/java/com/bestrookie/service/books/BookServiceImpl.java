@@ -6,6 +6,7 @@ import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
 import com.bestrookie.service.bookreview.BookReviewService;
+import com.bestrookie.service.collection.CollectionService;
 import com.bestrookie.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,6 +25,8 @@ public class BookServiceImpl implements BookService {
     private BookMapper bookMapper;
     @Autowired
     private BookReviewService bookReviewService;
+    @Autowired
+    private CollectionService collectionService;
 
     /**
      * 上传书籍
@@ -85,6 +88,7 @@ public class BookServiceImpl implements BookService {
             bookMapper.updateBookSearch(bookPojo.getBookId(),bookPojo.getBookClick());
             bookPojo.setMyReview(bookReviewService.isReview(userId,bookId));
             bookPojo.setValue(bookReviewService.countBookValue(bookId));
+            bookPojo.setMyCollection(collectionService.isCollection(userId,bookId));
             return MyResult.success(bookPojo,"查询成功");
         }else {
             return MyResult.failed("查询失败",null,518);

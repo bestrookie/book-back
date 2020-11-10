@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.CollectionMapper">
+    <resultMap id="collectionInfo" type="com.bestrookie.pojo.CollectionPojo">
+        <id column="collection_id" property="collectionId"/>
+        <result column="collection_date" property="collectionDate"/>
+        <result column="user_id" property="userId"/>
+        <result column="b_id" property="bookId"/>
+    </resultMap>
+<!--    添加收藏-->
+    <insert id="addCollection" parameterType="com.bestrookie.pojo.CollectionPojo">
+        INSERT INTO book_db.collection(collection_date, user_id, b_id)
+        values (#{collectionDate},#{userId},#{bookId})
+    </insert>
+<!--    取消收藏-->
+    <delete id="cancelCollection">
+        DELETE FROM book_db.collection WHERE user_id = #{userId} AND b_id = #{bookId}
+    </delete>
+<!--    是否收藏-->
+    <select id="isCollection" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.collection WHERE user_id = #{userId} AND b_id = #{bookId}
+    </select>
+
+</mapper>
