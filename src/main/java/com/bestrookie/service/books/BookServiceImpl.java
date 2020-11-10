@@ -5,6 +5,7 @@ import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
+import com.bestrookie.service.bookreview.BookReviewService;
 import com.bestrookie.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -21,6 +22,8 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     private BookMapper bookMapper;
+    @Autowired
+    private BookReviewService bookReviewService;
 
     /**
      * 上传书籍
@@ -75,11 +78,13 @@ public class BookServiceImpl implements BookService {
      * @return 自定义返回类型
      */
     @Override
-    public MyResult queryBookById(int bookId) {
+    public MyResult queryBookById(int bookId,int userId) {
         BookPojo bookPojo = bookMapper.queryBookById(bookId);
         if (bookPojo != null){
             bookPojo.setBookClick(bookPojo.getBookClick() + 1);
             bookMapper.updateBookSearch(bookPojo.getBookId(),bookPojo.getBookClick());
+            bookPojo.setMyReview(bookReviewService.isReview(userId,bookId));
+            bookPojo.setValue(bookReviewService.countBookValue(bookId));
             return MyResult.success(bookPojo,"查询成功");
         }else {
             return MyResult.failed("查询失败",null,518);

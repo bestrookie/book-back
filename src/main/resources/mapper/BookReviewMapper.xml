@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.BookReviewMapper">
+<!--    评论信息-->
+    <resultMap id="bookReviewInfo" type="com.bestrookie.pojo.BookReviewPojo">
+        <id column="br_id" property="reviewId"/>
+        <result column="br_content" property="reviewContent"/>
+        <result column="br_date" property="reviewDate"/>
+        <result column="b_id" property="bookId"/>
+        <result column="user_id" property="userId"/>
+        <result column="br_level" property="value"/>
+        <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
+    </resultMap>
+<!--    添加评论信息-->
+    <insert id="addBookReview">
+        INSERT INTO book_db.book_review (br_content, br_date, b_id, user_id, br_level)
+        values (#{reviewContent},#{reviewDate},#{bookId},#{userId},#{value})
+    </insert>
+<!--    传发表评论的数量-->
+    <select id="isReview" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_review WHERE user_id = #{userId} AND b_id = #{bookId}
+    </select>
+<!--    查看书籍的评论数量-->
+    <select id="reviewCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_review WHERE b_id = #{bookId}
+    </select>
+<!--    查看所有评论-->
+    <select id="queryAllReviews" resultMap="bookReviewInfo">
+        SELECT * FROM book_db.book_review WHERE b_id =#{bookId}
+    </select>
+
+</mapper>

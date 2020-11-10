@@ -39,9 +39,10 @@ public interface BookService {
     /**
      * 根据d查询书籍信息
      * @param bookId 书籍id
+     * @param userId 用户id
      * @return 自定义返回类型
      */
-    MyResult queryBookById(int bookId);
+    MyResult queryBookById(int bookId,int userId);
 
     /**
      * 上传历史

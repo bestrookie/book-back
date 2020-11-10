@@ -30,4 +30,6 @@ public class BookPojo {
     private float bookDiscount;
     private String typeName;
     private UserPojo user;
+    private boolean myReview;
+    private double value;
 }

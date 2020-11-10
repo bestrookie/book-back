@@ -78,7 +78,7 @@ public class BookController {
     public MyResult queryBookInfo(HttpServletRequest request ,HttpServletResponse response){
         MyResult result;
         if (IsTrueUtils.isTrue(request.getParameter("bookId"))){
-            result = bookService.queryBookById(Integer.parseInt(request.getParameter("bookId")));
+            result = bookService.queryBookById(Integer.parseInt(request.getParameter("bookId")),TokenUtils.getId(request.getHeader("authorization")));
         }else {
             result = MyResult.failed("参数错误",null,412);
         }
@@ -93,7 +93,7 @@ public class BookController {
                     Integer.parseInt(request.getParameter("pageSize")));
             PageResult pageResult = bookService.queryMyUpload(param, TokenUtils.getId(request.getHeader("authorization")));
             if (pageResult == null) {
-                result = MyResult.failed("查看上传历史", null, 519);
+                result = MyResult.failed("查看上传历史失败", null, 519);
             } else {
                 result = MyResult.success(pageResult);
             }
