@@ -23,7 +23,7 @@ public class BookPojo {
     private String image;
     private String identity;
     private int userId;
-    private int bookSearch = 0;
+    private int bookCollect = 0;
     private int bookClick = 0;
     private boolean bookState;
     private int bookPrice;

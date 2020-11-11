@@ -25,12 +25,17 @@ public interface CollectionMapper {
      * @return 是否成功
      */
     boolean cancelCollection(@Param(value = "userId") int userId,@Param(value = "bookId") int bookId);
-
     /**
      * 是否收藏
      * @param userId 用户id
      * @param bookId 书籍id
      * @return 收藏数量
      */
-    int isCollection(@Param(value = "userId") int userId,@Param(value = "bookId") int bookId );
+    int isCollection(@Param(value = "userId") int userId,@Param(value = "bookId") int bookId);
+    /**
+     * 查看一本书的收藏数量
+     * @param bookId 书籍id
+     * @return 数量
+     */
+    int collectCount(@Param(value = "bookId") int bookId);
 }

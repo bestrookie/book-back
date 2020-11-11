@@ -7,7 +7,6 @@ import com.bestrookie.pojo.BookPojo;
 import com.bestrookie.service.async.AsyncService;
 import com.bestrookie.service.books.BookService;
 import com.bestrookie.utils.IsTrueUtils;
-import com.bestrookie.utils.SendSmsUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
 import lombok.SneakyThrows;
@@ -85,7 +84,6 @@ public class BookController {
         response.setStatus(result.getCode());
         return result;
     }
-
     /**
      * 我的上传
      * @param response 响应参数
@@ -107,6 +105,19 @@ public class BookController {
         }else {
             result = MyResult.failed("参数错误", null, 412);
         }
+        response.setStatus(result.getCode());
+        return  result;
+    }
+    /**
+     * 查看书架
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回值
+     */
+    @GetMapping("/mycollection")
+    public MyResult queryMyCollection(HttpServletRequest request,HttpServletResponse response){
+        MyResult result;
+        result = bookService.queryMyCollect(TokenUtils.getId(request.getHeader("authorization")));
         response.setStatus(result.getCode());
         return  result;
     }

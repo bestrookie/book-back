@@ -13,6 +13,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,9 +106,32 @@ public class BookServiceImpl implements BookService {
     public PageResult queryMyUpload(PageRequestParam param, int userId) {
         return PageUtils.getPageResult(param,getBookInfo(param,userId));
     }
+
+    /**
+     * 查看用户收藏
+     * @param userId 用户id
+     * @return 分页结果
+     */
+    @Override
+    public MyResult queryMyCollect(int userId) {
+        List<BookPojo> books = bookMapper.queryMyCollection(userId);
+        if (books.size() == 0){
+            return MyResult.success(null,"书架是空的哦");
+        }else {
+            return MyResult.success(books);
+        }
+    }
+
+    /**
+     * 调用分页插件
+     * @param param 分页参数
+     * @param userId 用户id
+     * @return 分页结果
+     */
     private PageInfo<BookPojo> getBookInfo(PageRequestParam param,int userId){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
-        List<BookPojo> books = bookMapper.queryMyUpload(userId);
+        List<BookPojo> books = new ArrayList<>();
+        books = bookMapper.queryMyUpload(userId);
         return new PageInfo<>(books);
 
     }

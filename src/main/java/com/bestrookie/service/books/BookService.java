@@ -5,6 +5,8 @@ import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
 
+import java.util.List;
+
 /**
  * @author : bestrookie
  * @date : 19:17 2020/11/7
@@ -43,7 +45,6 @@ public interface BookService {
      * @return 自定义返回类型
      */
     MyResult queryBookById(int bookId,int userId);
-
     /**
      * 上传历史
      * @param userId 用户id
@@ -51,4 +52,11 @@ public interface BookService {
      * @return 分页结果
      */
     PageResult queryMyUpload(PageRequestParam param, int userId);
+
+    /**
+     * 查看用户收藏
+     * @param userId 用户id
+     * @return 分页结果
+     */
+    MyResult queryMyCollect(int userId);
 }

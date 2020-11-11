@@ -14,7 +14,6 @@
         <result column="b_publisher" property="publisher"/>
         <result column="user_id" property="userId"/>
         <result column="type_id" property="type"/>
-        <result column="b_search_count" property="bookSearch"/>
         <result column="b_click_count" property="bookClick"/>
         <result column="b_identity" property="identity"/>
         <result column="b_upload_date" property="uploadDate"/>
@@ -24,6 +23,7 @@
         <result column="bt_name" property="typeName"/>
         <association property="discussionId" select="com.bestrookie.mapper.BookDiscussionsMapper.queryDiscussionId" column="b_id"/>
         <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
+        <association property="bookCollect" select="com.bestrookie.mapper.CollectionMapper.collectCount" column="b_id"/>
     </resultMap>
 <!--    添加书籍信息-->
     <insert id="addBookMapper" parameterType="com.bestrookie.pojo.BookPojo">
@@ -55,6 +55,14 @@
 <!--    根据userId查询书籍-->
     <select id="queryMyUpload" resultMap="bookInfo">
         SELECT * FROM book_db.books WHERE user_id = #{userId}
+    </select>
+<!--    查看我的收藏-->
+    <select id="queryMyCollection" resultMap="bookInfo">
+        SELECT * FROM book_db.books
+        JOIN book_db.collection
+        on books.b_id = collection.b_id
+        WHERE collection.user_id = #{userId}
+        ORDER BY collection_date DESC
     </select>
     <!--    修改书的状态码-->
     <update id="updateBookState">
