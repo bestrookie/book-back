@@ -34,8 +34,7 @@ public class ReportController {
         if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))){
             PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
                     Integer.parseInt(request.getParameter("pageSize")));
-            PageResult pageResult;
-            pageResult = reportService.queryReports(param,Integer.parseInt(request.getParameter("type")));
+            PageResult pageResult = reportService.queryReports(param,Integer.parseInt(request.getParameter("type")));
             if (pageResult == null) {
                 result = MyResult.failed("查看举报消息失败", null, 516);
             } else {

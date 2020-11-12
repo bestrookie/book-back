@@ -28,7 +28,10 @@ public class BookServiceImpl implements BookService {
     private BookReviewService bookReviewService;
     @Autowired
     private CollectionService collectionService;
-
+    private static final int ALL = 0;
+    private static final int FUZZY = 1;
+    private static final int FUZZY_TYPE = 2;
+    private static final int SEARCH_ID = 3;
     /**
      * 上传书籍
      * @param bookPojo 书籍信息实体
@@ -123,6 +126,33 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
+     * 模糊查询
+     * @param param 分页参数
+     * @param key 关键词
+     * @return 将查询结果分页
+     */
+    @Override
+    public PageResult queryFuzzy(PageRequestParam param, String key,int typeId) {
+        if (typeId == 0){
+            return PageUtils.getPageResult(param,getFuzzyInfo(param,key,0,FUZZY));
+        }else {
+            return PageUtils.getPageResult(param,getFuzzyInfo(param,key,typeId,FUZZY_TYPE));
+        }
+    }
+
+    /**
+     * 搜索中的搜索id
+     * @param param 分页信息
+     * @param bookId 书籍id
+     * @return
+     */
+    @Override
+    public PageResult queryById(PageRequestParam param, int bookId) {
+        return PageUtils.getPageResult(param,getFuzzyInfo(param,null,bookId,SEARCH_ID));
+    }
+
+
+    /**
      * 调用分页插件
      * @param param 分页参数
      * @param userId 用户id
@@ -130,9 +160,37 @@ public class BookServiceImpl implements BookService {
      */
     private PageInfo<BookPojo> getBookInfo(PageRequestParam param,int userId){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
-        List<BookPojo> books = new ArrayList<>();
-        books = bookMapper.queryMyUpload(userId);
+        List<BookPojo> books = bookMapper.queryMyUpload(userId);
         return new PageInfo<>(books);
+    }
 
+    /**
+     * 调用分页插件处理模糊查询等
+     * @param param 分页参数
+     * @param key 关键词
+     * @param typeId 类型id
+     * @param type 查询类型
+     * @return 分页结果
+     */
+    private PageInfo<BookPojo> getFuzzyInfo(PageRequestParam param,String key,int typeId,int type){
+        PageHelper.startPage(param.getPageNumber(),param.getPageSize());
+        List<BookPojo> books = new ArrayList<>();
+        switch (type){
+            case 0:
+                books = bookMapper.queryAllBooks();
+                break;
+            case 1:
+                books = bookMapper.queryFuzzy(key);
+                break;
+            case 2:
+                books = bookMapper.queryFuzzyByType(key,typeId);
+                break;
+            case 3:
+                books.add(bookMapper.queryBookById(typeId));
+                break;
+            default:
+                break;
+        }
+        return new PageInfo<>(books);
     }
 }

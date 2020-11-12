@@ -3,14 +3,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestrookie.mapper.BookTypeMapper">
-<!--    类型信息-->
+    <!--    类型信息-->
     <resultMap id="typeInfo" type="com.bestrookie.pojo.BookTypePojo">
         <id column="bt_id" property="typeId"/>
         <result column="bt_name" property="typeName"/>
     </resultMap>
-<!--    查询所有的类型信息-->
+    <!--    添加书籍类型-->
+    <insert id="addBookType">
+        INSERT INTO book_db.book_type (bt_name) value (#{typeName})
+    </insert>
+    <update id="updateBookType">
+        UPDATE book_db.book_type
+        set bt_name = #{typeName}
+        WHERE bt_id = #{typeId};
+    </update>
+    <!--    查询所有的类型信息-->
     <select id="queryBookType" resultMap="typeInfo">
-        SELECT * FROM book_db.book_type
+        SELECT *
+        FROM book_db.book_type
     </select>
 
 </mapper>

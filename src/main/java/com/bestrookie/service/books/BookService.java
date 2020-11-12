@@ -5,8 +5,6 @@ import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
 
-import java.util.List;
-
 /**
  * @author : bestrookie
  * @date : 19:17 2020/11/7
@@ -52,11 +50,34 @@ public interface BookService {
      * @return 分页结果
      */
     PageResult queryMyUpload(PageRequestParam param, int userId);
-
     /**
      * 查看用户收藏
      * @param userId 用户id
      * @return 分页结果
      */
     MyResult queryMyCollect(int userId);
+
+    /**
+     * 模糊查询
+     * @param key 关键词
+     * @param param 分页参数
+     * @return 自定义返回类型
+     */
+    PageResult queryFuzzy(PageRequestParam param,String key,int typeId);
+
+    /**
+     * 全局搜索中的搜索id
+     * @param param 分页信息
+     * @param bookId 书籍id
+     * @return 分页结果
+     */
+    PageResult queryById(PageRequestParam param,int bookId);
+
+    /**
+     * 管理员查看书籍信息
+     * @param param 分页的参数
+     * @param typed 查看种类
+     * @return
+     */
+//    PageResult queryAllBook(PageRequestParam param,int typed);
 }

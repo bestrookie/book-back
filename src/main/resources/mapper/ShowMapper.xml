@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.ShowMapper">
+    <resultMap id="showInfo" type="com.bestrookie.pojo.ShowPojo">
+        <id column="show_id" property="showId"/>
+        <result column="show_image" property="showImage"/>
+        <result column="show_request" property="showRequest"/>
+        <result column="show_state" property="showState"/>
+    </resultMap>
+<!--    添加展示信息-->
+    <insert id="addShow">
+        INSERT INTO book_db.book_show (show_image, show_request)
+        values (#{showImage},#{showRequest})
+    </insert>
+<!--    修改展示状态-->
+    <update id="updateShowState">
+        UPDATE book_db.book_show SET show_state = #{state} WHERE show_id = #{showId}
+    </update>
+<!--    删除展示信息-->
+    <delete id="deleteShowInfo">
+        DELETE FROM book_db.book_show WHERE show_id = #{showId}
+    </delete>
+    <!--    查看展示信息-->
+    <select id="queryShowInfo" resultMap="showInfo">
+        SELECT * FROM book_db.book_show ORDER BY show_id DESC
+    </select>
+<!--    展示列表-->
+    <select id="queryShow" resultMap="showInfo">
+        SELECT * FROM book_db.book_show WHERE show_state = TRUE
+    </select>
+    <select id="showCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_show WHERE show_state = TRUE;
+    </select>
+
+</mapper>

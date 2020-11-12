@@ -7,14 +7,13 @@ import com.bestrookie.service.books.BookService;
 import com.bestrookie.service.user.UserService;
 import com.bestrookie.utils.PdfUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
+import com.itextpdf.text.pdf.PdfReader;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.io.EOFException;
 import java.util.Set;
 
 /**
@@ -46,12 +45,14 @@ public class AsyncService {
     @Async
     public void isBookLegal(BookPojo bookPojo){
         log.info("正在执行异步任务");
-        String content = PdfUtils.getReallyContent(filePath + bookPojo.getResource());
+        String content = PdfUtils.readPdf(filePath + bookPojo.getResource());
         SensitiveWordUtils.init(wordPath);
         Set<String> set = SensitiveWordUtils.getSensitiveWord(content);
         double result = (double) set.size() / (double)content.length();
-        if (result < LIMIT && content.length() > 50){
-            int pagesCount = PdfUtils.pagesCount(filePath + bookPojo.getResource());
+        System.out.println(result);
+        if (result < LIMIT && content.length() > 0){
+            PdfReader reader = new PdfReader(filePath + bookPojo.getResource());
+            int pagesCount = reader.getNumberOfPages();
             UserPojo userPojo = userService.queryUserById(bookPojo.getUserId());
             int coin = pagesCount * REWARD + userPojo.getUserCoin();
             userService.updateUserCoin(coin,userPojo.getUserPhone());

@@ -4,6 +4,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -58,10 +59,25 @@ public class PdfUtils {
         pdDocument.close();
         return text;
     }
+    public static String readPdf(String fileName){
+        StringBuilder pageContent = new StringBuilder();
+        try {
+            PdfReader reader = new PdfReader(fileName);
+            int pageNum = reader.getNumberOfPages();
+            for(int i=1;i<=pageNum;i++){
+                pageContent.append(PdfTextExtractor.getTextFromPage(reader, i));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pageContent.toString();
+    }
+
     @SneakyThrows
     public static void main(String[] args) {
         System.out.println(new Date());
-        partitionPdfFile("F:\\我的坚果云\\资料\\JAVA核心知识点整理.pdf","F:\\我的坚果云\\资料\\122.pdf",1,100);
+        System.out.println(readPdf("D:\\resources\\books\\208265ebfe75867c93dd9166edbe71f6.pdf"));
         System.out.println(new Date());
     }
     public static void partitionPdfFile(String pdfFile,String newFile, int from, int end) {

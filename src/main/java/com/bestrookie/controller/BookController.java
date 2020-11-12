@@ -121,4 +121,49 @@ public class BookController {
         response.setStatus(result.getCode());
         return  result;
     }
+
+    /**
+     * 全局搜索
+     * @param response 请求参数
+     * @param request 响应参数
+     * @return 自定义返回类型
+     */
+    @GetMapping("/fuzzy")
+    public MyResult queryFuzzy(HttpServletResponse response,HttpServletRequest request,@RequestParam String key,@RequestParam String type){
+        MyResult result;
+        if (!IsTrueUtils.isTrue(key)){
+            int typeId = 0;
+            if (!"undefined".equals(type)){
+                typeId = Integer.parseInt(type);
+            }
+            if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))){
+                PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
+                        Integer.parseInt(request.getParameter("pageSize")));
+                PageResult pageResult = bookService.queryFuzzy(param,key,typeId);
+                if (pageResult == null) {
+                    result = MyResult.failed("搜索失败", null, 524);
+                } else {
+                    result = MyResult.success(pageResult);
+                }
+            }else {
+                result = MyResult.failed("参数错误", null, 412);
+            }
+        }else {
+            if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))) {
+                PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
+                        Integer.parseInt(request.getParameter("pageSize")));
+                PageResult pageResult = bookService.queryById(param, Integer.parseInt(key));
+                if (pageResult == null) {
+                    result = MyResult.failed("搜索失败", null, 524);
+                } else {
+                    result = MyResult.success(pageResult);
+                }
+            } else {
+                result = MyResult.failed("参数错误", null, 412);
+            }
+        }
+
+        response.setStatus(result.getCode());
+        return  result;
+    }
 }

@@ -86,4 +86,26 @@ public interface BookMapper {
      */
     List<BookPojo> queryMyCollection(@Param(value = "userId") int userId);
 
+    /**
+     * 根据类型查看书籍
+     * @param typeId 书籍类型id
+     * @return 书籍列表
+     */
+    List<BookPojo> queryAllByType(@Param(value = "typeId") int typeId);
+
+    /**
+     * 模糊查询
+     * @param key 关键词
+     * @return 书籍信息列表
+     */
+    List<BookPojo> queryFuzzy(@Param(value = "key") String key);
+
+    /**
+     * 模糊查询根据类型
+     * @param key 关键词
+     * @param typeId leixingid
+     * @return 书籍列表
+     */
+    List<BookPojo> queryFuzzyByType(@Param(value = "key") String key,@Param(value = "typeId") int typeId);
+
 }

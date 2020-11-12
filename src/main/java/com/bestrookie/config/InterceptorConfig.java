@@ -25,6 +25,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/swagger-resources/**")
                 .excludePathPatterns("/api/discussions/querydiscussion/**")
                 .excludePathPatterns("/api/admin/login/**")
+                .excludePathPatterns("/api/show/showinfo")
+                .excludePathPatterns("/api/book/fuzzy")
+                .excludePathPatterns("/api/booktype/querytype ")
         ;
 
     }
