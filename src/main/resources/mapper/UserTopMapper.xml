@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.UserTopMapper">
+    <resultMap id="topInfo" type="com.bestrookie.pojo.UserTopPojo">
+        <id column="top_id" property="topId"/>
+        <result column="user_id" property="userId"/>
+        <result column="top_date" property="topDate"/>
+        <result column="top_count" property="topCount"/>
+        <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
+    </resultMap>
+<!--    添加排行信息-->
+    <insert id="addUserTop">
+        INSERT INTO book_db.user_top (user_id, top_date, top_count) values (#{userId},#{topDate},#{topCount})
+    </insert>
+<!--    更新排行信息-->
+    <update id="updateUserTop">
+        UPDATE book_db.user_top set top_count = top_count + 1 WHERE user_id = #{userId}
+    </update>
+    <!--    查询是否存在排行信息-->
+    <select id="isTopExist" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.user_top WHERE user_id = #{userId}
+    </select>
+    <select id="queryUserTop" resultMap="topInfo">
+        SELECT * FROM book_db.user_top ORDER BY top_count DESC , top_date LIMIT 10
+    </select>
+</mapper>

@@ -13,7 +13,6 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -121,7 +120,6 @@ public class BookController {
         response.setStatus(result.getCode());
         return  result;
     }
-
     /**
      * 全局搜索
      * @param response 请求参数
@@ -166,4 +164,61 @@ public class BookController {
         response.setStatus(result.getCode());
         return  result;
     }
+
+    /**
+     * 分类榜
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回类型
+     */
+    @GetMapping("/typetop")
+    public MyResult queryTypeTop(HttpServletRequest request,HttpServletResponse response){
+        MyResult result;
+        if (IsTrueUtils.isTrue(request.getParameter("typeId"))){
+            result = bookService.booksOutByType(Integer.parseInt(request.getParameter("typeId")));
+        }else {
+            result = MyResult.failed("参数错误", null, 412);
+        }
+        response.setStatus(result.getCode());
+        return  result;
+    }
+
+    /**
+     * 查看未过审书籍
+     * @param response 请求参数
+     * @param request 响应参数
+     * @return 自定义返回类型
+     */
+    @GetMapping("/unbook")
+    public MyResult queryUnBook(HttpServletResponse response,HttpServletRequest request){
+        MyResult result;
+        if (IsTrueUtils.isTrue(request.getParameter("pageNumber")) && IsTrueUtils.isTrue(request.getParameter("pageSize"))) {
+            PageRequestParam param = new PageRequestParam(Integer.parseInt(request.getParameter("pageNumber")),
+                    Integer.parseInt(request.getParameter("pageSize")));
+            PageResult pageResult = bookService.queryUnBook(param);
+            if (pageResult == null) {
+                result = MyResult.failed("查看失败", null, 519);
+            } else {
+                result = MyResult.success(pageResult);
+            }
+        }else {
+            result = MyResult.failed("参数错误", null, 412);
+        }
+        response.setStatus(result.getCode());
+        return  result;
+    }
+
+    /**
+     * 查看书籍排行榜
+     * @param response 响应参数
+     * @return 自定义返回类型
+     */
+    @GetMapping("/top")
+    public MyResult queryTop(HttpServletResponse response){
+        MyResult result;
+        result = bookService.queryTop();
+        response.setStatus(result.getCode());
+        return  result;
+    }
+
 }

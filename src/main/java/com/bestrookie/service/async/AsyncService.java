@@ -3,8 +3,10 @@ package com.bestrookie.service.async;
 import com.bestrookie.handler.MessageEventHandler;
 import com.bestrookie.pojo.BookPojo;
 import com.bestrookie.pojo.UserPojo;
+import com.bestrookie.pojo.UserTopPojo;
 import com.bestrookie.service.books.BookService;
 import com.bestrookie.service.user.UserService;
+import com.bestrookie.service.usertop.UserTopService;
 import com.bestrookie.utils.PdfUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
 import com.itextpdf.text.pdf.PdfReader;
@@ -33,9 +35,11 @@ public class AsyncService {
     @Autowired
     UserService userService;
     @Autowired
-    MessageEventHandler messageEventHandler;
+    private MessageEventHandler messageEventHandler;
     @Autowired
-    BookService bookService;
+    private BookService bookService;
+    @Autowired
+    private UserTopService topService;
 
     /**
      * 书籍内容的合法性检验 以及价格的确定
@@ -49,8 +53,7 @@ public class AsyncService {
         SensitiveWordUtils.init(wordPath);
         Set<String> set = SensitiveWordUtils.getSensitiveWord(content);
         double result = (double) set.size() / (double)content.length();
-        System.out.println(result);
-        if (result < LIMIT && content.length() > 0){
+        if (result < LIMIT && content.length() > 10000){
             PdfReader reader = new PdfReader(filePath + bookPojo.getResource());
             int pagesCount = reader.getNumberOfPages();
             UserPojo userPojo = userService.queryUserById(bookPojo.getUserId());
@@ -59,6 +62,14 @@ public class AsyncService {
             bookService.updateBookState(bookPojo.getIdentity(),true);
             bookService.updateBookPriceByIdentity(bookPojo.getIdentity(), (int) (pagesCount * REWARD * PRICE));
             messageEventHandler.auditPass(bookPojo.getUserId(),"你上传的书已经审核通过获得源币："+pagesCount*REWARD);
+            if (topService.isTopExist(userPojo.getUserId()) && userPojo.getUserId() != 100001){
+                UserTopPojo topPojo = new UserTopPojo();
+                topPojo.setTopDate(System.currentTimeMillis());
+                topPojo.setUserId(userPojo.getUserId());
+                topService.addUserTopInfo(topPojo);
+            }else {
+                topService.updateUserTop(userPojo.getUserId());
+            }
         }else {
             messageEventHandler.auditPass(bookPojo.getUserId(),"你上传的书未通过审核");
         }

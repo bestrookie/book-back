@@ -9,7 +9,7 @@
         <result column="bt_name" property="typeName"/>
     </resultMap>
     <!--    添加书籍类型-->
-    <insert id="addBookType">
+    <insert id="addBookType" useGeneratedKeys="true" keyProperty="bt_id">
         INSERT INTO book_db.book_type (bt_name) value (#{typeName})
     </insert>
     <update id="updateBookType">

@@ -5,8 +5,10 @@ import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
+import com.bestrookie.pojo.UserPojo;
 import com.bestrookie.service.bookreview.BookReviewService;
 import com.bestrookie.service.collection.CollectionService;
+import com.bestrookie.service.user.UserService;
 import com.bestrookie.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -28,7 +30,9 @@ public class BookServiceImpl implements BookService {
     private BookReviewService bookReviewService;
     @Autowired
     private CollectionService collectionService;
-    private static final int ALL = 0;
+    @Autowired
+    private UserService userService;
+    private static final int UN = 0;
     private static final int FUZZY = 1;
     private static final int FUZZY_TYPE = 2;
     private static final int SEARCH_ID = 3;
@@ -144,13 +148,107 @@ public class BookServiceImpl implements BookService {
      * 搜索中的搜索id
      * @param param 分页信息
      * @param bookId 书籍id
-     * @return
+     * @return 分页结果
      */
     @Override
     public PageResult queryById(PageRequestParam param, int bookId) {
         return PageUtils.getPageResult(param,getFuzzyInfo(param,null,bookId,SEARCH_ID));
     }
 
+    /**
+     *管理员修改状态码
+     * @param bookId 书籍id
+     * @param status 状态
+     * @return 自定义返回类型
+     */
+    @Override
+    public MyResult updateStatus(int bookId, boolean status) {
+        if (bookMapper.updateStateById(bookId,status)){
+            if (!status){
+                BookPojo bookPojo = bookMapper.queryBookById(bookId);
+                UserPojo userPojo = userService.queryUserById(bookPojo.getUserId());
+                int coin = (int)(bookPojo.getBookPrice() / 1.1);
+                userService.updateUserCoin(userPojo.getUserCoin() - coin,userPojo.getUserPhone());
+            }
+            return MyResult.success(true);
+        }else {
+            return MyResult.failed("修改状态失败",false,525);
+        }
+    }
+
+    /**
+     * 修改书籍信息
+     * @param bookPojo 书籍信息
+     * @return 自定义返回类型
+     */
+    @Override
+    public MyResult updateBookInfo(BookPojo bookPojo) {
+        if (bookMapper.updateBookInfo(bookPojo)){
+            return MyResult.success(true);
+        }else {
+            return MyResult.failed("修改书籍信息失败",false,526);
+        }
+    }
+
+    /**
+     * 根据类型查询点击量排名
+     * @param typeId 类型id
+     * @return 自定义返回类型
+     */
+    @Override
+    public MyResult booksOutByType(int typeId) {
+        List<BookPojo> books = bookMapper.booksAreRankByType(typeId);
+        if (books != null){
+            return MyResult.success(books);
+        }else {
+            return MyResult.failed("查看分类榜失败",false,527);
+        }
+    }
+
+    /**
+     * 查看未过审书籍
+     * @param param 分页参数
+     * @return 分页结果
+     */
+    @Override
+    public PageResult queryUnBook(PageRequestParam param) {
+        return PageUtils.getPageResult(param,getFuzzyInfo(param,null,0,UN));
+    }
+
+    /**
+     * 查看此书是否过审
+     * @param bookId 书籍id
+     * @return 是否过审
+     */
+    @Override
+    public boolean isBookTrue(int bookId) {
+        BookPojo bookPojo = bookMapper.queryBookById(bookId);
+        return bookPojo.isBookState();
+    }
+
+    /**
+     * 查看书籍排行耪
+     * @return 自定义
+     */
+    @Override
+    public MyResult queryTop() {
+        List<BookPojo> books = bookMapper.bookTop();
+        if (books != null){
+            return MyResult.success(books);
+        }else {
+            return  MyResult.failed("查询排行榜失败",null,527);
+        }
+    }
+
+    @Override
+    public boolean addCollection(int bookId) {
+        return bookMapper.addCollection(bookId);
+    }
+
+    @Override
+    public boolean reduceCollection(int bookId) {
+        return bookMapper.reduceCollection(bookId);
+    }
 
     /**
      * 调用分页插件
@@ -177,7 +275,7 @@ public class BookServiceImpl implements BookService {
         List<BookPojo> books = new ArrayList<>();
         switch (type){
             case 0:
-                books = bookMapper.queryAllBooks();
+                books = bookMapper.queryUnBook();
                 break;
             case 1:
                 books = bookMapper.queryFuzzy(key);

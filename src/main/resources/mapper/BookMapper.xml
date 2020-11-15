@@ -21,17 +21,17 @@
         <result column="b_price" property="bookPrice"/>
         <result column="b_discount" property="bookDiscount"/>
         <result column="bt_name" property="typeName"/>
+        <result column="b_collect_count" property="bookCollect"/>
         <association property="discussionId" select="com.bestrookie.mapper.BookDiscussionsMapper.queryDiscussionId"
                      column="b_id"/>
         <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
-        <association property="bookCollect" select="com.bestrookie.mapper.CollectionMapper.collectCount" column="b_id"/>
     </resultMap>
     <!--    添加书籍信息-->
     <insert id="addBookMapper" parameterType="com.bestrookie.pojo.BookPojo">
         INSERT INTO book_db.books
-        (b_name, b_author, b_photo, b_address, b_publish_date, b_publisher, user_id, type_id, b_identity, b_upload_date)
+        (b_name, b_author, b_photo, b_address, b_publish_date, b_publisher, user_id, type_id, b_identity, b_upload_date,b_collect_count)
         VALUES (#{bookName}, #{author}, #{image}, #{resource}, #{publishDate}, #{publisher}, #{userId}, #{type},
-                #{identity}, #{uploadDate})
+                #{identity}, #{uploadDate},#{bookCollect})
     </insert>
     <!--    根据身份码查询是否存在书籍-->
     <select id="queryExistsIdentity" resultType="java.lang.Integer">
@@ -53,14 +53,14 @@
         FROM book_db.books
                  JOIN book_db.book_type
                       ON books.type_id = book_type.bt_id
-        WHERE b_state = true
-          AND b_id = #{bookId}
+        WHERE b_id = #{bookId}
     </select>
     <!--    根据userId查询书籍-->
     <select id="queryMyUpload" resultMap="bookInfo">
         SELECT *
         FROM book_db.books
         WHERE user_id = #{userId}
+        ORDER BY b_upload_date DESC
     </select>
     <!--    查看我的收藏-->
     <select id="queryMyCollection" resultMap="bookInfo">
@@ -76,18 +76,22 @@
         SELECT *
         FROM book_db.books
         WHERE type_id = #{typeId}
+        ORDER BY b_upload_date DESC
     </select>
     <!--    模糊查询-->
     <select id="queryFuzzy" resultMap="bookInfo">
         SELECT *
         FROM book_db.books
-        WHERE b_name
-            like CONCAT('%', #{key}, '%')
-           or b_author
-            like CONCAT('%', #{key}, '%')
-           or b_publisher
-            like CONCAT('%', #{key}, '%')
+        WHERE (b_name
+                   like CONCAT('%', #{key}, '%')
+            or b_author
+                   like CONCAT('%', #{key}, '%')
+            or b_publisher
+                   like CONCAT('%', #{key}, '%'))
+          AND b_state = true
+        ORDER BY b_upload_date DESC
     </select>
+    <!--    根据类型模糊查询-->
     <select id="queryFuzzyByType" resultMap="bookInfo">
         SELECT *
         FROM book_db.books
@@ -98,6 +102,26 @@
             or b_publisher
                    like CONCAT('%', #{key}, '%'))
           AND type_id = #{typeId}
+          AND b_state = true
+        ORDER BY b_upload_date DESC
+    </select>
+    <!--    根据类型查询书籍按照点击量排序-->
+    <select id="booksAreRankByType" resultMap="bookInfo">
+        SELECT *
+        FROM book_db.books
+        WHERE type_id = #{typeId}
+        ORDER BY b_click_count
+        LIMIT 5
+    </select>
+<!--    查询未过审书籍-->
+    <select id="queryUnBook" resultMap="bookInfo">
+        SELECT *
+        FROM book_db.books
+        WHERE b_state = false
+    </select>
+<!--    书籍排行-->
+    <select id="bookTop" resultMap="bookInfo">
+        SELECT * FROM book_db.books ORDER BY (b_click_count * 0.1+b_collect_count)DESC
     </select>
     <!--    修改书的状态码-->
     <update id="updateBookState">
@@ -116,6 +140,30 @@
         UPDATE book_db.books
         SET b_click_count =#{clickCount}
         WHERE b_id = #{bookId}
+    </update>
+    <!--    根据id修改状态-->
+    <update id="updateStateById">
+        UPDATE book_db.books
+        SET b_state = #{state}
+        WHERE b_id = #{bookId}
+    </update>
+    <!--    修改书籍信息-->
+    <update id="updateBookInfo">
+        UPDATE book_db.books
+        SET b_name         = #{bookName},
+            b_author       = #{author},
+            b_publisher    =#{publisher},
+            b_publish_date =#{publishDate},
+            type_id        =#{type}
+        WHERE b_id = #{bookId}
+    </update>
+<!--    收藏数量加一-->
+    <update id="addCollection">
+        UPDATE book_db.books SET b_collect_count = (b_collect_count + 1) WHERE b_id = #{bookId}
+    </update>
+<!--    收藏数量减一-->
+    <update id="reduceCollection">
+        UPDATE book_db.books SET b_collect_count = (b_collect_count - 1) WHERE b_id = #{bookId}
     </update>
 
 

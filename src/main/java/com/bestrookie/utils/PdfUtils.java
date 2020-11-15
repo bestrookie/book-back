@@ -60,6 +60,7 @@ public class PdfUtils {
         return text;
     }
     public static String readPdf(String fileName){
+        String str = "\\s*|\t|\r|\n";
         StringBuilder pageContent = new StringBuilder();
         try {
             PdfReader reader = new PdfReader(fileName);
@@ -71,7 +72,11 @@ public class PdfUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return pageContent.toString();
+        String text = pageContent.toString();
+        Pattern pattern = Pattern.compile(str);
+        Matcher m = pattern.matcher(text);
+        text = m.replaceAll("");
+        return text;
     }
 
     @SneakyThrows

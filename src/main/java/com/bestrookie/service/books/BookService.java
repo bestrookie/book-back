@@ -4,7 +4,6 @@ import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
-
 /**
  * @author : bestrookie
  * @date : 19:17 2020/11/7
@@ -56,15 +55,14 @@ public interface BookService {
      * @return 分页结果
      */
     MyResult queryMyCollect(int userId);
-
     /**
      * 模糊查询
      * @param key 关键词
      * @param param 分页参数
+     * @param typeId 类型id
      * @return 自定义返回类型
      */
     PageResult queryFuzzy(PageRequestParam param,String key,int typeId);
-
     /**
      * 全局搜索中的搜索id
      * @param param 分页信息
@@ -72,12 +70,56 @@ public interface BookService {
      * @return 分页结果
      */
     PageResult queryById(PageRequestParam param,int bookId);
+    /**
+     * 管理员修改书籍状态
+     * @param bookId 书籍id
+     * @param status 状态
+     * @return 自定义返回类型
+     */
+    MyResult updateStatus(int bookId,boolean status);
+    /**
+     * 修改书籍信息
+     * @param bookPojo 书籍信息
+     * @return 自定义返回类型
+     */
+    MyResult updateBookInfo(BookPojo bookPojo);
 
     /**
-     * 管理员查看书籍信息
-     * @param param 分页的参数
-     * @param typed 查看种类
-     * @return
+     * 根据类型查询点击量排名
+     * @param typeId 类型id
+     * @return 自定义返回类型
      */
-//    PageResult queryAllBook(PageRequestParam param,int typed);
+    MyResult booksOutByType(int typeId);
+
+    /**
+     * 查看未过深书籍
+     * @param param 分页参数
+     * @return 分页结果
+     */
+    PageResult queryUnBook(PageRequestParam param);
+
+    /**
+     * 查询此书是否过审
+     * @param bookId 书籍id
+     * @return 是否过审
+     */
+    boolean isBookTrue(int bookId);
+    /**
+     * 查看书籍排行版
+     * @return 自定义返回类型
+     */
+    MyResult queryTop();
+    /**
+     * 收藏数加一
+     * @param bookId 书籍id
+     * @return 是否成功
+     */
+    boolean addCollection(int bookId);
+
+    /**
+     * 收藏数量减一
+     * @param bookId 书籍id
+     * @return 是否成功
+     */
+    boolean reduceCollection(int bookId);
 }
