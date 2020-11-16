@@ -63,8 +63,9 @@ public interface UserService {
       * 修改用户虚拟币
       * @param userCoin 虚拟币数量
       * @param phone 手机号
+      * @return
       */
-     void updateUserCoin(int userCoin, String phone);
+     boolean updateUserCoin(int userCoin, String phone);
      /**
       * 查询所有用户
       * @param param 分页参数

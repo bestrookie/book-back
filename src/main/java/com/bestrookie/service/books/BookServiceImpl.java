@@ -250,6 +250,16 @@ public class BookServiceImpl implements BookService {
         return bookMapper.reduceCollection(bookId);
     }
 
+    @Override
+    public boolean addBookPage(int bookId, int pageCount) {
+        return bookMapper.updateBookPage(bookId,pageCount);
+    }
+
+    @Override
+    public BookPojo queryBookById(int bookId) {
+        return bookMapper.queryBookById(bookId);
+    }
+
     /**
      * 调用分页插件
      * @param param 分页参数

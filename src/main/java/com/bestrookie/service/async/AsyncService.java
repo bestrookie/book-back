@@ -4,6 +4,7 @@ import com.bestrookie.handler.MessageEventHandler;
 import com.bestrookie.pojo.BookPojo;
 import com.bestrookie.pojo.UserPojo;
 import com.bestrookie.pojo.UserTopPojo;
+import com.bestrookie.service.booklimit.BookLimitService;
 import com.bestrookie.service.books.BookService;
 import com.bestrookie.service.user.UserService;
 import com.bestrookie.service.usertop.UserTopService;
@@ -40,9 +41,11 @@ public class AsyncService {
     private BookService bookService;
     @Autowired
     private UserTopService topService;
+    @Autowired
+    private BookLimitService bookLimitService;
 
     /**
-     * 书籍内容的合法性检验 以及价格的确定
+     * 书籍内容的合法性检验 以及价格的确定,书籍页数的存储
      * @param bookPojo 书籍信息
      */
     @SneakyThrows
@@ -60,9 +63,11 @@ public class AsyncService {
             int coin = pagesCount * REWARD + userPojo.getUserCoin();
             userService.updateUserCoin(coin,userPojo.getUserPhone());
             bookService.updateBookState(bookPojo.getIdentity(),true);
+            bookService.addBookPage(bookPojo.getBookId(),pagesCount);
             bookService.updateBookPriceByIdentity(bookPojo.getIdentity(), (int) (pagesCount * REWARD * PRICE));
             messageEventHandler.auditPass(bookPojo.getUserId(),"你上传的书已经审核通过获得源币："+pagesCount*REWARD);
-            if (topService.isTopExist(userPojo.getUserId()) && userPojo.getUserId() != 100001){
+            //上传榜加一
+            if (!topService.isTopExist(userPojo.getUserId()) && userPojo.getUserId() != 100001){
                 UserTopPojo topPojo = new UserTopPojo();
                 topPojo.setTopDate(System.currentTimeMillis());
                 topPojo.setUserId(userPojo.getUserId());
@@ -70,6 +75,7 @@ public class AsyncService {
             }else {
                 topService.updateUserTop(userPojo.getUserId());
             }
+            bookLimitService.addLimit(bookPojo.getUserId(),bookPojo.getBookId(),0);
         }else {
             messageEventHandler.auditPass(bookPojo.getUserId(),"你上传的书未通过审核");
         }

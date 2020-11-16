@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.BookLimitMapper">
+    <resultMap id="bookLimitInfo" type="com.bestrookie.pojo.BookLimitPojo">
+        <id column="limit_id" property="limitId"/>
+        <result column="user_id" property="userId"/>
+        <result column="b_id" property="bookId"/>
+        <result column="limit_date" property="limitDate"/>
+        <result column="limit_page" property="limitPage"/>
+        <result column="limit_now_page" property="nowPage"/>
+        <result column="limit_all" property="limitAll"/>
+        <association property="book" select="com.bestrookie.mapper.BookMapper.queryBookById" column="b_id"/>
+    </resultMap>
+<!--    添加书籍权限信息-->
+    <insert id="addBookLimitInfo">
+        INSERT INTO book_db.book_limlt (user_id, b_id, limit_date, limit_page, limlit_now_page,limit_all)
+        VALUES (#{userId},#{bookId},#{limitDate},#{limitPage},#{nowPage},#{limitAll})
+    </insert>
+<!--    修改用户的书籍权限-->
+    <update id="updateBookLimitInfo">
+        UPDATE book_db.book_limlt
+        SET limit_date = #{limitDate},limit_page = #{limitPage},limlit_now_page = #{nowPage}
+        WHERE user_id = #{userId} AND b_id = #{bookId}
+    </update>
+<!--    全本解锁-->
+    <update id="updateBookLimitAll">
+        UPDATE book_db.book_limlt
+        SET limit_all = true
+        WHERE user_id =#{userId} AND b_id = #{bookId}
+    </update>
+    <delete id="deleteLimit">
+        DELETE FROM book_db.book_limlt WHERE user_id =#{userId} AND b_id = #{bookId}
+    </delete>
+    <!--    判断是否存在权限-->
+    <select id="isExistBookLimit" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_limlt WHERE user_id =#{userId} AND b_id = #{bookId}
+    </select>
+<!--    根据id查询权限信息-->
+    <select id="queryLimitById" resultMap="bookLimitInfo">
+        SELECT * FROM book_db.book_limlt WHERE user_id = #{userId} AND b_id = #{bookId}
+    </select>
+<!--    查询是否全本解锁-->
+    <select id="isAllLimit" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_limlt WHERE limit_all = TRUE AND user_id =#{userId} AND b_id = #{bookId}
+    </select>
+    <select id="bookLimitHistory" resultMap="bookLimitInfo">
+        SELECT book_db.book_limlt.*
+        FROM book_db.book_limlt
+        JOIN book_db.books
+        on (book_db.books.user_id != #{userId} AND book_db.books.b_id = book_db.book_limlt.b_id)
+        WHERE book_limlt.user_id = #{userId}
+        ORDER BY book_limlt.limit_date DESC
+    </select>
+
+</mapper>

@@ -122,4 +122,19 @@ public interface BookService {
      * @return 是否成功
      */
     boolean reduceCollection(int bookId);
+
+    /**
+     * 添加书籍页数
+     * @param bookId 书籍id
+     * @param pageCount 页数
+     * @return 是否添加成功
+     */
+    boolean addBookPage(int bookId,int pageCount);
+
+    /**
+     * 根据id查找书籍
+     * @param bookId 书籍id
+     * @return 书籍信息
+     */
+    BookPojo queryBookById(int bookId);
 }

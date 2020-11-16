@@ -137,12 +137,19 @@ public interface BookMapper {
      * @return 是否成功
      */
     boolean addCollection(@Param(value = "bookId") int bookId);
-
     /**
      * 收藏数量减一
      * @param bookId 书籍id
      * @return 是否成功
      */
     boolean reduceCollection(@Param(value = "bookId") int bookId);
+
+    /**
+     * 添加书籍页数
+     * @param bookId 书籍id
+     * @param pageCount 页数
+     * @return 是否添加成功
+     */
+    boolean updateBookPage(@Param(value = "bookId") int bookId,@Param(value = "pageCount") int pageCount);
 
 }

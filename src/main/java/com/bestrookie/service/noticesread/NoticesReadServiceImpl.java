@@ -35,10 +35,6 @@ public class NoticesReadServiceImpl implements NoticesReadService {
      */
     @Override
     public boolean isReadNotice(int userId, int noticeId) {
-        if (readMapper.queryNoticesRead(userId, noticeId) == 0){
-            return false;
-        }else {
-            return true;
-        }
+        return readMapper.queryNoticesRead(userId, noticeId) != 0;
     }
 }

@@ -164,10 +164,11 @@ public class UserServiceImpl implements UserService {
      * 修改用户虚拟币
      * @param userCoin 虚拟币数量
      * @param phone 手机号
+     * @return
      */
     @Override
-    public void updateUserCoin(int userCoin, String phone) {
-        userMapper.updateUserCoin(userCoin, phone);
+    public boolean updateUserCoin(int userCoin, String phone) {
+        return userMapper.updateUserCoin(userCoin, phone);
     }
 
     /**

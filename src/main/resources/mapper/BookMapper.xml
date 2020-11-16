@@ -22,12 +22,13 @@
         <result column="b_discount" property="bookDiscount"/>
         <result column="bt_name" property="typeName"/>
         <result column="b_collect_count" property="bookCollect"/>
+        <result column="b_page_count" property="bookPage"/>
         <association property="discussionId" select="com.bestrookie.mapper.BookDiscussionsMapper.queryDiscussionId"
                      column="b_id"/>
         <association property="user" select="com.bestrookie.mapper.UserMapper.queryUserById" column="user_id"/>
     </resultMap>
     <!--    添加书籍信息-->
-    <insert id="addBookMapper" parameterType="com.bestrookie.pojo.BookPojo">
+    <insert id="addBookMapper" useGeneratedKeys="true" keyProperty="bookId" parameterType="com.bestrookie.pojo.BookPojo">
         INSERT INTO book_db.books
         (b_name, b_author, b_photo, b_address, b_publish_date, b_publisher, user_id, type_id, b_identity, b_upload_date,b_collect_count)
         VALUES (#{bookName}, #{author}, #{image}, #{resource}, #{publishDate}, #{publisher}, #{userId}, #{type},
@@ -164,6 +165,9 @@
 <!--    收藏数量减一-->
     <update id="reduceCollection">
         UPDATE book_db.books SET b_collect_count = (b_collect_count - 1) WHERE b_id = #{bookId}
+    </update>
+    <update id="updateBookPage">
+        UPDATE book_db.books SET b_page_count = #{pageCount} WHERE b_id = #{bookId}
     </update>
 
 

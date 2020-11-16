@@ -44,8 +44,8 @@ public class BookController {
         if (!(SensitiveWordUtils.contains(bookPojo.getBookName()) && SensitiveWordUtils.contains(bookPojo.getPublisher()) && SensitiveWordUtils.contains(bookPojo.getAuthor()))){
             bookPojo.setUploadDate(System.currentTimeMillis());
             bookPojo.setUserId(TokenUtils.getId(request.getHeader("authorization")));
-            asyncService.isBookLegal(bookPojo);
             result = bookService.uploadBook(bookPojo);
+            asyncService.isBookLegal(bookPojo);
         }else {
             result = MyResult.failed("参数错误",null,412);
         }
