@@ -1,5 +1,6 @@
 package com.bestrookie.utils;
 
+import com.bestrookie.pojo.BookPojo;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
@@ -82,7 +83,7 @@ public class PdfUtils {
     @SneakyThrows
     public static void main(String[] args) {
         System.out.println(new Date());
-        System.out.println(readPdf("D:\\resources\\books\\208265ebfe75867c93dd9166edbe71f6.pdf"));
+        partitionPdfFile("D:\\resources\\books\\6da76f4207b99c445bddec02aaf46b3e.pdf","D:\\resources\\bookpart\\6da76f4207b99c445bddec02aaf46b3e.pdf",1,10);
         System.out.println(new Date());
     }
     public static void partitionPdfFile(String pdfFile,String newFile, int from, int end) {
@@ -106,5 +107,23 @@ public class PdfUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static void splitPdf(BookPojo book,String filePath,String partFilePath) {
+        int total = (int) Math.ceil((double) (book.getBookPage()) / (double) 100);
+        int from = 1;
+        int end = 100;
+        String pdfFile = filePath + book.getResource();
+        String newFile = partFilePath + book.getIdentity();
+        log.info("开始切割");
+        PdfUtils.partitionPdfFile(pdfFile, (newFile + "-"+ 0+".pdf"), 1, 10);
+        for (int part = 1; part <= total; part++) {
+            if (part == (total)) {
+                end = book.getBookPage();
+            }
+            PdfUtils.partitionPdfFile(pdfFile, (newFile + "-"+ part+".pdf"), from, end);
+            end += 100;
+            from += 100;
+        }
+        log.info("切割完成");
     }
 }

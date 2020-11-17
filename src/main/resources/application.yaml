@@ -73,6 +73,7 @@ sms:
 file:
   image-path: D:\\resources\\image
   book-path : D:\\resources\\books\\
+  bookPart-path : D:\\resources\\bookpart\\
   banWord-path : D:\\resources\\banwords\banword.txt
 #分页插件
 pagehelper:

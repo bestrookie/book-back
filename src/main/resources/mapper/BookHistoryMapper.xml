@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestrookie.mapper.BookHistoryMapper">
+    <resultMap id="historyInfo" type="com.bestrookie.pojo.BookHistoryPojo">
+        <id column="history_id" property="historyId"/>
+        <result column="user_id" property="userId"/>
+        <result column="b_id" property="bookId"/>
+        <result column="history_date" property="historyDate"/>
+        <result column="history_page" property="historyPage"/>
+        <association property="book" select="com.bestrookie.mapper.BookMapper.queryBookById" column="b_id"/>
+    </resultMap>
+<!--    添加历史记录-->
+    <insert id="addBookHistory">
+        INSERT INTO book_db.book_history (user_id, b_id, history_date,history_page)
+        VALUES (#{userId},#{bookId},#{historyDate},#{historyPage})
+    </insert>
+<!--    更新历史记录-->
+    <update id="updateBookHistory">
+        UPDATE book_db.book_history SET history_date =#{historyDate},history_page =#{historyPage} WHERE user_id = #{userId} AND b_id = #{bookId}
+    </update>
+    <!--    查看浏览记录-->
+    <select id="queryBookHistory" resultMap="historyInfo">
+        SELECT * FROM book_db.book_history WHERE user_id = #{userId} AND b_id =#{bookId}
+    </select>
+<!--    查看用户所有记录-->
+    <select id="queryBookHistoryById" resultMap="historyInfo">
+        SELECT * FROM book_db.book_history WHERE user_id = #{userId}
+    </select>
+<!--    是否存在历史记录-->
+    <select id="isHistory" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_history WHERE user_id =#{userId} AND b_id= #{bookId}
+    </select>
+</mapper>

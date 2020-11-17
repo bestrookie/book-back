@@ -3,6 +3,7 @@ package com.bestrookie.service.booklimit;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.model.PageResult;
 import com.bestrookie.model.param.PageRequestParam;
+import com.bestrookie.pojo.BookLimitPojo;
 
 /**
  * @author : bestrookie
@@ -61,4 +62,12 @@ public interface  BookLimitService {
      * @return 分页结果
      */
     PageResult queryBookLimitHistory(PageRequestParam param, int userId);
+
+    /**
+     * 查询权限信息
+     * @param userId 用户id
+     * @param bookId 书籍id
+     * @return 权限信息
+     */
+    BookLimitPojo queryById(int userId,int bookId);
 }

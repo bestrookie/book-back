@@ -174,6 +174,11 @@ public class BookLimitServiceImpl implements BookLimitService{
         return PageUtils.getPageResult(param,getPageInfo(param,userId));
     }
 
+    @Override
+    public BookLimitPojo queryById(int userId, int bookId) {
+        return limitMapper.queryLimitById(userId, bookId);
+    }
+
 
     /**
      * 更新解锁部分

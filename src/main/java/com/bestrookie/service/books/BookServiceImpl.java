@@ -10,6 +10,7 @@ import com.bestrookie.service.bookreview.BookReviewService;
 import com.bestrookie.service.collection.CollectionService;
 import com.bestrookie.service.user.UserService;
 import com.bestrookie.utils.PageUtils;
+import com.bestrookie.utils.PdfUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

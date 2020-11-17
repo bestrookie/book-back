@@ -30,6 +30,8 @@ public class AsyncService {
     private String filePath;
     @Value("${file.banWord-path}")
     private String wordPath;
+    @Value("${file.bookPart-path}")
+    private String partFilePath;
     private static final int REWARD = 10;
     private static final double PRICE = 1.1;
     private static final double LIMIT = 0.1;
@@ -59,6 +61,7 @@ public class AsyncService {
         if (result < LIMIT && content.length() > 10000){
             PdfReader reader = new PdfReader(filePath + bookPojo.getResource());
             int pagesCount = reader.getNumberOfPages();
+            bookPojo.setBookPage(pagesCount);
             UserPojo userPojo = userService.queryUserById(bookPojo.getUserId());
             int coin = pagesCount * REWARD + userPojo.getUserCoin();
             userService.updateUserCoin(coin,userPojo.getUserPhone());
@@ -66,6 +69,7 @@ public class AsyncService {
             bookService.addBookPage(bookPojo.getBookId(),pagesCount);
             bookService.updateBookPriceByIdentity(bookPojo.getIdentity(), (int) (pagesCount * REWARD * PRICE));
             messageEventHandler.auditPass(bookPojo.getUserId(),"你上传的书已经审核通过获得源币："+pagesCount*REWARD);
+            PdfUtils.splitPdf(bookPojo,filePath,partFilePath);
             //上传榜加一
             if (!topService.isTopExist(userPojo.getUserId()) && userPojo.getUserId() != 100001){
                 UserTopPojo topPojo = new UserTopPojo();
@@ -80,6 +84,5 @@ public class AsyncService {
             messageEventHandler.auditPass(bookPojo.getUserId(),"你上传的书未通过审核");
         }
         log.info("异步任务完成");
-
     }
 }
