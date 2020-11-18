@@ -7,6 +7,7 @@ import com.bestrookie.service.notice.NoticeService;
 import com.bestrookie.utils.TokenUtils;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.annotation.OnConnect;
+import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class MessageEventHandler {
     @Autowired
     private NoticeService noticeService;
     public static ConcurrentHashMap<String, SocketIOClient> clientHashMap = new ConcurrentHashMap<>();
+    public static int peopleNum = 0;
 
     /**
      * 客户端连接
@@ -33,7 +35,9 @@ public class MessageEventHandler {
      */
     @OnConnect
     public void onConnect(SocketIOClient client){
-        client.sendEvent("MESSAGE","onConnect back");
+        peopleNum += 1;
+        log.info(String.valueOf(peopleNum));
+        SocketIOClient client1 = clientHashMap.get("1");
     }
 
 
@@ -47,6 +51,9 @@ public class MessageEventHandler {
         int userId = TokenUtils.getId(data.getMsg());
         clientHashMap.put(String.valueOf(userId),client);
         log.info("客户端:" + client.getSessionId() + "uid=" + userId);
+        SocketIOClient client1 = clientHashMap.get("1");
+        client1.sendEvent("peopleNum",peopleNum);
+
     }
 
     /**
@@ -170,5 +177,18 @@ public class MessageEventHandler {
         if (client != null){
             client.sendEvent("SYSTEM",msgObj);
         }
+    }
+    /**
+     * 客户端关闭连接时触发
+     *
+     * @param client
+     */
+    @OnDisconnect
+    public void onDisconnect(SocketIOClient client) {
+        peopleNum -= 1;
+        SocketIOClient client1 = clientHashMap.get("1");
+        log.info(String.valueOf(peopleNum));
+        client1.sendEvent("peopleNum",peopleNum);
+
     }
 }

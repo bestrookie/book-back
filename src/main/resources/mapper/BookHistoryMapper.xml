@@ -26,10 +26,13 @@
     </select>
 <!--    查看用户所有记录-->
     <select id="queryBookHistoryById" resultMap="historyInfo">
-        SELECT * FROM book_db.book_history WHERE user_id = #{userId}
+        SELECT * FROM book_db.book_history WHERE user_id = #{userId} ORDER BY history_date DESC
     </select>
 <!--    是否存在历史记录-->
     <select id="isHistory" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM book_db.book_history WHERE user_id =#{userId} AND b_id= #{bookId}
+    </select>
+    <select id="querAllHistory" resultMap="historyInfo">
+        SELECT * FROM book_db.book_history
     </select>
 </mapper>

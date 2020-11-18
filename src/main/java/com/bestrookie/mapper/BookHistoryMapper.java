@@ -49,4 +49,10 @@ public interface BookHistoryMapper {
      * @return 数量
      */
     int isHistory(@Param(value = "userId") int userId,@Param(value = "bookId") int bookId);
+
+    /**
+     * 查询所有记录
+     * @return 记录列表
+     */
+    List<BookHistoryPojo> querAllHistory();
 }

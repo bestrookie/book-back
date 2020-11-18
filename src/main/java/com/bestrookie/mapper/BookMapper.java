@@ -112,14 +112,12 @@ public interface BookMapper {
      * @return 是否修改成功
      */
     boolean updateBookInfo(BookPojo bookPojo);
-
     /**
      * 书籍同类中的排名
      * @param typeId 书籍id
      * @return 书籍信息
      */
     List<BookPojo>booksAreRankByType(@Param(value = "typeId") int typeId);
-
     /**
      * 查询为过审书籍
      * @return 书籍列表
@@ -130,7 +128,6 @@ public interface BookMapper {
      * @return 书籍列表
      */
     List<BookPojo>bookTop();
-
     /**
      * 收藏数加一
      * @param bookId 书籍id
@@ -143,7 +140,6 @@ public interface BookMapper {
      * @return 是否成功
      */
     boolean reduceCollection(@Param(value = "bookId") int bookId);
-
     /**
      * 添加书籍页数
      * @param bookId 书籍id
@@ -151,5 +147,11 @@ public interface BookMapper {
      * @return 是否添加成功
      */
     boolean updateBookPage(@Param(value = "bookId") int bookId,@Param(value = "pageCount") int pageCount);
+
+    /**
+     * 查询类型的书籍数量
+     * @return 数量
+     */
+    int queryNumByType(@Param(value = "typeId") int typeId);
 
 }

@@ -52,4 +52,10 @@ public interface BookDiscussionsMapper {
      */
     int queryDiscussionId(@Param(value = "bookId") int bookId);
 
+    /**
+     * 查询书圈的数量
+     * @return
+     */
+    int discussionNum();
+
 }

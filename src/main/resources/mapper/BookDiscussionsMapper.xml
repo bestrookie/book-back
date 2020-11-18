@@ -44,4 +44,7 @@
     <select id="queryDiscussionId" resultType="java.lang.Integer">
         SELECT book_db.book_discussions.bd_id FROM book_db.book_discussions WHERE b_id =#{bookId}
     </select>
+    <select id="discussionNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.book_discussions
+    </select>
 </mapper>

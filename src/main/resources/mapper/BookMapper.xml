@@ -124,6 +124,9 @@
     <select id="bookTop" resultMap="bookInfo">
         SELECT * FROM book_db.books ORDER BY (b_click_count * 0.1+b_collect_count)DESC
     </select>
+    <select id="queryNumByType" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM book_db.books WHERE type_id = #{typeId}
+    </select>
     <!--    修改书的状态码-->
     <update id="updateBookState">
         UPDATE book_db.books
