@@ -75,6 +75,7 @@ file:
   book-path : D:\\resources\\books\\
   bookPart-path : D:\\resources\\bookpart\\
   banWord-path : D:\\resources\\banwords\banword.txt
+  key-path : D:\\resources\\password\\key.txt
 #分页插件
 pagehelper:
   helper-dialect: mysql

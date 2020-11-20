@@ -75,7 +75,7 @@ public class UserController {
      */
     @PostMapping("/getsms")
     public String getSms(@RequestBody HashMap<String, String> phone, HttpServletResponse response) {
-        HashMap<String, String> hashMap = getSmsService.GetSms(phone.get("phone"));
+        HashMap<String, String> hashMap = getSmsService.getSms(phone.get("phone"));
         String userPhone = phone.get("phone");
         String code = hashMap.get(userPhone);
         redisTemplate.opsForValue().set(userPhone, code, 5 * 60, TimeUnit.SECONDS);

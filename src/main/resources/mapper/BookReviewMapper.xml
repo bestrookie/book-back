@@ -18,7 +18,7 @@
         INSERT INTO book_db.book_review (br_content, br_date, b_id, user_id, br_level)
         values (#{reviewContent},#{reviewDate},#{bookId},#{userId},#{value})
     </insert>
-<!--    传发表评论的数量-->
+<!--    发表评论的数量-->
     <select id="isReview" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM book_db.book_review WHERE user_id = #{userId} AND b_id = #{bookId}
     </select>

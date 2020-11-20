@@ -35,6 +35,7 @@ public class PLoginServiceImpl implements PLoginService {
                 String token = TokenUtils.token(phone,userPojo.getUserId(),0);
                 HashMap<String, String> hashMap = SImageUtils.sImage(token,userPojo.getImage());
                 String key = "T"+ userPojo.getUserPhone();
+                assert token != null;
                 redisTemplate.opsForValue().set(key,token);
                 return MyResult.success(hashMap);
             }else {

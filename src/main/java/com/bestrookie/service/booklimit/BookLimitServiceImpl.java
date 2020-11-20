@@ -90,15 +90,7 @@ public class BookLimitServiceImpl implements BookLimitService{
         BookPojo bookPojo = bookService.queryBookById(bookId);
         if (!isAllLimit(userId, bookId)){
             if (payCost(userId,bookPojo.getBookPrice())){
-                if (isExistBookLimit(userId, bookId)){
-                    if (limitMapper.updateBookLimitAll(userId, bookId)){
-                        return MyResult.success(true);
-                    }else {
-                        return MyResult.failed("解锁失败",false,528);
-                    }
-                }else {
-                    return addLimit(userId,bookId,0);
-                }
+                return addLimit(userId,bookId,0);
             }else {
                 return MyResult.failed("检查你的源币是否足够",false,528);
             }
@@ -177,6 +169,23 @@ public class BookLimitServiceImpl implements BookLimitService{
     @Override
     public BookLimitPojo queryById(int userId, int bookId) {
         return limitMapper.queryLimitById(userId, bookId);
+    }
+
+    @Override
+    public MyResult partAllLimit(int userId, int bookId) {
+        BookPojo bookPojo = bookService.queryBookById(bookId);
+        BookLimitPojo limitPojo = limitMapper.queryLimitById(userId, bookId);
+        int price = (bookPojo.getBookPage() - (limitPojo.getLimitPage() * 100)) * 11;
+        if (!isAllLimit(userId,bookId)){
+            if (payCost(userId,price)){
+                limitMapper.deleteLimit(userId,bookId);
+                return addLimit(userId,bookId,0);
+            }else {
+                return MyResult.failed("检查你的源币是否足够",false,528);
+            }
+        }else {
+            return MyResult.failed("已经解锁",false,528);
+        }
     }
 
 

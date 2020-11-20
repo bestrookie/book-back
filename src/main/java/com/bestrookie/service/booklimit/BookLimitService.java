@@ -70,4 +70,12 @@ public interface  BookLimitService {
      * @return 权限信息
      */
     BookLimitPojo queryById(int userId,int bookId);
+
+    /**
+     * 解锁部分后全部解锁
+     * @param userId 用户id
+     * @param bookId 书籍id
+     * @return 自定义返回类型
+     */
+    MyResult partAllLimit(int userId,int bookId);
 }

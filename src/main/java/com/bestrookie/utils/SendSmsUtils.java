@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -27,16 +28,14 @@ import java.util.Set;
  */
 @Slf4j
 public class SendSmsUtils {
-//    private static final String ACCESS_KEY_ID = "";
-//    private static final String SECRET = "";
     private static final String SIGN_NAME = "书源网";
     private static final String TEMPLATE_CODE = "SMS_204106333";
 
 
-    public static HashMap<String, String> send(String phone){
+    public static HashMap<String, String> send(String phone,String filePath){
         String[] secretKey = new String[3];
         int i = 0;
-        Set<String> strings = readTxtByLine("D:\\resources\\password\\key.txt");
+        Set<String> strings = readTxtByLine(filePath);
         for (String string : strings) {
             secretKey[i] = string;
             i++;
@@ -73,19 +72,15 @@ public class SendSmsUtils {
     public static Set<String> readTxtByLine(String path){
         Set<String> keyWordSet = new HashSet<String>();
         File file=new File(path);
-        if(!file.exists()){      //文件流是否存在
+        if(!file.exists()){
             return keyWordSet;
         }
         BufferedReader reader=null;
-        String temp=null;
-        //int line=1;
+        String temp;
         try{
-            //reader=new BufferedReader(new FileReader(file));这样在web运行的时候，读取会乱码
-            reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+            reader=new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             while((temp=reader.readLine())!=null){
-                //System.out.println("line"+line+":"+temp);
                 keyWordSet.add(temp);
-                //line++;
             }
         } catch(Exception e){
             e.printStackTrace();

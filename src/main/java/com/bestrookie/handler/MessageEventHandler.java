@@ -35,9 +35,7 @@ public class MessageEventHandler {
      */
     @OnConnect
     public void onConnect(SocketIOClient client){
-        peopleNum += 1;
-        log.info(String.valueOf(peopleNum));
-        SocketIOClient client1 = clientHashMap.get("1");
+
     }
 
 
@@ -51,8 +49,12 @@ public class MessageEventHandler {
         int userId = TokenUtils.getId(data.getMsg());
         clientHashMap.put(String.valueOf(userId),client);
         log.info("客户端:" + client.getSessionId() + "uid=" + userId);
+        peopleNum += 1;
         SocketIOClient client1 = clientHashMap.get("1");
-        client1.sendEvent("peopleNum",peopleNum);
+        if (client1 != null){
+            client1.sendEvent("peopleNum",peopleNum);
+        }
+        log.info(String.valueOf(peopleNum));
 
     }
 
@@ -161,7 +163,9 @@ public class MessageEventHandler {
     @OnEvent(value = "receive_report")
     public void receiveReport(){
         SocketIOClient client = clientHashMap.get("1");
-        client.sendEvent("REPORT","收到一条举报信息");
+        if (client!=null){
+            client.sendEvent("REPORT","收到一条举报信息");
+        }
     }
     public void auditPass(int userId,String msg){
         MessagePojo msgObj = new MessagePojo();
@@ -188,7 +192,9 @@ public class MessageEventHandler {
         peopleNum -= 1;
         SocketIOClient client1 = clientHashMap.get("1");
         log.info(String.valueOf(peopleNum));
-        client1.sendEvent("peopleNum",peopleNum);
+        if ((client1 != null)){
+            client1.sendEvent("peopleNum",peopleNum);
+        }
 
     }
 }

@@ -1,6 +1,7 @@
 package com.bestrookie.service.sms;
 
 import com.bestrookie.utils.SendSmsUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,8 +12,10 @@ import java.util.HashMap;
  */
 @Service
 public class GetSmsServiceImpl implements GetSmsService {
+    @Value("${file.key-path}")
+    private String filePath;
     @Override
-    public HashMap<String, String> GetSms(String phone) {
-        return SendSmsUtils.send(phone);
+    public HashMap<String, String> getSms(String phone) {
+        return SendSmsUtils.send(phone,filePath);
     }
 }

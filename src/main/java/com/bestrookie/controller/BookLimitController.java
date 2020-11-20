@@ -35,7 +35,12 @@ public class BookLimitController {
     public MyResult getBookAllLimit(HttpServletRequest request, HttpServletResponse response){
         MyResult result;
         int bookId = Integer.parseInt(request.getParameter("bookId"));
-        result = limitService.getBookAllLimit(TokenUtils.getId(request.getHeader("authorization")),bookId);
+        if (limitService.isExistBookLimit(TokenUtils.getId(request.getHeader("authorization")),bookId)){
+            result = limitService.partAllLimit(TokenUtils.getId(request.getHeader("authorization")),bookId);
+        }else {
+            result = limitService.getBookAllLimit(TokenUtils.getId(request.getHeader("authorization")),bookId);
+        }
+
         response.setStatus(result.getCode());
         return  result;
     }
