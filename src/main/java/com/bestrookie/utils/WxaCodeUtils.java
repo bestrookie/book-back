@@ -18,8 +18,8 @@ public class WxaCodeUtils {
 
 
     public static String postToken() throws Exception {
-        String APIKEY = "wx7d19e476e23b041c";//小程序id
-        String SECRETKEY = "c449f39ab11b1e5982f150b05f793d85";//小程序密钥
+        String APIKEY = "";//小程序id
+        String SECRETKEY = "";//小程序密钥
         String requestUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APIKEY + "&secret=" + SECRETKEY;
         URL url = new URL(requestUrl);
         // 打开和URL之间的连接
