@@ -13,7 +13,7 @@ public interface AttendanceService {
      * @param userId 用户id
      * @return 自定义返回类型
      */
-    MyResult getUserAttendanceIfo(int userId);
+    MyResult getUserAttendanceInfo(int userId);
     /**
      * 过滤签到信息
      * @param attendancePojo 签到信息实体

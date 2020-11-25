@@ -30,7 +30,7 @@ public class AttendanceController {
     @GetMapping("/getattendance")
     public MyResult getAttendanceInfo(HttpServletRequest request, HttpServletResponse response){
         int userId = TokenUtils.getId(request.getHeader("authorization"));
-        MyResult myResult = attendanceService.getUserAttendanceIfo(userId);
+        MyResult myResult = attendanceService.getUserAttendanceInfo(userId);
         response.setStatus(myResult.getCode());
         return attendanceService.getAttendanceMainInfo((AttendancePojo) myResult.getObj());
     }

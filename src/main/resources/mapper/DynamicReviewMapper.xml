@@ -28,7 +28,7 @@
         <association property="sonReview"  select="com.bestrookie.mapper.DynamicReviewMapper.querySonReviews" column="{dynamicId=d_id,parentId=dr_id}"/>
     </resultMap>
 <!--查询子评论-->
-    <select parameterType="java.util.Map" id="querySonReviews" resultMap="sonReviewInfo">
+    <select id="querySonReviews" resultMap="sonReviewInfo">
         SELECT book_db.dynamic_review.*,book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
         FROM book_db.dynamic_review
         JOIN book_db.user
@@ -49,7 +49,15 @@
     <select id="reviewCount" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM book_db.dynamic_review WHERE book_db.dynamic_review.d_id = #{dynamicId}
     </select>
-<!--    删除评论根据id-->
+<!--    查询评论人信息-->
+    <select id="queryRepUser" resultMap="com.bestrookie.mapper.UserMapper.userInfo">
+        SELECT book_db.user.user_id,book_db.user.user_name,book_db.user.user_photo
+        FROM book_db.dynamic_review
+                 JOIN book_db.user
+                      on book_db.dynamic_review.user_id = book_db.user.user_id
+        WHERE  book_db.dynamic_review.dr_id = #{parentId} AND book_db.dynamic_review.dr_spid != 0
+    </select>
+    <!--    删除评论根据id-->
     <delete id="deleteReviewById">
         DELETE FROM book_db.dynamic_review WHERE book_db.dynamic_review.dr_id = #{reviewId} AND book_db.dynamic_review.user_id = #{userId}
     </delete>

@@ -155,6 +155,12 @@ public class MessageEventHandler {
     public void logout(MessagePojo msg){
         int userId  = TokenUtils.getId(msg.getToken());
         clientHashMap.remove(String.valueOf(userId));
+        SocketIOClient client1 = clientHashMap.get("1");
+        peopleNum -= 1;
+        log.info(String.valueOf(peopleNum));
+        if ((client1 != null)){
+            client1.sendEvent("peopleNum",peopleNum);
+        }
     }
 
     /**

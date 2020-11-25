@@ -37,7 +37,7 @@ public class AttendanceServiceImpl implements AttendanceService {
      * @return 自定义返回类型
      */
     @Override
-    public MyResult getUserAttendanceIfo(int userId) {
+    public MyResult getUserAttendanceInfo(int userId) {
         AttendancePojo attendancePojo = attendanceMapper.queryAttendanceById(userId);
         if (attendancePojo != null){
             return MyResult.success(attendancePojo,"签到信息");

@@ -2,6 +2,7 @@ package com.bestrookie.mapper;
 
 
 import com.bestrookie.pojo.DynamicReviewPojo;
+import com.bestrookie.pojo.UserPojo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -53,5 +54,12 @@ public interface DynamicReviewMapper {
      * @return 是否成功
      */
     boolean addReview(@Param(value = "dynamicReviewPojo") DynamicReviewPojo dynamicReviewPojo);
+
+    /**
+     * 查询回复人
+     * @param drPid 评论id
+     * @return 用户信息
+     */
+    UserPojo queryRepUser(@Param(value = "drPid") int drPid);
 
 }

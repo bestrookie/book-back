@@ -74,16 +74,19 @@ public class UserController {
      * @return 自定义返回类型
      */
     @PostMapping("/getsms")
-    public String getSms(@RequestBody HashMap<String, String> phone, HttpServletResponse response) {
+    public MyResult getSms(@RequestBody HashMap<String, String> phone, HttpServletResponse response) {
+        MyResult result;
         HashMap<String, String> hashMap = getSmsService.getSms(phone.get("phone"));
         String userPhone = phone.get("phone");
         String code = hashMap.get(userPhone);
         redisTemplate.opsForValue().set(userPhone, code, 5 * 60, TimeUnit.SECONDS);
         if (hashMap.size() == 0) {
-            response.setStatus(500);
-            return "failed";
+            result =  MyResult.failed("获取验证码失败",false,500);
+        }else {
+            result = MyResult.success(true);
         }
-        return "success";
+        response.setStatus(result.getCode());
+        return result;
     }
 
     /**

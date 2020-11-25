@@ -113,15 +113,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public MyResult updateUserName(String userName, String phone) {
-        if (checkUserName(userName).getCode() == 404){
+        if (userMapper.checkUserByName(userName).size() == 0){
             boolean flg = userMapper.updateUserName(userName, phone);
             if (flg){
                 return MyResult.success(userName,"修改成功");
             }else{
                 return MyResult.failed("修改失败",null,406);
             }
+        }else {
+            return MyResult.failed("用户名已存在",null,406);
         }
-        return MyResult.failed("用户名已存在",null,406);
 
     }
     /**
@@ -138,8 +139,9 @@ public class UserServiceImpl implements UserService {
             }else{
                 return MyResult.failed("未找到该用户",null,404);
             }
+        }else {
+            return MyResult.failed("姓名不能为空");
         }
-        return MyResult.failed("姓名不能为空");
     }
     /**
      * 用户修改密码
