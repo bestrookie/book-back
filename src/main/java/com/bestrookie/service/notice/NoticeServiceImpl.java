@@ -28,7 +28,7 @@ public class NoticeServiceImpl implements NoticeService{
      * 查询未读公告
      * @param param 分页参数
      * @param userId 用户id
-     * @return
+     * @return 分页结果
      */
     @Override
     public PageResult queryNotice(PageRequestParam param,int userId) {
@@ -37,8 +37,8 @@ public class NoticeServiceImpl implements NoticeService{
 
     /**
      * 查询所有公告
-     * @param param
-     * @return
+     * @param param 分页参数
+     * @return 分页结果
      */
     @Override
     public PageResult queryAllNotice(PageRequestParam param) {
@@ -46,8 +46,8 @@ public class NoticeServiceImpl implements NoticeService{
     }
     /**
      * 管理员删除公告
-     * @param noticeId
-     * @return
+     * @param noticeId 公告id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult deleteNotice(int noticeId) {
@@ -60,8 +60,8 @@ public class NoticeServiceImpl implements NoticeService{
 
     /**
      * 发布公告
-     * @param noticePojo
-     * @return
+     * @param noticePojo 公告信息
+     * @return 自定义返回类型
      */
     @Override
     public MyResult releaseNotice(NoticePojo noticePojo) {
@@ -74,8 +74,8 @@ public class NoticeServiceImpl implements NoticeService{
 
     /**
      * 根据id查询公告
-     * @param noticeId
-     * @return
+     * @param noticeId 公告id
+     * @return 公告信息
      */
     @Override
     public NoticePojo queryNoticeById(int noticeId) {
@@ -89,7 +89,6 @@ public class NoticeServiceImpl implements NoticeService{
      * @return 分页结果
      */
     private PageInfo<NoticePojo> getPageInfo(PageRequestParam param,int userId){
-        int index = 0;
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());
         List<NoticePojo> notices = noticeMapper.queryNotice();
         if (userId != 0){
@@ -97,7 +96,6 @@ public class NoticeServiceImpl implements NoticeService{
                 if (readService.isReadNotice(userId,notice.getNoticeId())){
                     notice.setRead(true);
                 }
-                index++;
             }
         }
         return new PageInfo<>(notices);

@@ -30,9 +30,9 @@ public class DynamicReviewController {
     private String filePath;
     /**
      * 查看评论
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @GetMapping("/queryreviews")
     public MyResult getDynamicReview(HttpServletRequest request, HttpServletResponse response){
@@ -57,9 +57,9 @@ public class DynamicReviewController {
     }
     /**
      * 删除评论
-     * @param response
-     * @param request
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @GetMapping("/deletereview")
     public MyResult deleteDynamicReview(HttpServletResponse response,HttpServletRequest request){
@@ -78,10 +78,10 @@ public class DynamicReviewController {
     }
     /**
      * 发布评论
-     * @param request
-     * @param response
-     * @param param
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @param param 分页参数
+     * @return 自定义返回类型
      */
     @SneakyThrows
     @PostMapping("/releasereview")

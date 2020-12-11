@@ -34,8 +34,8 @@ public interface NoticeMapper {
 
     /**
      * 根据id查询公告
-     * @param noticeId
-     * @return
+     * @param noticeId 公告id
+     * @return 公告信息
      */
     NoticePojo queryNoticeById(int noticeId);
 }

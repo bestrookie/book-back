@@ -21,8 +21,8 @@ MyResult {
 
     /**
      * 成功返回对象
-     * @param obj
-     * @return
+     * @param obj 返回对象
+     * @return 自定义返回结果
      */
     public static MyResult success(Object obj){
         return new MyResult(ResultCode.SUCCESS.getCode(),ResultCode.SUCCESS.getMessage(),obj);
@@ -30,9 +30,9 @@ MyResult {
 
     /**
      * 成功返回对象和消息
-     * @param obj
-     * @param msg
-     * @return
+     * @param obj 返回对象
+     * @param msg 消息提示
+     * @return 自定义返回结果
      */
     public static MyResult success(Object obj,String msg){
         return new MyResult(ResultCode.SUCCESS.getCode(),msg,obj);
@@ -40,8 +40,8 @@ MyResult {
 
     /**
      * 失败返回消息
-     * @param msg
-     * @return
+     * @param msg 提示消息
+     * @return 自定义返回类型
      */
     public static MyResult failed(String msg){
         return new MyResult(ResultCode.FAILED.getCode(), msg,null);
@@ -49,9 +49,9 @@ MyResult {
 
     /**
      * 失败返回对象和消息
-     * @param msg
-     * @param obj
-     * @return
+     * @param msg 消息提示
+     * @param obj 返回对象
+     * @return 自定义返回结果
      */
     public static MyResult failed(String msg,Object obj){
         return  new MyResult(ResultCode.FAILED.getCode(),msg,obj);

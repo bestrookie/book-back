@@ -12,29 +12,29 @@ import com.bestrookie.pojo.DynamicReviewPojo;
 public interface DynamicReviewService {
     /**
      * 查询动态信息
-     * @param param
-     * @param dynamicId
-     * @return
+     * @param param 分页参数
+     * @param dynamicId 动态id
+     * @return 自定义返回类型
      */
     PageResult queryDynamicReview(PageRequestParam param, int dynamicId);
     /**
      * 删除评论
-     * @param dynamicId
-     * @param reviewId
-     * @param userId
-     * @return
+     * @param dynamicId 动态id
+     * @param reviewId 评论id
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     MyResult deleteDynamicReview(int dynamicId,int reviewId,int userId);
     /**
      *发布评论
-     * @param dynamicReviewPojo
-     * @return
+     * @param dynamicReviewPojo 评论信息
+     * @return 自定义返回类型
      */
     MyResult releaseDynamicReview(DynamicReviewPojo dynamicReviewPojo);
     /**
      * 获取评论数量
-     * @param dynamicId
-     * @return
+     * @param dynamicId 动态id
+     * @return 数量
      */
     int reviewCount(int dynamicId);
 }

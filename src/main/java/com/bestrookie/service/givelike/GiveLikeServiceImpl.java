@@ -18,12 +18,12 @@ public class GiveLikeServiceImpl implements GiveLikeService {
     private GiveLikeMapper giveLikeMapper;
     /**
      * 添加点赞信息
-     * @param giveLikePojo
-     * @return
+     * @param giveLikePojo 点赞信息
+     * @return 自定义返回类型
      */
     @Override
     public MyResult giveLike(GiveLikePojo giveLikePojo) {
-        if (isLiked(giveLikePojo.getDynamicId(),giveLikePojo.getUserId()) == false){
+        if (!isLiked(giveLikePojo.getDynamicId(), giveLikePojo.getUserId())){
             if (giveLikePojo.getUserId() > 0 || giveLikePojo.getDynamicId() > 0){
                 if (giveLikeMapper.addGiveLike(giveLikePojo)){
                     HashMap<String, Object>result = new HashMap<>();
@@ -44,8 +44,8 @@ public class GiveLikeServiceImpl implements GiveLikeService {
 
     /**
      * 获取点赞数
-     * @param dynamicId
-     * @return
+     * @param dynamicId 动态id
+     * @return 自定义返回类型
      */
     @Override
     public int giveLikeNum(int dynamicId) {
@@ -53,23 +53,19 @@ public class GiveLikeServiceImpl implements GiveLikeService {
     }
     /**
      * 是否点赞
-     * @param dynamicId
-     * @param userId
-     * @return
+     * @param dynamicId 动态id
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     @Override
     public boolean isLiked(int dynamicId, int userId) {
-        if (giveLikeMapper.isLiked(dynamicId,userId) == null){
-            return false;
-        }else {
-            return true;
-        }
+        return giveLikeMapper.isLiked(dynamicId, userId) != null;
     }
     /**
      * 取消点赞
-     * @param dynamicId
-     * @param userId
-     * @return
+     * @param dynamicId 动态id
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult cancelLiked(int dynamicId, int userId) {

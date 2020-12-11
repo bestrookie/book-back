@@ -54,7 +54,7 @@ public interface BookDiscussionsMapper {
 
     /**
      * 查询书圈的数量
-     * @return
+     * @return 数量
      */
     int discussionNum();
 

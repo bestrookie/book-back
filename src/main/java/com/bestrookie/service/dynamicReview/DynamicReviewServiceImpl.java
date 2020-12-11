@@ -28,9 +28,9 @@ public class DynamicReviewServiceImpl implements DynamicReviewService{
 
     /**
      * 查询所有评论
-     * @param param
-     * @param dynamicId
-     * @return
+     * @param param 分页参数
+     * @param dynamicId 动态id
+     * @return 自定义返回类型
      */
     @Override
     public PageResult queryDynamicReview(PageRequestParam param, int dynamicId) {
@@ -38,10 +38,10 @@ public class DynamicReviewServiceImpl implements DynamicReviewService{
     }
     /**
      * 删除评论
-     * @param dynamicId
-     * @param reviewId
-     * @param userId
-     * @return
+     * @param dynamicId 动态id
+     * @param reviewId 评论id
+     * @param userId 用户id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult deleteDynamicReview(int dynamicId, int reviewId, int userId) {
@@ -63,8 +63,8 @@ public class DynamicReviewServiceImpl implements DynamicReviewService{
 
     /**
      * 发布评论
-     * @param dynamicReviewPojo
-     * @return
+     * @param dynamicReviewPojo 评论信息
+     * @return 自定义返回类型
      */
     @Override
     public MyResult releaseDynamicReview(DynamicReviewPojo dynamicReviewPojo) {
@@ -91,9 +91,9 @@ public class DynamicReviewServiceImpl implements DynamicReviewService{
 
     /**
      * 调用分页插件完成分页
-     * @param param
-     * @param dynamicId
-     * @return
+     * @param param 分页参数
+     * @param dynamicId 动态id
+     * @return 分页结果
      */
     private PageInfo<DynamicReviewPojo> getDynamicReviewInfo(PageRequestParam param,int dynamicId){
         PageHelper.startPage(param.getPageNumber(),param.getPageSize());

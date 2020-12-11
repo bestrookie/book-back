@@ -41,7 +41,6 @@ public class BookDiscussionsController {
     public MyResult addDiscussion(HttpServletResponse response, HttpServletRequest request,@RequestBody AddDiscussionParam param) {
         MyResult result;
         SensitiveWordUtils.init(wordPath);
-        System.out.println(param.toString());
         if (!(SensitiveWordUtils.contains(param.getDbName()) && SensitiveWordUtils.contains(param.getDbDes()))) {
             BookDiscussionsPojo bookDiscussionsPojo = new BookDiscussionsPojo();
             bookDiscussionsPojo.setUserId(TokenUtils.getId(request.getHeader("authorization")));

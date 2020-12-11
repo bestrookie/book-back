@@ -3,12 +3,10 @@ package com.bestrookie.service.bduser;
 import com.bestrookie.mapper.BdUserMapper;
 import com.bestrookie.model.MyResult;
 import com.bestrookie.pojo.BdUserPojo;
-import com.bestrookie.pojo.DiscussionUserPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author : bestrookie
@@ -20,8 +18,8 @@ public class BdUserServiceImpl implements BdUserService {
     BdUserMapper bdUserMapper;
     /**
      * 加入书圈
-     * @param bdUserPojo
-     * @return
+     * @param bdUserPojo 书圈关系信息
+     * @return 自定义返回类型
      */
     @Override
     public MyResult joinDiscussion(BdUserPojo bdUserPojo) {
@@ -40,22 +38,18 @@ public class BdUserServiceImpl implements BdUserService {
     }
     /**
      * 查询是否已经加入书圈
-     * @param userId
-     * @param discussionId
-     * @return
+     * @param userId 用户id
+     * @param discussionId 书圈id
+     * @return 是否加入
      */
     @Override
     public boolean stateByJoin(int userId, int discussionId) {
-        if (bdUserMapper.queryById(userId,discussionId) != null){
-            return true;
-        }else {
-            return false;
-        }
+        return bdUserMapper.queryById(userId, discussionId) != null;
     }
     /**
      * 查询加入书圈的人数
-     * @param discussionId
-     * @return
+     * @param discussionId 书圈id
+     * @return 人数
      */
     @Override
     public int queryNums(int discussionId) {
@@ -63,9 +57,9 @@ public class BdUserServiceImpl implements BdUserService {
     }
     /**
      * 退出书圈
-     * @param userId
-     * @param discussionId
-     * @return
+     * @param userId 用户id
+     * @param discussionId 书圈id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult exitDiscussion(int userId, int discussionId) {
@@ -84,8 +78,8 @@ public class BdUserServiceImpl implements BdUserService {
     }
     /**
      * 查询某个书圈的所有人
-     * @param discussionId
-     * @return
+     * @param discussionId 书圈id
+     * @return 自定义返回类型
      */
     @Override
     public MyResult queryPopulation(int discussionId) {
@@ -97,9 +91,9 @@ public class BdUserServiceImpl implements BdUserService {
     }
     /**
      * 查询某个书圈的部分人
-     * @param discussionId
-     * @param limit
-     * @return
+     * @param discussionId 书圈id
+     * @param limit 人数限制
+     * @return 自定义返回类型
      */
     @Override
     public MyResult queryPopulationLimit(int discussionId, int limit) {

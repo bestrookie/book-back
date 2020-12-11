@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/api/bookreview")
-public class BookReviewController {
+public class  BookReviewController {
     @Autowired
     private BookReviewService bookReviewService;
     @Value("${file.banWord-path}")

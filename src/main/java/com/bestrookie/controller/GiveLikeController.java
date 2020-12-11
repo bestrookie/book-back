@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.wltea.analyzer.core.IKSegmenter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,14 +27,14 @@ public class GiveLikeController {
 
     /**
      * 点赞
-     * @param response
-     * @param request
-     * @return
+     * @param response 响应参数
+     * @param request 请求参数
+     * @return 自定义返回类型
      */
     @RequestMapping("/givelike")
     MyResult giveLike(HttpServletResponse response, HttpServletRequest request){
         GiveLikePojo giveLikePojo = new GiveLikePojo();
-        MyResult result = null;
+        MyResult result ;
         if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
             giveLikePojo.setDynamicId(Integer.parseInt(request.getParameter("dynamicId")));
             giveLikePojo.setLikeDate(System.currentTimeMillis());
@@ -50,13 +49,13 @@ public class GiveLikeController {
 
     /**
      * 取消点赞
-     * @param request
-     * @param response
-     * @return
+     * @param request 请求参数
+     * @param response 响应参数
+     * @return 自定义返回类型
      */
     @GetMapping("/cancellike")
     MyResult cancelLiked(HttpServletRequest request,HttpServletResponse response){
-        MyResult result = null;
+        MyResult result ;
         if (IsTrueUtils.isTrue(request.getParameter("dynamicId"))){
             messageService.updateFlg(TokenUtils.getId(request.getHeader("authorization")),Integer.parseInt(request.getParameter("dynamicId")));
             result = giveLikeService.cancelLiked( Integer.parseInt(request.getParameter("dynamicId")),TokenUtils.getId(request.getHeader("authorization")));
