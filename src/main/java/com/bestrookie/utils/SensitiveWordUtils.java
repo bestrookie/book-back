@@ -5,6 +5,7 @@ import org.wltea.analyzer.core.Lexeme;
 import org.wltea.analyzer.core.IKSegmenter;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,9 +110,9 @@ public class SensitiveWordUtils {
     }
     /**
      * 将敏感词替换成指定字符串
-     * @param txt
-     * @param replaceStr
-     * @return
+     * @param txt 文本信息
+     * @param replaceStr 替换字符
+     * @return 返回结果文本
      * @throws IOException
      */
     private static String replaceSensitiveWord(String txt, String replaceStr) throws IOException {
@@ -133,7 +134,7 @@ public class SensitiveWordUtils {
         //int line=1;
         try{
             //reader=new BufferedReader(new FileReader(file));这样在web运行的时候，读取会乱码
-            reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+            reader=new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             while((temp=reader.readLine())!=null){
                 //System.out.println("line"+line+":"+temp);
                 keyWordSet.add(temp);

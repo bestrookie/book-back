@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author : bestrookie
  * @date : 20:16 2020/11/10
@@ -38,4 +40,17 @@ public interface CollectionMapper {
      * @return 数量
      */
     int collectCount(@Param(value = "bookId") int bookId);
+
+    /**
+     * 获取用户收藏书的id
+     * @param userId 用户id
+     * @return 数组列表
+     */
+    List<Integer> getCollectBookId(@Param(value = "userId") int userId);
+
+    /**
+     * 获取用户id
+     * @return 数组列表
+     */
+    List<Integer> getUser();
 }

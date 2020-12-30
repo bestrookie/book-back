@@ -26,5 +26,13 @@
     <select id="collectCount" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM book_db.collection WHERE b_id = #{bookId}
     </select>
+<!--    获取用户收藏书的id-->
+    <select id="getCollectBookId" resultType="int">
+        SELECT book_db.collection.b_id FROM book_db.collection WHERE user_id = #{userId}
+    </select>
+<!--    获取用户信息-->
+    <select id="getUser" resultType="java.lang.Integer">
+        SELECT book_db.collection.user_id FROM book_db.collection
+    </select>
 
 </mapper>

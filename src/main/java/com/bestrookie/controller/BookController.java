@@ -6,6 +6,7 @@ import com.bestrookie.model.param.PageRequestParam;
 import com.bestrookie.pojo.BookPojo;
 import com.bestrookie.service.async.AsyncService;
 import com.bestrookie.service.books.BookService;
+import com.bestrookie.service.recommend.RecommendBookService;
 import com.bestrookie.utils.IsTrueUtils;
 import com.bestrookie.utils.SensitiveWordUtils;
 import com.bestrookie.utils.TokenUtils;
@@ -27,6 +28,8 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private AsyncService asyncService;
+    @Autowired
+    private RecommendBookService recommendBookService;
     @Value("${file.banWord-path}")
     private String wordPath;
     /**
@@ -220,5 +223,20 @@ public class BookController {
         response.setStatus(result.getCode());
         return  result;
     }
+
+    /**
+     * 书籍推荐
+     * @param request  请求参数
+     * @param response 响应参数
+     * @param bookId 书籍id
+     * @return 自定义返回类型
+     */
+    @GetMapping("/recommend")
+    public MyResult getRecommend(HttpServletRequest request,HttpServletResponse response,@RequestParam int bookId){
+        MyResult result = recommendBookService.recommendBook(bookId,TokenUtils.getId(request.getHeader("authorization")));
+        response.setStatus(result.getCode());
+        return  result;
+    }
+
 
 }

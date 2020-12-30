@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * @author : bestrookie
  * @date : 9:37 2020/11/19
  */
-public class WxaCodeUtils {
+public class  WxaCodeUtils {
 
 
     public static String postToken() throws Exception {
