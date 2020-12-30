@@ -89,7 +89,6 @@ public class RecommendBookServiceImpl implements RecommendBookService{
      */
     public HashMap<Integer, Double> userRecommend(int [] userIds,int nowUser){
         HashMap<Integer, Double> result = new HashMap<>();
-        Scanner scanner = new Scanner(System.in);
         //用户总量
         int n = userIds.length;
         int[][] sparseMatrix = new int[n][n];
@@ -130,7 +129,6 @@ public class RecommendBookServiceImpl implements RecommendBookService{
                 }
             }
         }
-        System.out.println(itemUserCollection.toString());
         //计算相似度矩阵【稀疏】
         Set<Map.Entry<String, Set<String>>> entrySet = itemUserCollection.entrySet();
         for (Map.Entry<String, Set<String>> stringSetEntry : entrySet) {
@@ -145,7 +143,6 @@ public class RecommendBookServiceImpl implements RecommendBookService{
                 }
             }
         }
-        System.out.println(userItemLength.toString());
         String recommendUser = String.valueOf(nowUser);
         //计算用户之间的相似度【余弦相似性】
         int recommendUserId = userId.get(recommendUser);
@@ -166,12 +163,10 @@ public class RecommendBookServiceImpl implements RecommendBookService{
                     itemRecommendDegree += sparseMatrix[userId.get(recommendUser)][userId.get(user)]/Math.sqrt(userItemLength.get(recommendUser)*userItemLength.get(user));
                     //推荐度计算
                 }
-                System.out.println("The item "+item+" for "+recommendUser +"'s recommended degree:"+itemRecommendDegree);
                 result.put(Integer.valueOf(item),itemRecommendDegree);
             }
 
         }
-        scanner.close();
         return result;
     }
 }
