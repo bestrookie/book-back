@@ -38,17 +38,21 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public MyResult queryUserByName(String phone,String password) {
-        UserPojo userPojo = userMapper.queryUserByName(phone);
-        if (userPojo!=null && Objects.equals(userPojo.getPassword(),password)){
-            String token = TokenUtils.token(phone,userPojo.getUserId(),0);
-            HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
-            //保留用户最后一条token
-            String key = "T"+ phone;
-            assert token != null;
-            redisTemplate.opsForValue().set(key,token);
-            return MyResult.success(hashMap,"登陆成功");
-        }else{
-            return MyResult.failed("账号或者密码错误");
+        if (phone.isEmpty() || password.isEmpty()){
+            return MyResult.failed("账号或者密码不能为空");
+        }else {
+            UserPojo userPojo = userMapper.queryUserByName(phone);
+            if (userPojo!=null && Objects.equals(userPojo.getPassword(),password)){
+                String token = TokenUtils.token(phone,userPojo.getUserId(),0);
+                HashMap<String, String> hashMap = SImageUtils.sImage(token, userPojo.getImage());
+                //保留用户最后一条token
+                String key = "T"+ phone;
+                assert token != null;
+                redisTemplate.opsForValue().set(key,token);
+                return MyResult.success(hashMap,"登陆成功");
+            }else{
+                return MyResult.failed("账号或者密码错误");
+            }
         }
     }
     /**

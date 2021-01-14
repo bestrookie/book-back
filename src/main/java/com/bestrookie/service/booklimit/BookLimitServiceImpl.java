@@ -37,34 +37,37 @@ public class BookLimitServiceImpl implements BookLimitService{
      */
     @Override
     public MyResult getBookLimit(int userId, int bookId) {
-        if (isAllLimit(userId, bookId)) {
-            return MyResult.failed("已经全本解锁",false,528);
-        }
-        BookPojo book = bookService.queryBookById(bookId);
-        BookLimitPojo bookLimit = limitMapper.queryLimitById(userId, bookId);
-        int total = (int)Math.ceil((double)(book.getBookPage()) / (double)100);
-        int price = 0;
-        try {
-            price = listPrice(bookLimit.getLimitPage(),total,book.getBookPage());
-        } catch (Exception e) {
-            price = listPrice(0,total,book.getBookPage());
-        }
-        if (payCost(userId,price)){
-            if (isExistBookLimit(userId, bookId)){
-                if ((bookLimit.getLimitPage() + 1) < total){
-                    bookLimit.setLimitPage(bookLimit.getLimitPage() + 1);
-                    return updatePage(bookLimit);
+        if(bookService.isBookTrue(bookId)){
+            if (isAllLimit(userId, bookId)) {
+                return MyResult.failed("已经全本解锁",false,529);
+            }
+            BookPojo book = bookService.queryBookById(bookId);
+            BookLimitPojo bookLimit = limitMapper.queryLimitById(userId, bookId);
+            int total = (int)Math.ceil((double)(book.getBookPage()) / (double)100);
+            int price ;
+            try {
+                price = listPrice(bookLimit.getLimitPage(),total,book.getBookPage());
+            } catch (Exception e) {
+                price = listPrice(0,total,book.getBookPage());
+            }
+            if (payCost(userId,price)){
+                if (isExistBookLimit(userId, bookId)){
+                    if ((bookLimit.getLimitPage() + 1) < total){
+                        bookLimit.setLimitPage(bookLimit.getLimitPage() + 1);
+                        return updatePage(bookLimit);
+                    }else {
+                        limitMapper.deleteLimit(userId, bookId);
+                        return addLimit(userId, bookId,0);
+                    }
                 }else {
-                    limitMapper.deleteLimit(userId, bookId);
-                    return addLimit(userId, bookId,0);
+                    return  addLimit(userId, bookId,1);
                 }
             }else {
-                return  addLimit(userId, bookId,1);
+                return MyResult.failed("检查你的源币是否足够",false,529);
             }
         }else {
-            return MyResult.failed("检查你的源币是否足够",false,528);
+            return MyResult.failed("此书以下架",false,530);
         }
-
 
     }
 
@@ -88,16 +91,19 @@ public class BookLimitServiceImpl implements BookLimitService{
     @Override
     public MyResult getBookAllLimit(int userId, int bookId) {
         BookPojo bookPojo = bookService.queryBookById(bookId);
-        if (!isAllLimit(userId, bookId)){
-            if (payCost(userId,bookPojo.getBookPrice())){
-                return addLimit(userId,bookId,0);
+        if (bookService.isBookTrue(bookId)){
+            if (!isAllLimit(userId, bookId)){
+                if (payCost(userId,bookPojo.getBookPrice())){
+                    return addLimit(userId,bookId,0);
+                }else {
+                    return MyResult.failed("检查你的源币是否足够",false,528);
+                }
             }else {
-                return MyResult.failed("检查你的源币是否足够",false,528);
+                return MyResult.failed("已经解锁",false,528);
             }
         }else {
-            return MyResult.failed("已经解锁",false,528);
+            return MyResult.failed("此书以下架",false,528);
         }
-
     }
 
     /**
@@ -139,20 +145,25 @@ public class BookLimitServiceImpl implements BookLimitService{
      */
     @Override
     public MyResult addLimit(int userId, int bookId, int type){
-        BookLimitPojo limitPojo = new BookLimitPojo();
-        limitPojo.setLimitPage(1);
-        limitPojo.setUserId(userId);
-        limitPojo.setLimitDate(System.currentTimeMillis());
-        if (type == 0){
-            limitPojo.setLimitAll(true);
-            limitPojo.setLimitPage(0);
-        }
-        limitPojo.setBookId(bookId);
-        if (limitMapper.addBookLimitInfo(limitPojo)){
-            return MyResult.success(true);
+        if (bookService.isBookTrue(bookId)){
+            BookLimitPojo limitPojo = new BookLimitPojo();
+            limitPojo.setLimitPage(1);
+            limitPojo.setUserId(userId);
+            limitPojo.setLimitDate(System.currentTimeMillis());
+            if (type == 0){
+                limitPojo.setLimitAll(true);
+                limitPojo.setLimitPage(0);
+            }
+            limitPojo.setBookId(bookId);
+            if (limitMapper.addBookLimitInfo(limitPojo)){
+                return MyResult.success(true);
+            }else {
+                return  MyResult.failed("解锁失败",false,529);
+            }
         }else {
-            return  MyResult.failed("解锁失败",false,528);
+            return MyResult.failed("此书以下架",false,530);
         }
+
     }
 
     /**
@@ -173,19 +184,24 @@ public class BookLimitServiceImpl implements BookLimitService{
 
     @Override
     public MyResult partAllLimit(int userId, int bookId) {
-        BookPojo bookPojo = bookService.queryBookById(bookId);
-        BookLimitPojo limitPojo = limitMapper.queryLimitById(userId, bookId);
-        int price = (bookPojo.getBookPage() - (limitPojo.getLimitPage() * 100)) * 11;
-        if (!isAllLimit(userId,bookId)){
-            if (payCost(userId,price)){
-                limitMapper.deleteLimit(userId,bookId);
-                return addLimit(userId,bookId,0);
+        if (bookService.isBookTrue(bookId)){
+            BookPojo bookPojo = bookService.queryBookById(bookId);
+            BookLimitPojo limitPojo = limitMapper.queryLimitById(userId, bookId);
+            int price = (bookPojo.getBookPage() - (limitPojo.getLimitPage() * 100)) * 11;
+            if (!isAllLimit(userId,bookId)){
+                if (payCost(userId,price)){
+                    limitMapper.deleteLimit(userId,bookId);
+                    return addLimit(userId,bookId,0);
+                }else {
+                    return MyResult.failed("检查你的源币是否足够",false,529);
+                }
             }else {
-                return MyResult.failed("检查你的源币是否足够",false,528);
+                return MyResult.failed("已经解锁",false,529);
             }
         }else {
-            return MyResult.failed("已经解锁",false,528);
+            return MyResult.failed("此书以下架",false,530);
         }
+
     }
 
 
@@ -198,7 +214,7 @@ public class BookLimitServiceImpl implements BookLimitService{
         if (limitMapper.updateBookLimitInfo(bookLimitPojo)){
             return MyResult.success(true);
         }else {
-            return MyResult.failed("解锁失败",false,528);
+            return MyResult.failed("解锁失败",false,529);
         }
     }
 

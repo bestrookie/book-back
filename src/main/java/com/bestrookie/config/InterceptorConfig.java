@@ -31,6 +31,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/book/top/**")
                 .excludePathPatterns("/api/top/query/**")
                 .excludePathPatterns("/api/download/download/**")
+                .excludePathPatterns("/api/booktype/querytype")
         ;
 
     }

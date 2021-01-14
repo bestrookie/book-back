@@ -15,8 +15,9 @@ public class NettySocketConfig {
     @Bean
     public SocketIOServer socketIOServer(){
         com.corundumstudio.socketio.Configuration configuration = new com.corundumstudio.socketio.Configuration();
-        configuration.setHostname("192.168.1.162");
-//       configuration.setHostname("192.168.43.168");
+//        configuration.setHostname("192.168.1.162");
+        configuration.setHostname("192.168.45.168");
+//        configuration.setHostname("172.18.80.214");
         configuration.setPort(8081);
         configuration.setTransports( Transport.WEBSOCKET,Transport.POLLING);
         configuration.setOrigin(":*:");
